@@ -1,0 +1,5 @@
+create user 'Admin' identified by 'HeighT#157s';
+
+create database app;
+Use app;
+grant all privileges on App.* to 'Admin'@'%';
