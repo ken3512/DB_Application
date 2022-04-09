@@ -126,10 +126,7 @@ function EventInfo($EventID)
 function comment($EventID, $UserID, $Comment)
 {
     $conn = connectToDatabase();
-    $sql = "INSERT INTO Comments (EventID, UserID, Text) VALUES (?, ?, ?)";
-    
-
-    
+    $sql = "INSERT INTO Comments (EventID, UserID, Text) VALUES (?, ?, ?)";    
 }
 
 function getComments($EventID)
