@@ -12,7 +12,7 @@
 </head>
 <body>    
     <h1>
-        <?php showEvents(6);?>
+        <?php showEvents(2);?>
     </h1>
 
 </body>
