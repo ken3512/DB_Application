@@ -97,7 +97,7 @@ function signup($UniversityID, $Name, $Gmail, $Phone, $Password)
 function showEvents($UserID)
 {
     $conn = connectToDatabase();
-    $sql = "SELECT E.Name FROM Events E, Users U  WHERE U.ID = ? AND 
+    $sql = "SELECT E.ID FROM Events E, Users U  WHERE U.ID = ? AND 
         ((U.Super =  1) OR 
         (E.Privacy =  0) OR 
         (E.Privacy = 1 AND EXISTS (SELECT O.ID FROM University O WHERE E.ForeignID = O.ID AND U.UniversityID = O.ID)) OR 
@@ -113,13 +113,48 @@ function showEvents($UserID)
     {
         while($row = mysqli_fetch_assoc($result))
         {
-            echo $row['Name'] . "<br>";
+            FormatEvent($row['ID']);
         }
     }
 
 }
 
 function EventInfo($EventID)
+{
+    $conn = connectToDatabase();
+    $sql = "SELECT * FROM Events E WHERE E.ID = $EventID;";
+
+    $result = mysqli_query($conn, $sql);
+    $row = mysqli_fetch_array($result);
+
+    return $row;
+
+}
+
+function FormatEvent($EventID)
+{
+    $info = EventInfo($EventID);
+    echo $info["Name"] . "<br>";
+    echo $info["ID"] . "<br>";
+    echo $info["ContactPhone"] . "<br>";
+    echo $info["ContactEmail"] . "<br>";
+    echo $info["NumRat"] . "<br>";
+    echo $info["WeighRat"] . "<br>";
+    echo $info["LocationID"] . "<br>";
+    echo $info["Description"] . "<br><br>";
+}
+
+function registerMember($MemberID, $RSOID)
+{
+    
+} 
+
+function unregisterMember($MemberID, $RSOID)
+{
+    
+} 
+
+function createRSO($OwnerID, $MemberID_1, $MemberID_2, $MemberID_3, $MemberID_4)
 {
 
 }
@@ -158,12 +193,6 @@ function rate($EventID, $UserID, $Rating)
 }
 
 function createEvent()
-{
-    $conn = connectToDatabase();
-    $sql = "";
-}
-
-function createRSO()
 {
     $conn = connectToDatabase();
     $sql = "";
