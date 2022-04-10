@@ -1,6 +1,6 @@
 <?php
-    include_once 'functions.php';
-    include_once 'signup_error_checking_functions.php';
+    include_once 'api_functions.php';
+    include_once 'helper_functions.php';
 
     // Check if the user got to this "page" in the correct way
     if (!isset($_POST["submit"])) {

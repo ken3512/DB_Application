@@ -1,6 +1,6 @@
 <?php
-    include_once 'functions.php';
-    include_once 'login_error_checking_functions.php';
+    include_once 'api_functions.php';
+    include_once 'helper_functions.php';
 
     // Check if we got here through the submit button
     // on the login form

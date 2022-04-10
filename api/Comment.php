@@ -1,6 +1,6 @@
 <?php
 
-include_once 'functions.php';
+include_once 'api_functions.php';
 
 $EventID = 1;
 $UserID = 1;

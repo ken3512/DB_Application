@@ -1,5 +1,5 @@
 <?php
-    include_once 'api/functions.php';
+    include_once 'api/api_functions.php';
     session_start();
 ?>
 
