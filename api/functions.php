@@ -309,10 +309,21 @@ function rating($EventID)
 }
 
 
-function createEvent()
+function createEvent($LocationID, $EventCat, $ForeignID, $Name, $Description, $Privacy, $ContactPhone, $ContactEmail)
 {
     $conn = connectToDatabase();
-    $sql = "";
+    $sql = "INSERT INTO RSO (LocationID, EventCat, ForeignID, Name, Description, Privacy, ContactPhone, ContactEmail)  VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
+
+    $stmt = $conn->prepare($sql);
+    
+    if(!$stmt) 
+    {
+        echo "Prepared statement failed";
+        exit();
+    }
+    
+    $stmt->bind_param("iiisssiss", $LocationID, $EventCat, $ForeignID, $Name, $Description, $Privacy, $ContactPhone, $ContactEmail);
+    $stmt->execute();
 }
 
 function test()
