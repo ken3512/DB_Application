@@ -9,7 +9,7 @@ $Rating = $_POST['rating'];
 
 rate($EventID, $UserID, $Rating);
 
-header("location: ../index");
+header("location: ../events");
 
 /*
     <form action="api/rate.php" method="POST">

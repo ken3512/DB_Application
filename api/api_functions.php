@@ -112,7 +112,7 @@ function showEvents($UserID)
     {
         while($row = mysqli_fetch_assoc($result))
         {
-            FormatEvent($row['ID']);
+            FormatEvent($row['ID'], $UserID);
         }
     }
 
@@ -130,7 +130,7 @@ function EventInfo($EventID)
 
 }
 
-function FormatEvent($EventID)
+function FormatEvent($EventID, $UserID)
 {
     $info = EventInfo($EventID);
     echo '
@@ -140,9 +140,38 @@ function FormatEvent($EventID)
                 <span class="contact_phone">Phone: '. $info["ContactPhone"] .'</span>
                 <span class="contact_email">Email: '. $info["ContactEmail"] .'</span>
                 <span class="location_id">Location: '. $info["LocationID"] .'</span> 
-        </div>
+                <p>Rating: '. rating($EventID) .'</p>
     ';
-    
+
+    if(!isRated($EventID, $UserID))
+    {
+        echo '                
+            <form action="api/rate.php" method="POST">
+                <input type="hidden" name="EventID" value='.$EventID.'>
+                <input type="radio" name="rating" value=1>
+                <input type="radio" name="rating" value=2>
+                <input type="radio" name="rating" value=3>
+                <input type="radio" name="rating" value=4>
+                <input type="radio" name="rating" value=5>
+                <br>
+                <p>&ensp;1&emsp;2&emsp;3&emsp;4&emsp;5&emsp;<p>
+                <button type="submit" name="submit">Rate</button>
+            </form>';
+    }
+
+    echo '<br>';
+    echo getComments($EventID);
+
+    echo '
+        <form action="api/Comment.php" method="POST">
+            <input type="hidden" name="EventID" value='. $EventID .'>
+            <input type="text" name="Comment" placeholder="Text">
+            <br>
+            <button type="submit" name="submit">Comment</button>
+        </form>
+    ';
+    echo '
+    </div>';
 }
 
 function isRegistered($RSOID, $MemberID)
@@ -211,6 +240,8 @@ function createRSO($UniversityID, $OwnerID, $Name, $MemberID_1, $MemberID_2, $Me
 
 function comment($EventID, $UserID, $Comment)
 {
+    if(empty($Comment)) return;
+
     $conn = connectToDatabase();
     $sql = "INSERT INTO Comments (EventID, UserID, Text) VALUES (?, ?, ?)";
     
@@ -235,24 +266,14 @@ function comment($EventID, $UserID, $Comment)
 function getComments($EventID)
 {
     $conn = connectToDatabase();
-    $sql = "SELECT C.Text FROM Comments C WHERE C.EventID = ?";
+    $sql = "SELECT C.Text, U.Name FROM Comments C, Users U WHERE C.EventID = $EventID AND (C.UserID = U.ID)";
 
-    $stmt = $conn->prepare($sql);
-    
-    if(!$stmt) 
-    {
-        echo "Prepared statement failed";
-        exit();
-    }
-
-    $stmt->bind_param("i", $EventID);
-    $stmt->execute();
-    $result = $stmt->get_result();
+    $result = mysqli_query($conn, $sql);
     $resultCheck = mysqli_num_rows($result);
 
     if($resultCheck > 0)
         while($row = mysqli_fetch_assoc($result))
-            echo $row['Text'] . "<br>";
+            echo "<p>". $row['Name'] .": ". $row['Text'] . "</p><br>";
 }
 
 function isRated($EventID, $UserID)
@@ -292,7 +313,8 @@ function rating($EventID)
     $result = mysqli_query($conn, $sql);
     $row = mysqli_fetch_array($result);
 
-    return $row["Rating"];
+    if($row["Rating"]) return $row["Rating"];
+    else return 'Unrated';
 }
 
 

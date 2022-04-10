@@ -34,3 +34,14 @@
 .location_id {
 
 }
+
+.event p
+{
+    color: white;
+    display: inline;
+}
+
+.event form
+{
+    margin: none;
+}
