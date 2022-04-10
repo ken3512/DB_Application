@@ -14,17 +14,6 @@ function connectToDatabase()
     return $conn;
 }
 
-// function passwordIsTooSimple($pass) 
-// {
-//     $result = false;
-//     // Check if the password is complex enough return true if it is too simple
-//     if (!preg_match("/^^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.* )(?=.*[^a-zA-Z0-9]).{8,32}$/", $pass)) {
-//         $result = true;
-//     }
-//     return $result;
-// }
-// Check if the username OR the email exists in the database
-// AND takes precedence over the OR 
 function usernameExists($Name, $Gmail) {
     $conn = connectToDatabase();
     $sql = "SELECT * FROM Users WHERE `Name` = ? OR `Gmail` = ?;";
@@ -58,10 +47,7 @@ function login($Gmail, $Password)
     // The user exists so check if the password matches
     $passIsValid = password_verify($Password, $usernameExists["Password"]);
     if (!$passIsValid) {
-        echo $usernameExists["Password"] . "<br>";
-        echo $Password . "<br>";
-        echo password_hash($Password, PASSWORD_DEFAULT) . "<br>";
-        // header("location: ../login.php?error=incorrectPassword");
+        header("location: ../login.php?error=incorrectPassword");
         exit();
     } else {
         // Start the session and assign variables
@@ -90,7 +76,7 @@ function signup($UniversityID, $Name, $Gmail, $Phone, $Password)
     session_start();
     $_SESSION["ID"] = $conn->insert_id;
     $_SESSION["Name"] = $Name;
-    header("location: ../welcome");
+    header("location: ../welcome.php");
     exit();
 }
 
@@ -102,13 +88,15 @@ function showEvents($UserID)
         (E.Privacy =  0) OR 
         (E.Privacy = 1 AND EXISTS (SELECT O.ID FROM University O WHERE E.ForeignID = O.ID AND U.UniversityID = O.ID)) OR 
         (E.Privacy = 2 AND EXISTS (SELECT R.ID FROM Registered R WHERE R.UserID = U.ID AND R.RSOID = E.ForeignID)));";
-
     $stmt = $conn->prepare($sql);
+    if (!$stmt) {
+        echo "stmt error";
+    }
     $stmt->bind_param("i", $UserID);
     $stmt->execute();
     $result = $stmt->get_result();
     $resultCheck = mysqli_num_rows($result);
-
+    
     if($resultCheck > 0)
     {
         while($row = mysqli_fetch_assoc($result))

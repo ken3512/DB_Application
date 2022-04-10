@@ -3,9 +3,9 @@
 ?>
     <h3 id="thankYou">Thank You,</h3>
     <?php
-        if (isset($_GET["username"])) {
-            $name = $_GET["username"];
-            echo "<h2 id='name'>$name</h2>";
+        if (isset($_SESSION["Name"])) {
+            $Name = $_SESSION["Name"];
+            echo "<h2 id='name'>$Name</h2>";
         }
         else {
             header("location: ../login.php");
