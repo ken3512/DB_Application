@@ -1,17 +1,35 @@
 
 <?php  
-
-function connectToDatabase() 
-{
+function connectToDatabase() {
     $conn = mysqli_connect("localhost","Admin","HeighT#157s","App"); 
-
     // Check connection
     if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);
     }
-    
     // echo "Connected successfully";
     return $conn;
+}
+
+// Return true if the UserID is an Admin
+// Return false is it is not
+function isAdmin($UserID) {
+    $conn = connectToDatabase();
+    $sql = "SELECT U.Name, R.Name FROM Users U, RSO R WHERE (U.ID = $UserID AND R.OwnerID = $UserID);";
+    $result = mysqli_query($conn, $sql);
+    $row = mysqli_fetch_assoc($result);
+    if ($row == true) return true;
+    else return false;
+}
+
+// Return true if the UserID is an Admin
+// Return false is it is not
+function isSuperAdmin($UserID) {
+    $conn = connectToDatabase();
+    $sql = "SELECT * FROM Users U WHERE U.ID = $UserID AND U.Super = 1;";
+    $result = mysqli_query($conn, $sql);
+    $row = mysqli_fetch_assoc($result);
+    if ($row == true) return true;
+    else return false;
 }
 
 function usernameExists($Name, $Gmail) {
