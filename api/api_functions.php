@@ -179,6 +179,7 @@ function unregisterMember($MemberID, $RSOID)
     return false;
 } 
 
+
 function createRSO($UniversityID, $OwnerID, $Name, $MemberID_1, $MemberID_2, $MemberID_3, $MemberID_4)
 {
     $conn = connectToDatabase();
