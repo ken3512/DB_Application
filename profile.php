@@ -1,8 +1,13 @@
 <?php 
     include_once "header.php";
 ?>
+<br>
+<?php  
 
-<?php  echo "<br>" .basename(__FILE__);?>
+if (isset($_SESSION["ID"])) getUnapprovedRSO($_SESSION["ID"]);
+else header("location: ../index");
+
+?>
 
 
 <?php 
