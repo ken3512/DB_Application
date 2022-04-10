@@ -19,6 +19,7 @@
     <link rel="stylesheet" href="styles/forms.css">
     <link rel="stylesheet" href="styles/welcome.css">
     <link rel="stylesheet" href="styles/sidebar.css">
+    <link rel="stylesheet" href="styles/events.css">
 
 </head>
 <!-- Body -->
