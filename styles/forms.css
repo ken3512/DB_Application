@@ -1,0 +1,65 @@
+.forms {
+    margin: 20px;
+    padding: 20px;
+    text-align: center;
+}
+
+.primaryTitle {
+    margin-top: 10vh;
+    margin-bottom: 10vh;
+    text-align: center;
+    font-size: 5vh;
+}
+
+.forms .textInput {
+    display: inline-block;
+    margin: 2vh auto;
+    height: 5vh;
+    width: 50vw;
+}
+
+.forms .textInput::-webkit-input-placeholder {
+    font-size: 2vh;
+}
+
+#signupButton {
+    margin-top: 3vh;
+    width: fit-content;
+    width: 30vw;
+    height: 5vh;
+    text-transform: uppercase;
+    font-size: medium;
+    
+    background: #be0606;
+    color: white;
+    transition: .75s;
+}
+
+#signupButton:hover {
+    background: linear-gradient(45deg, #be0606 50%, white);
+    cursor: pointer;
+}
+
+#checkboxLogin {
+    display: inline-block;
+    text-align: center;
+}
+
+#rememberMe {
+    display: inline;
+    margin: 0 auto;
+    padding: 0;
+}
+
+#rememberMeText {
+    font-size: 2.5vh;
+}
+
+#rememberMe:hover,
+#rememberMeText:hover {
+    cursor: pointer;
+}
+
+#noAccountMessage {
+    font-size: 2.5vh;
+}
