@@ -183,7 +183,7 @@ function unregisterMember($MemberID, $RSOID)
 function createRSO($UniversityID, $OwnerID, $Name, $MemberID_1, $MemberID_2, $MemberID_3, $MemberID_4)
 {
     $conn = connectToDatabase();
-    $sql = "INSERT INTO RSO(UniversityID, OwnerID, Name) OUTPUT INSERTED.ID VALUES (?, ?, ?);";
+    $sql = "INSERT INTO RSO(UniversityID, OwnerID, Name) VALUES (?, ?, ?);";
 
     $stmt = $conn->prepare($sql);
     
@@ -195,11 +195,8 @@ function createRSO($UniversityID, $OwnerID, $Name, $MemberID_1, $MemberID_2, $Me
     
     $stmt->bind_param("iis", $UniversityID, $OwnerID, $Name);
     $stmt->execute();
-    $result = $stmt->get_result();
-
-    $row = mysqli_fetch_array($result);
     
-    $RSOID = $row["ID"];
+    $RSOID = $conn->insert_id;
 
     registerMember($RSOID, $MemberID_1);
     registerMember($RSOID, $MemberID_2);

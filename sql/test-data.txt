@@ -49,6 +49,8 @@ INSERT INTO Users (UniversityID, Super, Name, Gmail, Password, Phone) VALUES (10
 INSERT INTO Users (UniversityID, Super, Name, Gmail, Password, Phone) VALUES (10, 0, "Ismael Mcdaniel", "ismaelmcdaniel", "password38", 4070909888);
 INSERT INTO Users (UniversityID, Super, Name, Gmail, Password, Phone) VALUES (10, 0, "Makaila Kerr", "makailakerr", "password39", 3062564658);
 INSERT INTO Users (UniversityID, Super, Name, Gmail, Password, Phone) VALUES (10, 0, "Sasha Duke", "sashaduke", "password40", 3060909888);
+INSERT INTO Users (UniversityID, Super, Name, Gmail, Password, Phone) VALUES (2, 0, "kenny", "kenny@ucf.edu", "password", 3060909888);
+
 
 INSERT INTO RSO (UniversityID, OwnerID, Name) VALUES (1, 1, "Scratch Systems");
 INSERT INTO RSO (UniversityID, OwnerID, Name) VALUES (1, 2, "Main Python Services");
