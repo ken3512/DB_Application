@@ -35,7 +35,8 @@ function usernameExists($Gmail)
     $result = $stmt->get_result();
     $resultCheck = mysqli_num_rows($result);
 
-    if($resultCheck > 0) {
+    if($resultCheck > 0) 
+    {
         return True;
     }
     else 
@@ -57,7 +58,7 @@ function login($Gmail, $Password)
 
     // The user exists so check if the password matches
     $databasePassHashed = $usernameExists["pass"];
-    $passIsValid = password_verify($passInput, $databasePassHashed);
+    $passIsValid = password_verify($Password, $databasePassHashed);
     if (!$passIsValid) {
         header("location: ../login.php?error=incorrectPassword");
         exit();
@@ -82,13 +83,20 @@ function signup($UniversityID, $Name, $Gmail, $Phone, $Password)
     $hashedPwd = password_hash($Password, PASSWORD_DEFAULT);
 
     $stmt = $conn->prepare($sql);
+
+    if(!$stmt) 
+    {
+        echo "Prepared statement failed";
+        exit();
+    }
+
     $stmt->bind_param("issss", $UniversityID, $Name, $Gmail, $Phone, $hashedPwd);
     $stmt->execute();
     $stmt->get_result();
 
     session_start();
-    $_SESSION["ID"] = $mysqli->insert_id;
-    $_SESSION["username"] = $username;
+    $_SESSION["ID"] = $conn->insert_id;
+    $_SESSION["username"] = $Gmail;
     header("location: ../welcome");
     exit();
 }
@@ -103,6 +111,13 @@ function showEvents($UserID)
         (E.Privacy = 2 AND EXISTS (SELECT R.ID FROM Registered R WHERE R.UserID = U.ID AND R.RSOID = E.ForeignID)));";
 
     $stmt = $conn->prepare($sql);
+    
+    if(!$stmt) 
+    {
+        echo "Prepared statement failed";
+        exit();
+    }
+
     $stmt->bind_param("i", $UserID);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -137,31 +152,97 @@ function FormatEvent($EventID)
     echo $info["ID"] . "<br>";
     echo $info["ContactPhone"] . "<br>";
     echo $info["ContactEmail"] . "<br>";
-    echo $info["NumRat"] . "<br>";
-    echo $info["WeighRat"] . "<br>";
     echo $info["LocationID"] . "<br>";
     echo $info["Description"] . "<br><br>";
 }
 
-function registerMember($MemberID, $RSOID)
+function isRegistered($RSOID, $MemberID)
 {
-    
+    $conn = connectToDatabase();
+    $sql = "SELECT R.ID FROM Registered R WHERE R.RSOID = $RSOID AND R.UserID = $MemberID;";
+
+    $result = mysqli_query($conn, $sql);
+    $resultCheck = mysqli_num_rows($result);
+
+    // Check if registration exists
+    if($resultCheck > 0) return True;
+    return False;
+} 
+
+function registerMember($RSOID, $MemberID)
+{
+
+    if(isRegistered($RSOID, $MemberID)) return true;
+
+    $conn = connectToDatabase();
+    $sql = "INSERT INTO Registered (RSOID, UserID) VALUES ($RSOID, $MemberID);";
+    $result = mysqli_query($conn, $sql);
+
+    // Return success boolean
+    if($result) return True;
+    return false;
 } 
 
 function unregisterMember($MemberID, $RSOID)
 {
-    
+    $conn = connectToDatabase();
+    $sql = "DELETE R FROM Registered R WHERE R.RSOID = $RSOID AND R.UserID = $MemberID;";
+    $result = mysqli_query($conn, $sql);
+
+    // Return success boolean
+    if($result) return True;
+    return false;
 } 
 
-function createRSO($OwnerID, $MemberID_1, $MemberID_2, $MemberID_3, $MemberID_4)
+function createRSO($UniversityID, $OwnerID, $Name, $MemberID_1, $MemberID_2, $MemberID_3, $MemberID_4)
 {
+    $conn = connectToDatabase();
+    $sql = "INSERT INTO RSO (UniversityID, OwnerID, Name) OUTPUT Inserted.ID VALUES (?, ?, ?);";
 
+    $stmt = $conn->prepare($sql);
+    
+    if(!$stmt) 
+    {
+        echo "Prepared statement failed";
+        exit();
+    }
+    
+    $stmt->bind_param("iis", $UniversityID, $OwnerID, $Name);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    $row = mysqli_fetch_array($result);
+    
+    $RSOID = $row["ID"];
+
+    registerMember($RSOID, $MemberID_1);
+    registerMember($RSOID, $MemberID_2);
+    registerMember($RSOID, $MemberID_3);
+    registerMember($RSOID, $MemberID_4);
+    registerMember($RSOID, $OwnerID);
 }
 
 function comment($EventID, $UserID, $Comment)
 {
     $conn = connectToDatabase();
-    $sql = "INSERT INTO Comments (EventID, UserID, Text) VALUES (?, ?, ?)";    
+    $sql = "INSERT INTO Comments (EventID, UserID, Text) VALUES (?, ?, ?)";
+    
+    // Execute prepared statement
+    $stmt = $conn->prepare($sql);
+    
+    if(!$stmt) 
+    {
+        echo "Prepared statement failed";
+        exit();
+    }
+
+    $stmt->bind_param("iis", $EventID, $UserID, $Comment);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    // Return success boolean
+    if($result) return True;
+    return false;
 }
 
 function getComments($EventID)
@@ -170,26 +251,63 @@ function getComments($EventID)
     $sql = "SELECT C.Text FROM Comments C WHERE C.EventID = ?";
 
     $stmt = $conn->prepare($sql);
+    
+    if(!$stmt) 
+    {
+        echo "Prepared statement failed";
+        exit();
+    }
+
     $stmt->bind_param("i", $EventID);
     $stmt->execute();
     $result = $stmt->get_result();
     $resultCheck = mysqli_num_rows($result);
 
     if($resultCheck > 0)
-    {
         while($row = mysqli_fetch_assoc($result))
-        {
-            echo $row['Name'] . "<br>";
-        }
-    }
+            echo $row['Text'] . "<br>";
 }
 
+function isRated($EventID, $UserID)
+{
+    $conn = connectToDatabase();
+    $sql = "SELECT R.ID FROM Ratings R WHERE R.EventID = $EventID AND R.UserID = $UserID;";
+
+    $result = mysqli_query($conn, $sql);
+    $resultCheck = mysqli_num_rows($result);
+
+    // Check if registration exists
+    if($resultCheck > 0) return True;
+    return False;
+}
 
 function rate($EventID, $UserID, $Rating)
 {
     $conn = connectToDatabase();
-    $sql = "INSERT INTO Ratings (EventID, UserID, Rating) VALUES (?, ?, ?)";
+    
+    if(isRated($EventID, $UserID)) return true;
+    
+    $sql = "INSERT INTO Ratings (EventID, UserID, Rating) VALUES ($EventID, $UserID, $Rating)";
+
+    $result = mysqli_query($conn, $sql);
+    $resultCheck = mysqli_num_rows($result);
+
+    // Check if registration exists
+    if($resultCheck > 0) return True;
+    return False;
 }
+
+function rating($EventID)
+{
+    $conn = connectToDatabase();
+    $sql = "SELECT AVG(R.Rating) Rating FROM Ratings R WHERE R.EventID = $EventID;";
+
+    $result = mysqli_query($conn, $sql);
+    $row = mysqli_fetch_array($result);
+
+    return $row["Rating"];
+}
+
 
 function createEvent()
 {
@@ -206,13 +324,8 @@ function test()
     $resultCheck = mysqli_num_rows($result);
 
     if($resultCheck > 0)
-    {
         while($row = mysqli_fetch_assoc($result))
-        {
             echo $row['Name'] . "<br>";
-        }
-    }
-
 }
 
 ?>
