@@ -54,6 +54,9 @@
         <a href="createRSO.php">Create New RSO</a><br>
     </div>
     <div class="navbar2">
+        <a href="createEvent.php">Create New Event</a><br>
+    </div>
+    <div class="navbar2">
         <a href="events.php">See All Events</a><br>
     </div>
     <?php
