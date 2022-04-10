@@ -71,6 +71,8 @@ INSERT INTO RSO (UniversityID, OwnerID, Name) VALUES (9, 34, "Hyacinth Internati
 INSERT INTO RSO (UniversityID, OwnerID, Name) VALUES (10, 37, "Ivo Inc");
 INSERT INTO RSO (UniversityID, OwnerID, Name) VALUES (10, 38, "Mudcakes Flux");
 
+INSERT INTO RSO (UniversityID, OwnerID, Name) OUTPUT Inserted.ID VALUES (10, 38, "Mudcakes Flux");
+
 INSERT INTO Registered (RSOID, UserID) VALUES (1, 3);
 INSERT INTO Registered (RSOID, UserID) VALUES (2, 4);
 INSERT INTO Registered (RSOID, UserID) VALUES (3, 7);
@@ -116,13 +118,13 @@ INSERT INTO Categories (Name) VALUES ("Concert");
 INSERT INTO Categories (Name) VALUES ("Programming");
 INSERT INTO Categories (Name) VALUES ("Engineering");
 
-INSERT INTO Events (LocationID, EventCat, ForeignID, Name, Description, NumRat, WeighRat, Privacy, ContactPhone, ContactEmail) VALUES (1,1,4,"Swim With Tim!","Get the chance to swim with Tim Tebow!", 0, 0, 1, 4077778888, "timtebow@gmail.com");
-INSERT INTO Events (LocationID, EventCat, ForeignID, Name, Description, NumRat, WeighRat, Privacy, ContactPhone, ContactEmail) VALUES (2,7,1,"Happy Feat!","We will go watch a penguin movie!", 0, 0, 0, 4076664444, "yaya@gmail.com");
-INSERT INTO Events (LocationID, EventCat, ForeignID, Name, Description, NumRat, WeighRat, Privacy, ContactPhone, ContactEmail) VALUES (3,12,2,"Robo Mobo!","We will work together to build a robot!", 0, 0, 1, 4073332222, "penquin@gmail.com");
-INSERT INTO Events (LocationID, EventCat, ForeignID, Name, Description, NumRat, WeighRat, Privacy, ContactPhone, ContactEmail) VALUES (4,11,1,"C++ Sesh!","Let's learn C++!", 0, 0, 0, 4072229999, "rick@gmail.com");
-INSERT INTO Events (LocationID, EventCat, ForeignID, Name, Description, NumRat, WeighRat, Privacy, ContactPhone, ContactEmail) VALUES (5,5,14,"Gym Rat!","Let's learn some new gym moves!", 0, 0, 1, 4071110000, "jock@gmail.com");
-INSERT INTO Events (LocationID, EventCat, ForeignID, Name, Description, NumRat, WeighRat, Privacy, ContactPhone, ContactEmail) VALUES (6,10,20,"Lil Nas X!","Let's all join the concert!", 0, 0, 2, 4071113333, "nasx@gmail.com");
-INSERT INTO Events (LocationID, EventCat, ForeignID, Name, Description, NumRat, WeighRat, Privacy, ContactPhone, ContactEmail) VALUES (7,6,2,"Party at Marty's!","Marty's birthday at his house!", 0, 0, 0, 4079993333, "marty@gmail.com");
-INSERT INTO Events (LocationID, EventCat, ForeignID, Name, Description, NumRat, WeighRat, Privacy, ContactPhone, ContactEmail) VALUES (8,9,18,"Rock!","Let's go to Rock Springs!", 0, 0, 1, 4071233426, "rocky@gmail.com");
-INSERT INTO Events (LocationID, EventCat, ForeignID, Name, Description, NumRat, WeighRat, Privacy, ContactPhone, ContactEmail) VALUES (9,4,13,"Middle East!","Let's try some awesome food!", 0, 0, 2, 4074970924, "middleeast@gmail.com");
-INSERT INTO Events (LocationID, EventCat, ForeignID, Name, Description, NumRat, WeighRat, Privacy, ContactPhone, ContactEmail) VALUES (10,3,19,"Protest at NY!","Let's protest for equal rights at NY!", 0, 0, 1, 4079845555, "protest@gmail.com");
+INSERT INTO Events (LocationID, EventCat, ForeignID, Name, Description, Privacy, ContactPhone, ContactEmail) VALUES (1,1,4,"Swim With Tim!","Get the chance to swim with Tim Tebow!", 1, 4077778888, "timtebow@gmail.com");
+INSERT INTO Events (LocationID, EventCat, ForeignID, Name, Description, Privacy, ContactPhone, ContactEmail) VALUES (2,7,1,"Happy Feat!","We will go watch a penguin movie!", 0, 4076664444, "yaya@gmail.com");
+INSERT INTO Events (LocationID, EventCat, ForeignID, Name, Description, Privacy, ContactPhone, ContactEmail) VALUES (3,12,2,"Robo Mobo!","We will work together to build a robot!", 1, 4073332222, "penquin@gmail.com");
+INSERT INTO Events (LocationID, EventCat, ForeignID, Name, Description, Privacy, ContactPhone, ContactEmail) VALUES (4,11,1,"C++ Sesh!","Let's learn C++!", 0, 4072229999, "rick@gmail.com");
+INSERT INTO Events (LocationID, EventCat, ForeignID, Name, Description, Privacy, ContactPhone, ContactEmail) VALUES (5,5,14,"Gym Rat!","Let's learn some new gym moves!", 1, 4071110000, "jock@gmail.com");
+INSERT INTO Events (LocationID, EventCat, ForeignID, Name, Description, Privacy, ContactPhone, ContactEmail) VALUES (6,10,20,"Lil Nas X!","Let's all join the concert!", 2, 4071113333, "nasx@gmail.com");
+INSERT INTO Events (LocationID, EventCat, ForeignID, Name, Description, Privacy, ContactPhone, ContactEmail) VALUES (7,6,2,"Party at Marty's!","Marty's birthday at his house!", 0, 4079993333, "marty@gmail.com");
+INSERT INTO Events (LocationID, EventCat, ForeignID, Name, Description, Privacy, ContactPhone, ContactEmail) VALUES (8,9,18,"Rock!","Let's go to Rock Springs!", 1, 4071233426, "rocky@gmail.com");
+INSERT INTO Events (LocationID, EventCat, ForeignID, Name, Description, Privacy, ContactPhone, ContactEmail) VALUES (9,4,13,"Middle East!","Let's try some awesome food!", 2, 4074970924, "middleeast@gmail.com");
+INSERT INTO Events (LocationID, EventCat, ForeignID, Name, Description, Privacy, ContactPhone, ContactEmail) VALUES (10,3,19,"Protest at NY!","Let's protest for equal rights at NY!", 1, 4079845555, "protest@gmail.com");
