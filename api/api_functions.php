@@ -182,7 +182,7 @@ function unregisterMember($MemberID, $RSOID)
 function createRSO($UniversityID, $OwnerID, $Name, $MemberID_1, $MemberID_2, $MemberID_3, $MemberID_4)
 {
     $conn = connectToDatabase();
-    $sql = "INSERT INTO RSO (UniversityID, OwnerID, Name) OUTPUT Inserted.ID VALUES (?, ?, ?);";
+    $sql = "INSERT INTO RSO(UniversityID, OwnerID, Name) OUTPUT INSERTED.ID VALUES (?, ?, ?);";
 
     $stmt = $conn->prepare($sql);
     
@@ -323,6 +323,30 @@ function test()
         while($row = mysqli_fetch_assoc($result))
             echo $row['Name'] . "<br>";
 }
+
+function getUserUniversity($UserID)
+{
+    $conn = connectToDatabase();
+    $sql = "SELECT U.UniversityID FROM Users U WHERE U.ID = $UserID;";
+
+    $result = mysqli_query($conn, $sql);
+    $row = mysqli_fetch_array($result);
+
+    return $row["UniversityID"];
+}
+
+function approveRSO($UserID, $RSOID)
+{
+    $conn = connectToDatabase();
+    $sql = "UPDATE RSO R SET R.Status = 1 WHERE R.ID = $RSOID AND EXISTS (SELECT U.ID FROM Users U WHERE U.ID = $UserID AND U.Super = 1);";
+
+    $result = mysqli_query($conn, $sql);
+    $resultCheck = mysqli_num_rows($result);
+
+    // Check if registration exists
+    if($resultCheck > 0) return True;
+    return False;
+} 
 
 ?>
 

@@ -1,10 +1,11 @@
 <?php
     include_once "header.php";
 ?>
-    <h1>
-        <?php showEvents($_SESSION["ID"]);?>
-    </h1>
+    <?php
+        if (isset($_SESSION["ID"])) {
+            showEvents($_SESSION["ID"]);
+        }
+    ?>
 <?php 
     include_once "footer.php";
 ?>
-
