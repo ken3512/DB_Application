@@ -6,11 +6,11 @@ session_start();
 $OwnerID = $_SESSION["ID"];
 $UniversityID = getUserUniversity($OwnerID);
 
+$Name = $_POST["Name"];
 $MemberInfo_1 = usernameExists($_POST["M1"], $_POST["M1"]);
 $MemberInfo_2 = usernameExists($_POST["M2"], $_POST["M2"]);
 $MemberInfo_3 = usernameExists($_POST["M3"], $_POST["M3"]);
 $MemberInfo_4 = usernameExists($_POST["M4"], $_POST["M4"]);
-
 
 if($MemberInfo_1["UniversityID"] != $UniversityID || 
     $MemberInfo_2["UniversityID"] != $UniversityID || 

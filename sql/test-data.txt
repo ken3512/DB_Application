@@ -44,11 +44,11 @@ INSERT INTO Users (UniversityID, Super, Name, Gmail, Password, Phone) VALUES (8,
 INSERT INTO Users (UniversityID, Super, Name, Gmail, Password, Phone) VALUES (9, 0, "Zoey Hampton", "zoeyhampton", "password33", 4078889999);
 INSERT INTO Users (UniversityID, Super, Name, Gmail, Password, Phone) VALUES (9, 0, "Elsie Alvarado", "elsiealvarado", "password34", 4075677777);
 INSERT INTO Users (UniversityID, Super, Name, Gmail, Password, Phone) VALUES (9, 0, "Anika Francis", "anikafrancis", "password35", 3068889999);
-INSERT INTO Users (UniversityID, Super, Name, Gmail, Password, Phone) VALUES (9, 0, "Fabian Small", "fabiansmall", "password36", 3065677777);
-INSERT INTO Users (UniversityID, Super, Name, Gmail, Password, Phone) VALUES (10, 0, "Devon Donovan", "devondonovan", "password37", 4072564658);
-INSERT INTO Users (UniversityID, Super, Name, Gmail, Password, Phone) VALUES (10, 0, "Ismael Mcdaniel", "ismaelmcdaniel", "password38", 4070909888);
-INSERT INTO Users (UniversityID, Super, Name, Gmail, Password, Phone) VALUES (10, 0, "Makaila Kerr", "makailakerr", "password39", 3062564658);
-INSERT INTO Users (UniversityID, Super, Name, Gmail, Password, Phone) VALUES (10, 0, "Sasha Duke", "sashaduke", "password40", 3060909888);
+INSERT INTO Users (UniversityID, Super, Name, Gmail, Password, Phone) VALUES (2, 0, "yo1", "yo1@gmail.com", "password36", 3065677777);
+INSERT INTO Users (UniversityID, Super, Name, Gmail, Password, Phone) VALUES (2, 0, "yo2", "yo2@gmail.com", "password37", 4072564658);
+INSERT INTO Users (UniversityID, Super, Name, Gmail, Password, Phone) VALUES (2, 0, "yo3", "yo3@gmail.com", "password38", 4070909888);
+INSERT INTO Users (UniversityID, Super, Name, Gmail, Password, Phone) VALUES (2, 0, "yo4", "yo4@gmail.com", "password39", 3062564658);
+INSERT INTO Users (UniversityID, Super, Name, Gmail, Password, Phone) VALUES (2, 0, "yo5", "yo5@gmail.com", "password40", 3060909888);
 INSERT INTO Users (UniversityID, Super, Name, Gmail, Password, Phone) VALUES (2, 0, "kenny", "kenny@ucf.edu", "password", 3060909888);
 
 
