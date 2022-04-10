@@ -130,6 +130,7 @@ function FormatEvent($EventID)
     echo $info["WeighRat"] . "<br>";
     echo $info["LocationID"] . "<br>";
     echo $info["Description"] . "<br><br>";
+    getComments($EventID);
 }
 
 function registerMember($MemberID, $RSOID)
