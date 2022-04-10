@@ -2,8 +2,9 @@
 
 include_once 'api_functions.php';
 
-$EventID = 1;
-$UserID = 2;
+session_start();
+$UserID = $_SESSION["ID"];
+$EventID = $_POST['EventID'];
 $Rating = $_POST['rating'];
 
 rate($EventID, $UserID, $Rating);
@@ -12,6 +13,7 @@ header("location: ../index");
 
 /*
     <form action="api/rate.php" method="POST">
+        <input type="hidden" name="EventID" value=7>
         <input type="radio" name="rating" value=1>
         <input type="radio" name="rating" value=2>
         <input type="radio" name="rating" value=3>

@@ -2,16 +2,18 @@
 
 include_once 'api_functions.php';
 
-$UserID = 1;
-$RSOID = 3;
+session_start();
+$UserID = $_SESSION["ID"];
+$RSOID = $_POST["RSOID"];
 
 approveRSO($UserID, $RSOID);
 
-header("location: ../index");
+header("location: ../profile");
 
 
 /*
     <form action="api/approveRSO.php" method="POST">
-        <input type="submit" name="submit" value="RSOID">Approve</input>
+        <input type="hidden" name="RSOID" value=7>
+        <button type="submit" name="submit">Approve</button>
     </form>
 */

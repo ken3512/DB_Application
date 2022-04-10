@@ -92,7 +92,7 @@ function showEvents($UserID)
     $conn = connectToDatabase();
     $sql = "SELECT E.ID FROM Events E, Users U  WHERE U.ID = ? AND 
         ((U.Super =  1) OR 
-        (E.Privacy =  0) OR 
+        (E.Privacy = 0) OR 
         (E.Privacy = 1 AND EXISTS (SELECT O.ID FROM University O WHERE E.ForeignID = O.ID AND U.UniversityID = O.ID)) OR 
         (E.Privacy = 2 AND EXISTS (SELECT R.ID FROM Registered R WHERE R.UserID = U.ID AND R.RSOID = E.ForeignID)));";
     $stmt = $conn->prepare($sql);
@@ -313,19 +313,6 @@ function createEvent($LocationID, $EventCat, $ForeignID, $Name, $Description, $P
     $stmt->execute();
 }
 
-function test()
-{
-    $sql = "SELECT E.Name FROM Events E, Users U  WHERE U.ID = 5 AND ((U.Super =  1) OR (E.Privacy =  0) OR (E.Privacy = 1 AND EXISTS (SELECT O.ID FROM University O WHERE E.ForeignID = O.ID AND U.UniversityID = O.ID)) OR (E.Privacy = 2 AND EXISTS (SELECT R.ID FROM Registered R WHERE R.UserID = U.ID AND R.RSOID = E.ForeignID)));";
-    $conn = connectToDatabase();
-
-    $result = mysqli_query($conn, $sql);
-    $resultCheck = mysqli_num_rows($result);
-
-    if($resultCheck > 0)
-        while($row = mysqli_fetch_assoc($result))
-            echo $row['Name'] . "<br>";
-}
-
 function getUserUniversity($UserID)
 {
     $conn = connectToDatabase();
@@ -342,13 +329,28 @@ function approveRSO($UserID, $RSOID)
     $conn = connectToDatabase();
     $sql = "UPDATE RSO R SET R.Status = 1 WHERE R.ID = $RSOID AND EXISTS (SELECT U.ID FROM Users U WHERE U.ID = $UserID AND U.Super = 1);";
 
+    mysqli_query($conn, $sql);
+} 
+
+function getUnapprovedRSO($UserID)
+{
+    $conn = connectToDatabase();
+    $sql = "SELECT R.ID, R.Name FROM  RSO R WHERE Status = 0 AND EXISTS (SELECT U.ID FROM Users U WHERE U.ID = $UserID AND U.Super = 1);";
+
     $result = mysqli_query($conn, $sql);
     $resultCheck = mysqli_num_rows($result);
+    
+    if($resultCheck > 0)
+        while($row = mysqli_fetch_assoc($result))
+            FormatApproval($row["ID"], $row["Name"]);
+}
 
-    // Check if registration exists
-    if($resultCheck > 0) return True;
-    return False;
-} 
+function FormatApproval($RSOID, $RSOName)
+{
+    echo $RSOName;
+    echo "<form action='api/approveRSO.php' method='POST'><input type='hidden' name='RSOID' value=$RSOID><button type='submit' name='submit'>Approve</button></form>";
+    echo "<br>";
+}
 
 ?>
 
