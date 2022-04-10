@@ -1,13 +1,13 @@
 body {
     margin: 0px auto;
     padding: 0px;
-    min-width: 500px;
-    min-height: 500px;
+    min-width: 375px;
+    min-height: 667px;
 }
 
 .navbar {
     background-color: #be0606;
-    border-bottom: 2px solid black;
+    border-bottom: 4px solid black;
 }
 .navbar-right {
     display: inline-block;
@@ -15,7 +15,10 @@ body {
 }
 .navbar-right a {
     margin-top: 5px;
-    padding: 20px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    padding-left: 10px;
+    padding-right: 10px;
     color: white;
     font-size: 30px;
     text-decoration: none;
@@ -52,6 +55,7 @@ body {
 .navbar2 {
     background-color: #be0606;
     text-align: center;
+    border-bottom: 2px solid black;
 }
 
 .navbar2 a {
@@ -61,6 +65,7 @@ body {
     font-size: large;
     text-decoration: none;
     color: white;
+
 }
 
 .navbar2:hover {

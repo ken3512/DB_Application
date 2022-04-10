@@ -12,6 +12,6 @@ header("location: ../index");
 
 /*
     <form action="api/approveRSO.php" method="POST">
-        <button type="submit" name="submit">Approve</button>
+        <input type="submit" name="submit" value="RSOID">Approve</input>
     </form>
 */

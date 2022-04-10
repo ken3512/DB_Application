@@ -133,12 +133,16 @@ function EventInfo($EventID)
 function FormatEvent($EventID)
 {
     $info = EventInfo($EventID);
-    echo $info["Name"] . "<br>";
-    echo $info["ID"] . "<br>";
-    echo $info["ContactPhone"] . "<br>";
-    echo $info["ContactEmail"] . "<br>";
-    echo $info["LocationID"] . "<br>";
-    echo $info["Description"] . "<br><br>";
+    echo '
+        <div class="event">
+                <span class="name">'. $info["Name"] .'</span> <br>
+                <span class="description">'. $info["Description"] .'</span> <br>
+                <span class="contact_phone">Phone: '. $info["ContactPhone"] .'</span>
+                <span class="contact_email">Email: '. $info["ContactEmail"] .'</span>
+                <span class="location_id">Location: '. $info["LocationID"] .'</span> 
+        </div>
+    ';
+    
 }
 
 function isRegistered($RSOID, $MemberID)
@@ -178,6 +182,7 @@ function unregisterMember($MemberID, $RSOID)
     if($result) return True;
     return false;
 } 
+
 
 function createRSO($UniversityID, $OwnerID, $Name, $MemberID_1, $MemberID_2, $MemberID_3, $MemberID_4)
 {
