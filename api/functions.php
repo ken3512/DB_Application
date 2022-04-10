@@ -14,41 +14,41 @@ function connectToDatabase()
     return $conn;
 }
 
-function passwordIsTooSimple($pass) 
-{
-    $result = false;
-    // Check if the password is complex enough return true if it is too simple
-    if (!preg_match("/^^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.* )(?=.*[^a-zA-Z0-9]).{8,32}$/", $pass)) {
-        $result = true;
-    }
-    return $result;
-}
-
-function usernameExists($Gmail) 
-{
+// function passwordIsTooSimple($pass) 
+// {
+//     $result = false;
+//     // Check if the password is complex enough return true if it is too simple
+//     if (!preg_match("/^^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.* )(?=.*[^a-zA-Z0-9]).{8,32}$/", $pass)) {
+//         $result = true;
+//     }
+//     return $result;
+// }
+// Check if the username OR the email exists in the database
+// AND takes precedence over the OR 
+function usernameExists($Name, $Gmail) {
     $conn = connectToDatabase();
-    $sql = "SELECT U.Name FROM Users U WHERE Gmail = ?";
-
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("s", $Gmail);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $resultCheck = mysqli_num_rows($result);
-
-    if($resultCheck > 0) {
-        return True;
+    $sql = "SELECT * FROM Users WHERE `Name` = ? OR `Gmail` = ?;";
+    $stmt = mysqli_stmt_init($conn);
+    if (!mysqli_stmt_prepare($stmt, $sql)) {
+        header("location: ../signup.php?error=preparedStatementFailed");
+        exit();
     }
-    else 
-    {
-        return False;
+    mysqli_stmt_bind_param($stmt, "ss", $Name, $Gmail);
+    mysqli_stmt_execute($stmt);
+
+    $resultData = mysqli_stmt_get_result($stmt);
+    if($row = mysqli_fetch_assoc($resultData)) {
+        return $row;
     }
+    else {
+        return false;
+    }
+    mysqli_stmt_close($stmt);
 }
 
 function login($Gmail, $Password)
 {
-    $conn = connectToDatabase();
-
-    $usernameExists = usernameExists($Gmail);
+    $usernameExists = usernameExists($Gmail, $Gmail);
 
     if ($usernameExists === false) {
         header("location: ../login.php?error=invalidUsernameOrEmail");
@@ -56,17 +56,18 @@ function login($Gmail, $Password)
     }
 
     // The user exists so check if the password matches
-    $databasePassHashed = $usernameExists["pass"];
-    $passIsValid = password_verify($passInput, $databasePassHashed);
+    $passIsValid = password_verify($Password, $usernameExists["Password"]);
     if (!$passIsValid) {
-        header("location: ../login.php?error=incorrectPassword");
+        echo $usernameExists["Password"] . "<br>";
+        echo $Password . "<br>";
+        echo password_hash($Password, PASSWORD_DEFAULT) . "<br>";
+        // header("location: ../login.php?error=incorrectPassword");
         exit();
     } else {
         // Start the session and assign variables
         session_start();
         $_SESSION["ID"] = $usernameExists["ID"];
-        $_SESSION["username"] = $usernameExists["username"];
-        
+        $_SESSION["Name"] = $usernameExists["Name"];
         // Go to the account page of the user
         header("location: ../index.php"); 
         exit();
@@ -77,7 +78,7 @@ function login($Gmail, $Password)
 function signup($UniversityID, $Name, $Gmail, $Phone, $Password)
 {
     $conn = connectToDatabase();
-    $sql = "INSERT INTO Users(UniversityID, Name, Gmail, Phone, Password) VALUES (?, ?, ?, ?, ?);";
+    $sql = "INSERT INTO Users(`UniversityID`, `Name`, `Gmail`, `Phone`, `Password`) VALUES (?, ?, ?, ?, ?);";
 
     $hashedPwd = password_hash($Password, PASSWORD_DEFAULT);
 
@@ -87,8 +88,8 @@ function signup($UniversityID, $Name, $Gmail, $Phone, $Password)
     $stmt->get_result();
 
     session_start();
-    $_SESSION["ID"] = $mysqli->insert_id;
-    $_SESSION["username"] = $username;
+    $_SESSION["ID"] = $conn->insert_id;
+    $_SESSION["Name"] = $Name;
     header("location: ../welcome");
     exit();
 }

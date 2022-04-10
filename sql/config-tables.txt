@@ -1,8 +1,8 @@
 CREATE TABLE `University` (
   `ID` int NOT NULL AUTO_INCREMENT,
-  `Name` varchar(50) NOT NULL UNIQUE,
-  `Bio` varchar(250),
-  `GmailAt` varchar(50) NOT NULL UNIQUE,
+  `Name` varchar(255) NOT NULL UNIQUE,
+  `Bio` varchar(255),
+  `GmailAt` varchar(255) NOT NULL UNIQUE,
   `DateTimeCreated` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `DateTimeUpdated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`ID`)
@@ -13,10 +13,10 @@ CREATE TABLE `Users` (
   `UniversityID` int NOT NULL REFERENCES University(ID),
 CONSTRAINT FK_User_Unvi FOREIGN KEY (UniversityID) REFERENCES University(ID),
   `Super` boolean NOT NULL DEFAULT  0,
-  `Name` varchar(50)  NOT NULL DEFAULT '',
-  `Gmail` varchar(50) NOT NULL DEFAULT '',
-  `Phone` varchar(50),
-  `Password` varchar(50),
+  `Name` varchar(255)  NOT NULL DEFAULT '',
+  `Gmail` varchar(255) NOT NULL DEFAULT '',
+  `Phone` varchar(255),
+  `Password` varchar(255),
   `DateTimeCreated` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `DateTimeUpdated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`ID`)
@@ -28,7 +28,7 @@ CREATE TABLE `RSO` (
   `OwnerID` int NOT NULL REFERENCES Users(ID),
 CONSTRAINT FK_RSO_Unvi FOREIGN KEY (UniversityID) REFERENCES University(ID),
 CONSTRAINT FK_RSO_User FOREIGN KEY (OwnerID) REFERENCES Users(ID),
-  `Name` varchar(50) NOT NULL DEFAULT '',
+  `Name` varchar(255) NOT NULL DEFAULT '',
   `DateTimeCreated` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `DateTimeUpdated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`ID`)
@@ -36,7 +36,7 @@ CONSTRAINT FK_RSO_User FOREIGN KEY (OwnerID) REFERENCES Users(ID),
 
 CREATE TABLE `Location` (
   `ID` int NOT NULL AUTO_INCREMENT,
-  `Name` varchar(100),
+  `Name` varchar(255),
   `Longitude` int,
   `Latitude` int,
   `DateTimeCreated` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -46,7 +46,7 @@ CREATE TABLE `Location` (
 
 CREATE TABLE `Categories` (
   `ID` int NOT NULL AUTO_INCREMENT,
-  `Name` varchar(50) NOT NULL UNIQUE,
+  `Name` varchar(255) NOT NULL UNIQUE,
   PRIMARY KEY (`ID`)
 );
 
@@ -68,13 +68,13 @@ CREATE TABLE `Events` (
   `ForeignID` int,
 CONSTRAINT FK_Events_Loc FOREIGN KEY (LocationID) REFERENCES Location(ID),
 CONSTRAINT FK_Events_Eve FOREIGN KEY (EventCat) REFERENCES Categories(ID),
-  `Name` varchar(50) NOT NULL DEFAULT '',
-  `Description` varchar(150) NOT NULL DEFAULT '',
+  `Name` varchar(255) NOT NULL DEFAULT '',
+  `Description` varchar(255) NOT NULL DEFAULT '',
   `NumRat` int,
   `WeighRat` int,
   `Privacy` int,
-  `ContactPhone` varchar(50),
-  `ContactEmail` varchar(50) NOT NULL DEFAULT '',
+  `ContactPhone` varchar(255),
+  `ContactEmail` varchar(255) NOT NULL DEFAULT '',
   `DateTimeCreated` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `DateTimeUpdated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`ID`)
@@ -98,7 +98,7 @@ CREATE TABLE `Comments` (
   `UserID` int NOT NULL REFERENCES Users(ID),
 CONSTRAINT FK_Com_Eve FOREIGN KEY (EventID) REFERENCES Events(ID),
 CONSTRAINT FK_Com_User FOREIGN KEY (UserID) REFERENCES Users(ID),
-  `Text` varchar(150) NOT NULL DEFAULT '',
+  `Text` varchar(255) NOT NULL DEFAULT '',
   `DateTimeCreated` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `DateTimeUpdated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`ID`)
