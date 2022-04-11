@@ -20,6 +20,7 @@
     <link rel="stylesheet" href="styles/welcome.css">
     <link rel="stylesheet" href="styles/sidebar.css">
     <link rel="stylesheet" href="styles/events.css">
+    <link rel="stylesheet" href="styles/rso.css">
 
 </head>
 <!-- Body -->
@@ -36,8 +37,14 @@
                     if (!isset($_SESSION["ID"])) {
                         echo '<a href="/signup.php">Sign Up</a>';
                         echo '<a href="/login.php">Login</a>';
+                        echo '<a href="events.php">See All Events</a>';
                     } 
                     else {
+                        echo '<a href="createRSO.php">Create New RSO</a>';
+                        if (isAdmin($_SESSION["ID"]) || isSuperAdmin($_SESSION["ID"])) {
+                            echo '<a href="createEvent.php">Create New Event</a>';
+                        }
+                        echo '<a href="events.php">See All Events</a>';
                         echo '<a href="/profile.php">Profile</a>';
                         echo '<a href="/settings.php">Settings</a>';
                         echo '<a href="/api/logout.php">Logout</a>';
@@ -50,29 +57,10 @@
             <a href="/index.php">Club Event Organizer</a>
         </div>  
     </div>
-    <?php
-        if (isset($_SESSION["ID"])) {
-            
-            echo '
-            <div class="navbar2">
-                <a href="createRSO.php">Create New RSO</a><br>
-            </div>';
-            
-            if (isAdmin($_SESSION["ID"]) || isSuperAdmin($_SESSION["ID"])) {
-                echo '
-                <div class="navbar2">
-                <a href="createEvent.php">Create New Event</a><br>
-                </div>
-                ';
-            }
-        }
-    ?>
+    
     <div class="navbar2">
-        <a href="events.php">See All Events</a><br>
+        
     </div>
-    <?php
-        if (isset($_SESSION["ID"])) {
-            echo $_SESSION["ID"] . "<br>";
-            echo $_SESSION["Name"] . "<br>";
-        }
-    ?>
+    <div class="event-feed">
+        
+        

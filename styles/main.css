@@ -3,6 +3,7 @@ body {
     padding: 0px;
     min-width: 375px;
     min-height: 667px;
+    background-color: darkgray;
 }
 
 .navbar {
@@ -65,10 +66,17 @@ body {
     font-size: large;
     text-decoration: none;
     color: white;
-
 }
 
 .navbar2:hover {
     background-color: #960303;
     cursor: pointer;
+}
+
+.footer {
+    text-align: right;
+    margin: 0px;
+    padding: 10px;
+    color: white;
+    background-color: #be0606;
 }
