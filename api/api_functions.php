@@ -314,6 +314,7 @@ function getRSOInfo($UserID) {
     }
     else {
         echo "Not In An RSO";
+        return null;
     }
 }
 

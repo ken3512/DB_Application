@@ -15,10 +15,12 @@
         
         echo '<div class="event"><h2 class="pageTitle">Current RSO(s)</h2><br>';
         $info = getRSOInfo($_SESSION["ID"]);
-        echo '<p class="desc">RSO Name: ' . $info["Name"] . '</p><br>';
-        echo '<p class="desc">RSO\'s University: ' . getUserUniversityName($info["UniversityID"]) . '</p><br>';
-        echo '<p class="desc">RSO\'s Approval Status: ' . stringifyStatus($info["Status"])  . '</p><br>';
-        echo '</div>';
+        if ($info) {
+            echo '<p class="desc">RSO Name: ' . $info["Name"] . '</p><br>';
+            echo '<p class="desc">RSO\'s University: ' . getUserUniversityName($info["UniversityID"]) . '</p><br>';
+            echo '<p class="desc">RSO\'s Approval Status: ' . stringifyStatus($info["Status"])  . '</p><br>';
+            echo '</div>';
+        }
 
         if (isSuperAdmin($_SESSION["ID"])) {
             echo '<div class="event"><h2 class="pageTitle">Approve RSOs for Super Admins:</h2>';
