@@ -105,6 +105,9 @@ INSERT INTO Location (Name, Longitude, Latitude) VALUES ("na8", 0, 0);
 INSERT INTO Location (Name, Longitude, Latitude) VALUES ("na9", 0, 0);
 INSERT INTO Location (Name, Longitude, Latitude) VALUES ("na10", 0, 0);
 
+INSERT INTO Categories (Name) VALUES ("Social");
+INSERT INTO Categories (Name) VALUES ("Fundraising");
+INSERT INTO Categories (Name) VALUES ("Tech Talks");
 INSERT INTO Categories (Name) VALUES ("Swimming");
 INSERT INTO Categories (Name) VALUES ("Food");
 INSERT INTO Categories (Name) VALUES ("Protest");
