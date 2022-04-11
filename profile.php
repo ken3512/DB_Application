@@ -15,6 +15,7 @@
         
         echo '<div class="event"><h2 class="pageTitle">Current RSO(s)</h2><br>';
         getAllRSO($_SESSION["ID"]);
+        echo '</div>';
 
         if (isSuperAdmin($_SESSION["ID"])) {
             echo '<div class="event"><h2 class="pageTitle">Approve RSOs for Super Admins:</h2>';

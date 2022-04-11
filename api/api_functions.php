@@ -321,9 +321,9 @@ function getAllRSO($UserID) {
 function formatRSOs($Name, $Status, $UniversityID)
 {
     echo '<p class="desc">RSO Name: ' . $Name . '</p><br>';
-        echo '<p class="desc">RSO\'s University: ' . getUserUniversityName($UniversityID) . '</p><br>';
-        echo '<p class="desc">RSO\'s Approval Status: ' . stringifyStatus($Status)  . '</p><br>';
-        echo '</div>';
+    echo '<p class="desc">RSO\'s University: ' . getUserUniversityName($UniversityID) . '</p><br>';
+    echo '<p class="desc">RSO\'s Approval Status: ' . stringifyStatus($Status)  . '</p><br><br>';
+    
 }
 
 function getRsoInfoByRsoId($RSOID) {
