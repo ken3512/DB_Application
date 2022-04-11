@@ -477,9 +477,9 @@ function getUnapprovedRSO($UserID)
 
 function FormatApproval($RSOID, $RSOName)
 {
-    echo $RSOName;
-    echo "<form action='api/approveRSO.php' method='POST'><input type='hidden' name='RSOID' value=$RSOID><button type='submit' name='submit'>Approve</button></form>";
-    echo "<br>";
+    echo "<form class='forms' action='api/approveRSO.php' method='POST'>
+        <input type='hidden' name='RSOID' value=$RSOID><h3>" . $RSOName . "</h3><button class='submitButton' type='submit' name='submit'>Approve</button>
+        </form>";
 }
 
 function allStudents($UniversityID)
