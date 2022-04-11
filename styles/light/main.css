@@ -2,7 +2,7 @@ body {
     margin: 0px auto;
     padding: 0px;
     min-width: 375px;
-    min-height: 667px;
+    min-height: 100vh;
     background-color: #ecd9ff;
 }
 

@@ -14,14 +14,44 @@
     <title>Document</title>
 
     <!-- Styles -->
-    <link rel="stylesheet" href="styles/main.css">
-    <link rel="stylesheet" href="styles/dropdown.css">
-    <link rel="stylesheet" href="styles/forms.css">
-    <link rel="stylesheet" href="styles/welcome.css">
-    <link rel="stylesheet" href="styles/sidebar.css">
-    <link rel="stylesheet" href="styles/events.css">
-    <link rel="stylesheet" href="styles/rso.css">
-
+    <?php
+        if (isset($_SESSION["ID"])) {
+            $prefValue = getUserWebsitePreferences($_SESSION["ID"]);
+            if ($prefValue == 0) { // Dark mode
+                echo '
+                    <link rel="stylesheet" href="styles/dark/main.css">
+                    <link rel="stylesheet" href="styles/dark/dropdown.css">
+                    <link rel="stylesheet" href="styles/dark/forms.css">
+                    <link rel="stylesheet" href="styles/dark/welcome.css">
+                    <link rel="stylesheet" href="styles/dark/sidebar.css">
+                    <link rel="stylesheet" href="styles/dark/events.css">
+                    <link rel="stylesheet" href="styles/dark/rso.css">
+                ';
+            }
+            else { // Light Mode
+                echo '
+                    <link rel="stylesheet" href="styles/light/main.css">
+                    <link rel="stylesheet" href="styles/light/dropdown.css">
+                    <link rel="stylesheet" href="styles/light/forms.css">
+                    <link rel="stylesheet" href="styles/light/welcome.css">
+                    <link rel="stylesheet" href="styles/light/sidebar.css">
+                    <link rel="stylesheet" href="styles/light/events.css">
+                    <link rel="stylesheet" href="styles/light/rso.css">
+                ';
+            }
+        } else { // Default is dark mode if the user isn't logged in
+            echo '
+                <link rel="stylesheet" href="styles/dark/main.css">
+                <link rel="stylesheet" href="styles/dark/dropdown.css">
+                <link rel="stylesheet" href="styles/dark/forms.css">
+                <link rel="stylesheet" href="styles/dark/welcome.css">
+                <link rel="stylesheet" href="styles/dark/sidebar.css">
+                <link rel="stylesheet" href="styles/dark/events.css">
+                <link rel="stylesheet" href="styles/dark/rso.css">
+            ';
+        }
+    ?>
+    
 </head>
 <!-- Body -->
 <body>
@@ -35,26 +65,27 @@
             <div id="myDropdown" class="dropdown-content">
                 <?php
                     if (!isset($_SESSION["ID"])) {
-                        echo '<a href="/signup.php">Sign Up</a>';
-                        echo '<a href="/login.php">Login</a>';
-                        echo '<a href="events.php">See All Events</a>';
+                        echo '<a href="/signup">Sign Up</a>';
+                        echo '<a href="/login">Login</a>';
+                        echo '<a href="events">See All Events</a>';
                     } 
                     else {
                         echo '<a href="createRSO.php">Create New RSO</a>';
                         if (isAdmin($_SESSION["ID"]) || isSuperAdmin($_SESSION["ID"])) {
                             echo '<a href="createEvent.php">Create New Event</a>';
                         }
-                        echo '<a href="joinRSO.php">Join New RSO</a>';
-                        echo '<a href="events.php">See All Events</a>';
-                        echo '<a href="/profile.php">Profile</a>';
-                        echo '<a href="/api/logout.php">Logout</a>';
+                        echo '<a href="joinRSO">Join New RSO</a>';
+                        echo '<a href="events">See All Events</a>';
+                        echo '<a href="/profile">Profile</a>';
+                        echo '<a href="/settings">Settings</a>';
+                        echo '<a href="/api/logout">Logout</a>';
                     } 
                 ?>
             </div>
             <script src="/scripts/dropdown.js"></script>
         </div>
         <div class="navbar-right">
-            <a href="/index.php">Club Event Organizer</a>
+            <a href="/index">Club Event Organizer</a>
         </div>  
     </div>
     

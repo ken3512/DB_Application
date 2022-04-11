@@ -1,5 +1,8 @@
 
 <?php  
+
+include_once "helper_functions.php";
+
 function connectToDatabase() {
     $conn = mysqli_connect("localhost","Admin","HeighT#157s","App"); 
     // Check connection
@@ -8,6 +11,58 @@ function connectToDatabase() {
     }
     // echo "Connected successfully";
     return $conn;
+}
+
+function changeUsername($UserID, $NewName) {
+    if (usernameIsInvalid($NewName)) {
+        header("location: ../changeUsername.php?error=newUsernameInvalid");
+        return;
+    }
+    if (usernameExists($NewName, $NewName)) {
+        header("location: ../changeUsername.php?error=usernameAlreadyExists");
+        return;
+    }
+    // Only here if the $NewName is valid and the name doesn't already exist
+    // Change the user's name in the database
+    $conn = connectToDatabase();
+    $sql = "Update Users SET Name = '$NewName' WHERE ID = $UserID;";
+    $result = mysqli_query($conn, $sql);
+    if ($result)  {
+        echo "Successfully changed name";
+        // session_start();
+        $_SESSION["Name"] = $NewName;
+        header("location: ../settings");
+    }
+    else {
+        echo "Name change failed" . mysqli_error($conn);
+        header("location: ../settings");
+    }
+    header("location: ../settings");
+}
+
+function setUserWebsiteAppearance($UserID, $WebsiteAppearanceValue) {
+    $conn = connectToDatabase();
+    $sql = "Update Users SET ColorPreferences = $WebsiteAppearanceValue WHERE ID = $UserID;";
+    $result = mysqli_query($conn, $sql);
+    if ($result)  {
+        header("location: ../settings");
+    }
+    else {
+        echo "Name change failed" . mysqli_error($conn);
+    }
+}
+
+function getUserWebsitePreferences($UserID) {
+    
+    $conn = connectToDatabase();
+    $sql = "SELECT ColorPreferences FROM Users WHERE ID = $UserID;";
+    $result = mysqli_query($conn, $sql);
+    if ($result)  {
+        $row = mysqli_fetch_assoc($result);
+        if ($row) {
+            return $row["ColorPreferences"];
+        }
+    }
 }
 
 function getMaxUserStatus($UserID) {

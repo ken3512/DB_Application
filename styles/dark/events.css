@@ -1,0 +1,40 @@
+.event-feed {
+    margin: 0 auto;
+    min-height: 80vh;
+    text-align: center;
+    min-width: 375px;
+}
+
+.event {
+    margin: 10px auto;
+    width: 80vw;
+    min-width: 320px;
+    background-color: rgb(32, 32, 32);
+    border: 2px solid white;
+    margin-bottom: 20px;
+    padding: 20px;
+}
+
+.event span {
+    display: inline-block;
+    padding: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    color: white;
+}
+
+.event p
+{
+    color: white;
+    display: inline;
+}
+
+.event form
+{
+    margin: none;
+}
+
+.CommentEntry {
+    min-width: 320px;
+    width: 99%;
+}
