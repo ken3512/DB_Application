@@ -12,8 +12,8 @@
         }
     ?>
     <form action="api/login.php" method="post">
-        <input class="textInput" type="text" name="Gmail" placeholder="Username/Email..." required autofocus>
-        <input class="textInput" type="password" name="Password" placeholder="Password..." required>
+        <input class="textInput" type="text" name="Gmail" placeholder="Username/Email..." required autofocus><br>
+        <input class="textInput" type="password" name="Password" placeholder="Password..." required> <br>
         <p id="noAccountMessage"> 
             Don't have an account? Sign up <a href="/signup.php">here</a>!
         </p>

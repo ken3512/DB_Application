@@ -14,12 +14,12 @@
 .forms .textInput {
     display: inline-block;
     margin: 2vh auto;
-    height: 5vh;
-    width: 50vw;
+    height: 40px;
+    width: 30vw;
 }
 
 .forms .textInput::-webkit-input-placeholder {
-    font-size: 2vh;
+    font-size: 15px;
 }
 
 .submitButton {
@@ -71,3 +71,7 @@
     margin: 10px;
 }
 
+.options {
+    width: 30vw;
+    height: 40px;
+}

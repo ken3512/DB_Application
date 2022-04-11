@@ -28,8 +28,16 @@ function isAdmin($UserID) {
     $conn = connectToDatabase();
     $sql = "SELECT U.Name, R.Name FROM Users U, RSO R WHERE (U.ID = $UserID AND R.OwnerID = $UserID AND R.Status = 1);";
     $result = mysqli_query($conn, $sql);
-    $row = mysqli_fetch_assoc($result);
-    if ($row == true) return true;
+    if ($result)  {
+        $row = mysqli_fetch_assoc($result);
+        if ($row) {
+            // echo "is admin";
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
     else return false;
 }
 
@@ -37,10 +45,18 @@ function isAdmin($UserID) {
 // Return false is it is not
 function isSuperAdmin($UserID) {
     $conn = connectToDatabase();
-    $sql = "SELECT * FROM Users U WHERE U.ID = $UserID AND U.Super = 1;";
+    $sql = "SELECT Super FROM Users U WHERE U.ID = $UserID;";
     $result = mysqli_query($conn, $sql);
-    $row = mysqli_fetch_assoc($result);
-    if ($row == true) return true;
+    if ($result)  {
+        $row = mysqli_fetch_assoc($result);
+        if ($row["Super"] == 1) {
+            // echo "is super";
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
     else return false;
 }
 
@@ -316,6 +332,9 @@ function getAllRSO($UserID) {
             FormatRSOs($row["Name"], $row["Status"], $row["UniversityID"]);
         }
     }
+    else {
+        echo "<p class='desc'>Not in any RSOs. Click <a href='joinRSO.php'>here</a> to see joinable RSOs!</p>";
+    }
 }
 
 function formatRSOs($Name, $Status, $UniversityID)
@@ -514,11 +533,13 @@ function getUnapprovedRSO($UserID)
     $sql = "SELECT R.ID, R.Name FROM  RSO R WHERE Status = 0 AND EXISTS (SELECT U.ID FROM Users U WHERE U.ID = $UserID AND U.Super = 1);";
 
     $result = mysqli_query($conn, $sql);
-    $resultCheck = mysqli_num_rows($result);
-    
-    if($resultCheck > 0)
-        while($row = mysqli_fetch_assoc($result))
-            FormatApproval($row["ID"], $row["Name"]);
+    if ($result) {
+        $resultCheck = mysqli_num_rows($result);
+        
+        if($resultCheck > 0)
+            while($row = mysqli_fetch_assoc($result))
+                FormatApproval($row["ID"], $row["Name"]);
+    }
 }
 
 function FormatApproval($RSOID, $RSOName)
