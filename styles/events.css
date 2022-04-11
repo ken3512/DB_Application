@@ -1,6 +1,9 @@
 .event-feed {
-    background-color: white;
-    min-width: 375;
+    margin: 0 auto;
+    background-color: darkgray;
+    min-height: 80vh;
+    text-align: center;
+    min-width: 375px;
 }
 
 .event {
@@ -44,4 +47,10 @@
 .event form
 {
     margin: none;
+}
+
+.CommentEntry {
+    min-width: 350px;
+    min-width: 350px;
+    width: 99%;
 }

@@ -253,7 +253,7 @@ function FormatEvent($EventID, $UserID)
 {
     $info = EventInfo($EventID);
     echo '
-        <div class="event">
+        <div class="event" style="text-align: left;">
                 <span class="name">'. $info["Name"] .'</span> <br>
                 <span class="description">'. $info["Description"] .'</span> <br>
                 <span class="contact_phone">Phone: '. $info["ContactPhone"] .'</span>
@@ -286,15 +286,12 @@ function FormatEvent($EventID, $UserID)
         echo '
             <form action="api/Comment.php" method="POST">
                 <input type="hidden" name="EventID" value='. $EventID .'>
-                <input type="text" name="Comment" placeholder="Text">
+                <textarea class="CommentEntry" name="Comment" rows="2" cols="20" placeholder="Text"></textarea>
                 <br>
                 <button type="submit" name="submit">Comment</button>
             </form>
         ';
     }
-
-
-
 
     echo '
     </div>';
@@ -443,9 +440,6 @@ function rating($EventID)
     else return 'Unrated';
 }
 
-
-
-
 function getUserUniversity($UserID)
 {
     $conn = connectToDatabase();
@@ -525,6 +519,7 @@ function FormatUniversites($UniversityID, $Name)
     echo '<option value="'. $UniversityID .'">'. $Name .'</option>';
 }
 
-?>
-
+function getLastUpdate() {
+    
+}
 
