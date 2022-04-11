@@ -18,7 +18,7 @@ function getMaxUserStatus($UserID) {
         return "RSO Admin";
     }
     else {
-        return "User";
+        return "Student";
     }
 }
 
@@ -522,7 +522,28 @@ function FormatUniversites($UniversityID, $Name)
     echo '<option value="'. $UniversityID .'">'. $Name .'</option>';
 }
 
-function getLastUpdate() {
+function allRSO($UniversityID, $UserID)
+{
+    $conn = connectToDatabase();
+    $sql = "SELECT R.ID, R.Name FROM  RSO R WHERE R.UniversityID = $UniversityID
+    AND NOT EXISTS 
+    (SELECT O.ID FROM Registered O WHERE O.UserID = $UserID AND O.RSOID = R.ID);";
+
+    $result = mysqli_query($conn, $sql);
+    $resultCheck = mysqli_num_rows($result);
+
     
+    if($resultCheck > 0)
+        while($row = mysqli_fetch_assoc($result))
+        FormatJoinRSO($row["ID"], $row["Name"]);
 }
 
+function FormatJoinRSO($RSOID, $Name)
+{
+    echo $Name;
+    echo'
+    <form action="api/registerMember.php" method="POST">
+        <input type="hidden" name="RSOID" value=' . $RSOID . '>
+        <button type="submit" name="submit">Join</button>
+    </form>';
+}
