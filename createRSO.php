@@ -1,7 +1,7 @@
 <?php
     include_once "header.php";
     include_once "api/api_functions.php";
-    if (isset($_SESSION["ID"]))
+    if (isset($_SESSION["ID"])) 
         $UniversityID = getUserUniversity($_SESSION["ID"]);
 ?>
     <h2 class="pageTitle">Create a New RSO!</h2>
