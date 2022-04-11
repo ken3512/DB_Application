@@ -6,7 +6,7 @@
 <h2> Change Website Appearance:</h2>
 <form class="forms" action="api/changeWebsiteAppearance.php" method="post">
     <select class="textInput" name="WebsiteAppearanceValue">
-        <option value="none" selected disabled hidden>Select an Option</option>
+        <!-- <option value="none" selected disabled hidden>Select an Option</option> -->
         <option value="0">[Default] Dark Mode</option>
         <option value="1">Light Mode</option>
     </select><br>
