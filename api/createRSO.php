@@ -12,10 +12,24 @@ $MemberID_2 = $_POST["M2"];
 $MemberID_3 = $_POST["M3"];
 $MemberID_4 = $_POST["M4"];
 
+$arr = array($OwnerID, $MemberID_1, $MemberID_2, $MemberID_3, $MemberID_4);
+
+if($MemberID_1 == 0|| 
+   $MemberID_2 == 0 || 
+   $MemberID_3 == 0 || 
+   $MemberID_4 == 0) 
+    header("location: ../index?error=notAllSelected");
+
+for ($i = 0; $i < 5; $i++)
+  for ($j = $i; $j < 5; $j++)
+    if (arr[$i] == arr[$j])
+        header("location: ../index?error=sameUserSelected");
+
 $MemberUniv_1 = getUserUniversity($MemberID_1);
 $MemberUniv_2 = getUserUniversity($MemberID_2);
 $MemberUniv_3 = getUserUniversity($MemberID_3);
 $MemberUniv_4 = getUserUniversity($MemberID_4);
+
 
 if($MemberUniv_1!= $UniversityID || 
    $MemberUniv_2 != $UniversityID || 
