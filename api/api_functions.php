@@ -589,8 +589,8 @@ function FormatJoinRSO($RSOID, $Name)
 {
     echo $Name;
     echo'
-    <form action="api/registerMember.php" method="POST">
+    <form class = "forms" action="api/registerMember.php" method="POST">
         <input type="hidden" name="RSOID" value=' . $RSOID . '>
-        <button type="submit" name="submit">Join</button>
+        <button type="submit" class="submitButton" name="submit">Join</button>
     </form>';
 }
