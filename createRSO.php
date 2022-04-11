@@ -14,13 +14,6 @@
         <br>
         <button type="submit" name="submit">Register RSO</button>
     </form>
-    <select name="housepets">
-        <option value="cat">Cat</option>
-        <option value="dog">Dog</option>
-        <option value="llama">Llama</option>
-        <option value="rabbit">Rabbit</option>
-        <option value="animal">Animal</option>
-    </select>
 <?php 
     include_once "footer.php";
 ?>
