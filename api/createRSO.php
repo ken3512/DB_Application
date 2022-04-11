@@ -18,12 +18,12 @@ if($MemberID_1 == 0||
    $MemberID_2 == 0 || 
    $MemberID_3 == 0 || 
    $MemberID_4 == 0) 
-    header("location: ../index?error=notAllSelected");
+    header("location: ../createRSO?error=notAllSelected");
 
 for ($i = 0; $i < 5; $i++)
   for ($j = $i; $j < 5; $j++)
     if (arr[$i] == arr[$j])
-        header("location: ../index?error=sameUserSelected");
+        header("location: ../createRSO?error=sameUserSelected");
 
 $MemberUniv_1 = getUserUniversity($MemberID_1);
 $MemberUniv_2 = getUserUniversity($MemberID_2);
@@ -35,13 +35,13 @@ if($MemberUniv_1!= $UniversityID ||
    $MemberUniv_2 != $UniversityID || 
    $MemberUniv_3 != $UniversityID || 
    $MemberUniv_4 != $UniversityID) 
-    header("location: ../index?error=universitiesDoNotMatch");
+    header("location: ../createRSO?error=universitiesDoNotMatch");
 
 
 createRSO($UniversityID, $OwnerID, $Name, $MemberID_1, $MemberID_2, $MemberID_3, $MemberID_4);
 
 
-header("location: ../index");
+header("location: ../createRSO");
 
 /*
 
