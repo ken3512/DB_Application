@@ -14,11 +14,7 @@
         echo '<p class="desc">User Status:' . getMaxUserStatus($userInfo["ID"]) . "</p><br></div>";
         
         echo '<div class="event"><h2 class="pageTitle">Current RSO(s)</h2><br>';
-        $info = getRSOInfo($_SESSION["ID"]);
-        echo '<p class="desc">RSO Name: ' . $info["Name"] . '</p><br>';
-        echo '<p class="desc">RSO\'s University: ' . getUserUniversityName($info["UniversityID"]) . '</p><br>';
-        echo '<p class="desc">RSO\'s Approval Status: ' . stringifyStatus($info["Status"])  . '</p><br>';
-        echo '</div>';
+        getAllRSO($_SESSION["ID"]);
 
         if (isSuperAdmin($_SESSION["ID"])) {
             echo '<div class="event"><h2 class="pageTitle">Approve RSOs for Super Admins:</h2>';

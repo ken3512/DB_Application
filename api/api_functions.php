@@ -301,31 +301,29 @@ function stringifyStatus($status) {
     }
 }
 
-function getRSOInfo($UserID) {
-    $RSOID = getRsoIdFromUserId($UserID);
-    if ($RSOID) {
-        $RSOInfo = getRsoInfoByRsoId($RSOID);
-        if ($RSOInfo) {
-            return $RSOInfo;
+
+function getAllRSO($UserID) {
+    $conn = connectToDatabase();
+    $sql = "SELECT R.Name, R.Status, R.UniversityID FROM RSO R WHERE EXISTS (SELECT O.ID FROM Registered O WHERE O.UserID = $UserID AND O.RSOID = R.ID)";
+    
+    $result = mysqli_query($conn, $sql);
+    $resultCheck = mysqli_num_rows($result);
+    
+    if($resultCheck > 0)
+    {
+        while($row = mysqli_fetch_assoc($result))
+        {
+            FormatRSOs($row["Name"], $row["Status"], $row["UniversityID"]);
         }
-        else {
-            return null;
-        }
-    }
-    else {
-        echo "Not In An RSO";
     }
 }
 
-function getRsoIdFromUserId($UserID) {
-    $conn = connectToDatabase();
-    $sql = "SELECT R.RSOID FROM Registered R WHERE R.UserID = $UserID;";
-    $result = mysqli_query($conn, $sql);
-    $row = mysqli_fetch_assoc($result);
-    if ($row)
-        return $row["RSOID"];
-    else 
-        return null;
+function formatRSOs($Name, $Status, $UniversityID)
+{
+    echo '<p class="desc">RSO Name: ' . $Name . '</p><br>';
+        echo '<p class="desc">RSO\'s University: ' . getUserUniversityName($UniversityID) . '</p><br>';
+        echo '<p class="desc">RSO\'s Approval Status: ' . stringifyStatus($Status)  . '</p><br>';
+        echo '</div>';
 }
 
 function getRsoInfoByRsoId($RSOID) {
@@ -333,6 +331,7 @@ function getRsoInfoByRsoId($RSOID) {
     $sql = "SELECT * FROM RSO WHERE ID = $RSOID;";
     $result = mysqli_query($conn, $sql);
     $row = mysqli_fetch_assoc($result);
+
     if ($row)
         return $row;
     else 
