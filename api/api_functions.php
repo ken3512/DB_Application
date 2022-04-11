@@ -412,6 +412,26 @@ function FormatCreateRSO($UserID, $Name)
     echo '<option value="'. $UserID .'">'. $Name .'</option>';
 }
 
+function allUniversity()
+{
+    $conn = connectToDatabase();
+    $sql = "SELECT U.ID, U.Name FROM  University U;";
+
+    $result = mysqli_query($conn, $sql);
+    $resultCheck = mysqli_num_rows($result);
+
+    FormatUniversites(0,"-----------------------");
+    
+    if($resultCheck > 0)
+        while($row = mysqli_fetch_assoc($result))
+            FormatCreateRSO($row["ID"], $row["Name"]);
+}
+
+function FormatUniversites($UniversityID, $Name)
+{
+    echo '<option value="'. $UniversityID .'">'. $Name .'</option>';
+}
+
 ?>
 
 
