@@ -292,6 +292,53 @@ function FormatEvent($EventID, $UserID)
     </div>';
 }
 
+function stringifyStatus($status) {
+    if ($status == 0) {
+        return "Not Approved Yet";
+    }
+    else {
+        return "Approved";
+    }
+}
+
+function getRSOInfo($UserID) {
+    $RSOID = getRsoIdFromUserId($UserID);
+    if ($RSOID) {
+        $RSOInfo = getRsoInfoByRsoId($RSOID);
+        if ($RSOInfo) {
+            return $RSOInfo;
+        }
+        else {
+            return null;
+        }
+    }
+    else {
+        echo "Not In An RSO";
+    }
+}
+
+function getRsoIdFromUserId($UserID) {
+    $conn = connectToDatabase();
+    $sql = "SELECT R.RSOID FROM Registered R WHERE R.UserID = $UserID;";
+    $result = mysqli_query($conn, $sql);
+    $row = mysqli_fetch_assoc($result);
+    if ($row)
+        return $row["RSOID"];
+    else 
+        return null;
+}
+
+function getRsoInfoByRsoId($RSOID) {
+    $conn = connectToDatabase();
+    $sql = "SELECT * FROM RSO WHERE ID = $RSOID;";
+    $result = mysqli_query($conn, $sql);
+    $row = mysqli_fetch_assoc($result);
+    if ($row)
+        return $row;
+    else 
+        return null;
+}
+
 function isRegistered($RSOID, $MemberID)
 {
     $conn = connectToDatabase();
