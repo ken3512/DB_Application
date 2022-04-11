@@ -392,6 +392,24 @@ function FormatApproval($RSOID, $RSOName)
     echo "<br>";
 }
 
+function allStudents($UniversityID)
+{
+    $conn = connectToDatabase();
+    $sql = "SELECT U.ID, U.Name FROM  Users U WHERE U.UniversityID = $UniversityID;";
+
+    $result = mysqli_query($conn, $sql);
+    $resultCheck = mysqli_num_rows($result);
+    
+    if($resultCheck > 0)
+        while($row = mysqli_fetch_assoc($result))
+            FormatCreateRSO($row["ID"], $row["Name"]);
+}
+
+function FormatCreateRSO($UserID, $Name)
+{
+    echo '<option value="'. $UserID .'">'. $Name .'</option>';
+}
+
 ?>
 
 

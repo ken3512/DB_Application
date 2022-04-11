@@ -7,21 +7,22 @@ $OwnerID = $_SESSION["ID"];
 $UniversityID = getUserUniversity($OwnerID);
 
 $Name = $_POST["Name"];
-$MemberInfo_1 = usernameExists($_POST["M1"], $_POST["M1"]);
-$MemberInfo_2 = usernameExists($_POST["M2"], $_POST["M2"]);
-$MemberInfo_3 = usernameExists($_POST["M3"], $_POST["M3"]);
-$MemberInfo_4 = usernameExists($_POST["M4"], $_POST["M4"]);
+$MemberID_1 = $_POST["M1"];
+$MemberID_2 = $_POST["M2"];
+$MemberID_3 = $_POST["M3"];
+$MemberID_4 = $_POST["M4"];
 
-if($MemberInfo_1["UniversityID"] != $UniversityID || 
-    $MemberInfo_2["UniversityID"] != $UniversityID || 
-    $MemberInfo_3["UniversityID"] != $UniversityID || 
-    $MemberInfo_4["UniversityID"] != $UniversityID) 
+$MemberUniv_1 = getUserUniversity($MemberID_1);
+$MemberUniv_2 = getUserUniversity($MemberID_2);
+$MemberUniv_3 = getUserUniversity($MemberID_3);
+$MemberUniv_4 = getUserUniversity($MemberID_4);
+
+if($MemberUniv_1!= $UniversityID || 
+   $MemberUniv_2 != $UniversityID || 
+   $MemberUniv_3 != $UniversityID || 
+   $MemberUniv_4 != $UniversityID) 
     header("location: ../index?error=universitiesDoNotMatch");
 
-$MemberID_1 = $MemberInfo_1["ID"];
-$MemberID_2 = $MemberInfo_2["ID"];
-$MemberID_3 = $MemberInfo_3["ID"];
-$MemberID_4 = $MemberInfo_4["ID"];
 
 createRSO($UniversityID, $OwnerID, $Name, $MemberID_1, $MemberID_2, $MemberID_3, $MemberID_4);
 
@@ -42,7 +43,5 @@ header("location: ../index");
         <input type="text" name="M4" placeholder="Member 4">
         <br>
         <button type="submit" name="submit">Register RSO</button>
-    </form>
-<?php 
-
+</form>
 */
