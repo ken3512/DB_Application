@@ -61,7 +61,10 @@
 
         <!-- Setup the form for signup -->
         <form action="api/registerUser.php" method="post">
-            <input class="textInput" type="text" name="UniversityID" placeholder="UniversityID..." required> <br>
+            <select class="textInput" name="UniversityID">
+                <?php allUniversity();?>
+            </select>
+            <br>
             <input class="textInput" type="text" name="Name" placeholder="Name..." required autofocus> <br>
             <input class="textInput" type="email" name="Gmail" placeholder="Gmail..." required autofocus> <br>
             <input class="textInput" type="phone" name="Phone" placeholder="Phone..." required autofocus> <br>

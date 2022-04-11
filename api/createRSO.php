@@ -22,7 +22,7 @@ if($MemberID_1 == 0||
 
 for ($i = 0; $i < 5; $i++)
   for ($j = $i; $j < 5; $j++)
-    if (arr[$i] == arr[$j])
+    if ($arr[$i] == $arr[$j] && $i != $j)
         header("location: ../createRSO?error=sameUserSelected");
 
 $MemberUniv_1 = getUserUniversity($MemberID_1);

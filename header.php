@@ -50,16 +50,19 @@
             <a href="/index.php">Club Event Organizer</a>
         </div>  
     </div>
-    <div class="navbar2">
-        <a href="createRSO.php">Create New RSO</a><br>
-    </div>
     <?php
         if (isset($_SESSION["ID"])) {
+            
+            echo '
+            <div class="navbar2">
+                <a href="createRSO.php">Create New RSO</a><br>
+            </div>';
+            
             if (isAdmin($_SESSION["ID"]) || isSuperAdmin($_SESSION["ID"])) {
                 echo '
-                    <div class="navbar2">
-                        <a href="createEvent.php">Create New Event</a><br>
-                    </div>
+                <div class="navbar2">
+                <a href="createEvent.php">Create New Event</a><br>
+                </div>
                 ';
             }
         }
