@@ -14,7 +14,7 @@ function connectToDatabase() {
 // Return false is it is not
 function isAdmin($UserID) {
     $conn = connectToDatabase();
-    $sql = "SELECT U.Name, R.Name FROM Users U, RSO R WHERE (U.ID = $UserID AND R.OwnerID = $UserID);";
+    $sql = "SELECT U.Name, R.Name FROM Users U, RSO R WHERE (U.ID = $UserID AND R.OwnerID = $UserID AND R.Status = 1);";
     $result = mysqli_query($conn, $sql);
     $row = mysqli_fetch_assoc($result);
     if ($row == true) return true;
@@ -32,6 +32,88 @@ function isSuperAdmin($UserID) {
     else return false;
 }
 
+// Return the data in the users table for the ID passed in
+function getUserInfoById($UserID) {
+    $conn = connectToDatabase();
+    $sql = "SELECT * FROM Users U WHERE U.ID = $UserID";
+    $result = mysqli_query($conn, $sql);
+    $row = mysqli_fetch_assoc($result);
+    return $row;
+}
+
+// function createEvent($LocationID, $EventCat, $ForeignID, $Name, $Description, $Privacy, $ContactPhone, $ContactEmail)
+// {
+//     $conn = connectToDatabase();
+//     $sql = "INSERT INTO RSO (LocationID, EventCat, ForeignID, Name, Description, Privacy, ContactPhone, ContactEmail)  VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
+
+//     $stmt = $conn->prepare($sql);
+    
+//     if(!$stmt) 
+//     {
+//         echo "Prepared statement failed";
+//         exit();
+//     }
+    
+//     $stmt->bind_param("iiisssiss", $LocationID, $EventCat, $ForeignID, $Name, $Description, $Privacy, $ContactPhone, $ContactEmail);
+//     $stmt->execute();
+// }
+
+// Display the category options for creating an event 
+function displayCategories() {
+    $conn = connectToDatabase();
+    $sql = "SELECT * FROM Categories;";
+    $result = mysqli_query($conn, $sql);
+    $resultCheck = mysqli_num_rows($result);
+    
+    if($resultCheck > 0)
+    {
+        while($row = mysqli_fetch_assoc($result))
+        {
+            echo '
+                <option value="' . $row["ID"] .'">' . $row["Name"] .'</option>
+            '; 
+        }
+    }
+}
+
+// Return the row data for the admin in an RSO
+function getRSOData($userID) {
+    $conn = connectToDatabase();
+    $sql = "SELECT * FROM rso WHERE OwnerID = $userID;";
+    $result = mysqli_query($conn, $sql);
+    $row = mysqli_fetch_array($result);
+    return $row;
+}
+
+function createEvent($EventName, $EventDescription, $EventCategory, $EventPrivacy, $ContactPhone, $ContactEmail, $EventLocation, $userID) {
+    $conn = connectToDatabase();
+    // Check if the location exists
+    // If it does not then add it to the location table and 
+    // use the new location ID for the event
+    // Else use the location ID that already exists for the event
+
+    // Get the ForeignID
+    // If the privacy is 0 or 1 set the ForeignID to the University
+    // Else set the ForeignID to the RSO
+    $rsoData = getRSOData($userID);
+    if ($EventPrivacy == 0 || $EventPrivacy == 1) {
+        $ForeignID = $rsoData["UniversityID"];
+    }
+    else {
+        $ForeignID = $rsoData["ID"];
+    }
+    $sql = "INSERT INTO Events (`LocationID`, `EventCat`, `ForeignID`, `Name`, `Description`, `Privacy`, `ContactPhone`, `ContactEmail`)  VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
+    $stmt = $conn->prepare($sql);
+    if(!$stmt) {
+        echo "Prepared statement failed";
+        exit();
+    }
+
+    $stmt->bind_param("iiissiis", $EventLocation, $EventCategory, $ForeignID, $EventName, $EventDescription, $EventPrivacy, $ContactPhone, $ContactEmail);
+    $stmt->execute();
+    $stmt->get_result();
+    header("location: ../index.php");
+}
 function usernameExists($Name, $Gmail) {
     $conn = connectToDatabase();
     $sql = "SELECT * FROM Users WHERE `Name` = ? OR `Gmail` = ?;";
@@ -336,22 +418,7 @@ function rating($EventID)
 }
 
 
-function createEvent($LocationID, $EventCat, $ForeignID, $Name, $Description, $Privacy, $ContactPhone, $ContactEmail)
-{
-    $conn = connectToDatabase();
-    $sql = "INSERT INTO RSO (LocationID, EventCat, ForeignID, Name, Description, Privacy, ContactPhone, ContactEmail)  VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
 
-    $stmt = $conn->prepare($sql);
-    
-    if(!$stmt) 
-    {
-        echo "Prepared statement failed";
-        exit();
-    }
-    
-    $stmt->bind_param("iiisssiss", $LocationID, $EventCat, $ForeignID, $Name, $Description, $Privacy, $ContactPhone, $ContactEmail);
-    $stmt->execute();
-}
 
 function getUserUniversity($UserID)
 {
