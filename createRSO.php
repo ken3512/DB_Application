@@ -1,6 +1,7 @@
 <?php
     include_once "header.php";
-    $UniversityID = getUserUniversity($_SESSION["ID"]);
+    if (isset($_SESSION["ID"]))
+        $UniversityID = getUserUniversity($_SESSION["ID"]);
 ?>
     <form action="api/createRSO.php" method="POST">
         <input type="text" name="Name" placeholder="RSON Name">

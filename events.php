@@ -5,6 +5,9 @@
         <?php
             if (isset($_SESSION["ID"])) {
                 showEvents($_SESSION["ID"]);
+            } 
+            else {
+                showPublicEvents();
             }
         ?>
     </div>

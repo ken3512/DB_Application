@@ -136,6 +136,25 @@ function showEvents($UserID)
 
 }
 
+function showPublicEvents()
+{
+    $UserID = 0;
+    $conn = connectToDatabase();
+    $sql = "SELECT E.ID FROM Events E WHERE E.Privacy = 0;";
+
+    $result = mysqli_query($conn, $sql);
+    $resultCheck = mysqli_num_rows($result);
+    
+    if($resultCheck > 0)
+    {
+        while($row = mysqli_fetch_assoc($result))
+        {
+            FormatEvent($row['ID'], $UserID);
+        }
+    }
+
+}
+
 function EventInfo($EventID)
 {
     $conn = connectToDatabase();
@@ -161,7 +180,7 @@ function FormatEvent($EventID, $UserID)
                 <p>Rating: '. rating($EventID) .'</p>
     ';
 
-    if(!isRated($EventID, $UserID))
+    if($UserID != 0 && !isRated($EventID, $UserID))
     {
         echo '                
             <form action="api/rate.php" method="POST">
@@ -180,14 +199,21 @@ function FormatEvent($EventID, $UserID)
     echo '<br>';
     echo getComments($EventID);
 
-    echo '
-        <form action="api/Comment.php" method="POST">
-            <input type="hidden" name="EventID" value='. $EventID .'>
-            <input type="text" name="Comment" placeholder="Text">
-            <br>
-            <button type="submit" name="submit">Comment</button>
-        </form>
-    ';
+    if($UserID != 0)
+    {
+        echo '
+            <form action="api/Comment.php" method="POST">
+                <input type="hidden" name="EventID" value='. $EventID .'>
+                <input type="text" name="Comment" placeholder="Text">
+                <br>
+                <button type="submit" name="submit">Comment</button>
+            </form>
+        ';
+    }
+
+
+
+
     echo '
     </div>';
 }
