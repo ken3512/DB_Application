@@ -44,6 +44,7 @@
                         if (isAdmin($_SESSION["ID"]) || isSuperAdmin($_SESSION["ID"])) {
                             echo '<a href="createEvent.php">Create New Event</a>';
                         }
+                        echo '<a href="joinRSO.php">Join New RSO</a>';
                         echo '<a href="events.php">See All Events</a>';
                         echo '<a href="/profile.php">Profile</a>';
                         // echo '<a href="/settings.php">Settings</a>';
