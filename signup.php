@@ -70,7 +70,7 @@
             <input class="textInput" type="phone" name="Phone" placeholder="Phone..." required autofocus> <br>
             <input class="textInput" type="password" name="Password" placeholder="Password..." required> <br>
             <input class="textInput" type="password" name="ConfirmPassword" placeholder="Confirm Password..." required> <br>
-            <button type="submit" name="submit" id="signupButton">Submit</button>
+            <button type="submit" name="submit" class="submitButton">Sign Up</button>
         </form>
     </div>
 </section>

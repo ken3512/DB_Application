@@ -22,20 +22,20 @@
     font-size: 2vh;
 }
 
-#signupButton {
+.submitButton {
     margin-top: 3vh;
     width: fit-content;
     width: 30vw;
     height: 5vh;
     text-transform: uppercase;
     font-size: medium;
-    
+    min-width: 200px;
     background: #be0606;
     color: white;
     transition: .75s;
 }
 
-#signupButton:hover {
+.submitButton:hover {
     background: linear-gradient(45deg, #be0606 50%, white);
     cursor: pointer;
 }
@@ -63,3 +63,11 @@
 #noAccountMessage {
     font-size: 2.5vh;
 }
+
+.forms select, 
+.forms label,
+.forms span {
+    font-size: 20px;
+    margin: 10px;
+}
+

@@ -17,7 +17,7 @@
         <p id="noAccountMessage"> 
             Don't have an account? Sign up <a href="/signup.php">here</a>!
         </p>
-        <button type="submit" name="submit" id="signupButton">Submit</button>
+        <button type="submit" name="submit" class="submitButton">Login</button>
     </form>
 </section>
 

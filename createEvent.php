@@ -11,9 +11,15 @@
             header("location: ../index");
         }
     ?>
-    <form action="api/createEvent.php" method="POST">
-        <input type="text" name="EventName" placeholder="Event Name..." required><br>
-        <input type="text" name="EventDescription" placeholder="Event Description..." required><br>
+    <h2 class="pageTitle">Create a New Event!</h2>
+    <form class="forms" action="api/createEvent.php" method="POST">
+        <input class="textInput" type="text" name="EventName" placeholder="Event Name..." required><br>
+        <input class="textInput" type="text" name="EventDescription" placeholder="Event Description..." required><br>
+        
+        <!-- <span>If phone and email is left blank, the user's phone and email will be used:</span><br> -->
+        <input class="textInput" type="text" name="ContactPhone" placeholder="Contact Phone..."><br>
+        <input class="textInput" type="text" name="ContactEmail" placeholder="Contact Email..."><br>
+        <input class="textInput" type="text" name="EventLocation" placeholder="Event Location..." required ><br>
         <label for="EventCategory">Category:</label>
         <select name="EventCategory">
             <?php
@@ -26,11 +32,7 @@
             <option value="1">Private</option>
             <option value="2">RSO</option>
         </select><br>
-        <span>If phone and email is left blank, the user's phone and email will be used:</span>
-        <input type="text" name="ContactPhone" placeholder="Contact Phone..."><br>
-        <input type="text" name="ContactEmail" placeholder="Contact Email..."><br>
-        <input type="text" name="EventLocation" placeholder="Event Location..." required ><br>
-        <button type="submit" name="submit">Create Event</button>
+        <button class="submitButton" type="submit" name="submit">Create Event</button>
     </form>
     
     </form>
