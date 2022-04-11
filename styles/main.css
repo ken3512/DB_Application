@@ -3,11 +3,11 @@ body {
     padding: 0px;
     min-width: 375px;
     min-height: 667px;
-    background-color: darkgray;
+    background-color: #ecd9ff;
 }
 
 .navbar {
-    background-color: #be0606;
+    background-color: #d6aeff;
     border-bottom: 4px solid black;
 }
 .navbar-right {
@@ -20,14 +20,14 @@ body {
     padding-bottom: 20px;
     padding-left: 10px;
     padding-right: 10px;
-    color: white;
+    color: black;
     font-size: 30px;
     text-decoration: none;
     display: inline-block;
 }
 
 .navbar a:hover{
-    background-color: #960303;
+    background-color: #c792fc;
 }
 
 .sidebar {
@@ -35,8 +35,8 @@ body {
     width: 200px;
     min-height: 100vh;
     max-height: fit-content;
-    background-color: #be0606;
-    color: white;
+    background-color: #d6aeff;
+    color: black;
     border-right: 3px solid black;
 }
 
@@ -45,16 +45,16 @@ body {
 }
 
 .sidebarTitle {
-    color: white
+    color: black;
 }
 
 .sidebarLink {
     text-decoration: none;
-    color: white;
+    color: black;
 }
 
 .navbar2 {
-    background-color: #be0606;
+    background-color: #d6aeff;
     text-align: center;
     border-bottom: 2px solid black;
 }
@@ -69,16 +69,17 @@ body {
 }
 
 .navbar2:hover {
-    background-color: #960303;
+    background-color: #bb78fd;
     cursor: pointer;
 }
 
 .footer {
+    border-top: 4px solid black;
     text-align: right;
     margin: 0px;
     padding: 10px;
-    color: white;
-    background-color: #be0606;
+    color: black;
+    background-color: #d6aeff;
 }
 
 .pageTitle {

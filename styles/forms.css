@@ -30,13 +30,13 @@
     text-transform: uppercase;
     font-size: medium;
     min-width: 200px;
-    background: #be0606;
-    color: white;
+    background: #d6aeff;
+    color: black;
     transition: .75s;
 }
 
 .submitButton:hover {
-    background: linear-gradient(45deg, #be0606 50%, white);
+    background: linear-gradient(45deg, #d6aeff 50%, white);
     cursor: pointer;
 }
 

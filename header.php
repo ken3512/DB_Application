@@ -46,7 +46,7 @@
                         }
                         echo '<a href="events.php">See All Events</a>';
                         echo '<a href="/profile.php">Profile</a>';
-                        echo '<a href="/settings.php">Settings</a>';
+                        // echo '<a href="/settings.php">Settings</a>';
                         echo '<a href="/api/logout.php">Logout</a>';
                     } 
                 ?>

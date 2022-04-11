@@ -10,6 +10,18 @@ function connectToDatabase() {
     return $conn;
 }
 
+function getMaxUserStatus($UserID) {
+    if (isSuperAdmin($UserID)) {
+        return "Super Admin";
+    }
+    else if (isAdmin($UserID)) {
+        return "RSO Admin";
+    }
+    else {
+        return "User";
+    }
+}
+
 // Return true if the UserID is an Admin
 // Return false is it is not
 function isAdmin($UserID) {
@@ -40,23 +52,6 @@ function getUserInfoById($UserID) {
     $row = mysqli_fetch_assoc($result);
     return $row;
 }
-
-// function createEvent($LocationID, $EventCat, $ForeignID, $Name, $Description, $Privacy, $ContactPhone, $ContactEmail)
-// {
-//     $conn = connectToDatabase();
-//     $sql = "INSERT INTO RSO (LocationID, EventCat, ForeignID, Name, Description, Privacy, ContactPhone, ContactEmail)  VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
-
-//     $stmt = $conn->prepare($sql);
-    
-//     if(!$stmt) 
-//     {
-//         echo "Prepared statement failed";
-//         exit();
-//     }
-    
-//     $stmt->bind_param("iiisssiss", $LocationID, $EventCat, $ForeignID, $Name, $Description, $Privacy, $ContactPhone, $ContactEmail);
-//     $stmt->execute();
-// }
 
 // Display the category options for creating an event 
 function displayCategories() {
@@ -438,6 +433,14 @@ function rating($EventID)
 
     if($row["Rating"]) return $row["Rating"];
     else return 'Unrated';
+}
+
+function getUserUniversityName($UniversityID) {
+    $conn = connectToDatabase();
+    $sql = "SELECT Name FROM University WHERE ID = $UniversityID;";
+    $result = mysqli_query($conn, $sql);
+    $row = mysqli_fetch_array($result);
+    return $row["Name"];
 }
 
 function getUserUniversity($UserID)

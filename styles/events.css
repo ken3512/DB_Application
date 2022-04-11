@@ -1,6 +1,5 @@
 .event-feed {
     margin: 0 auto;
-    background-color: darkgray;
     min-height: 80vh;
     text-align: center;
     min-width: 375px;
@@ -9,9 +8,11 @@
 .event {
     margin: 10px auto;
     width: 80vw;
-    min-width: 350px;
-    background-color: #be0606;
-    border: 4px solid #be0606;
+    min-width: 320px;
+    background-color: #ecd9ff;
+    border: 2px solid black;
+    margin-bottom: 20px;
+    padding: 20px;
 }
 
 .event span {
@@ -19,12 +20,12 @@
     padding: 5px;
     padding-left: 10px;
     padding-right: 10px;
-    color: rgb(255, 255, 255);
+    color: black;
 }
 
 .event p
 {
-    color: white;
+    color: black;
     display: inline;
 }
 
@@ -34,7 +35,6 @@
 }
 
 .CommentEntry {
-    min-width: 350px;
-    min-width: 350px;
+    min-width: 320px;
     width: 99%;
 }

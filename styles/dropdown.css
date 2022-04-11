@@ -6,7 +6,7 @@
 }
 
 .drop-btn {
-  background-color: #be0606;
+  background-color: #d6aeff;
   color: white;
   font-size: 16px;
   border: none;
@@ -14,7 +14,7 @@
 }
 
 #menuIcon:hover, #menuIcon:focus {
-  background-color: #960303;
+  background-color: #c792fc;
 }
 
 .dropdown {
