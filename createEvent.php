@@ -12,6 +12,15 @@
         }
     ?>
     <h2 class="pageTitle">Create a New Event!</h2>
+
+    <?php
+        $errorMsg = "";
+        if (isset($_GET["error"])) {
+            // Handle the error message
+            echo $_GET["error"];
+        }
+    ?>
+    
     <form class="forms" action="api/createEvent.php" method="POST">
         <input class="textInput" type="text" name="EventName" placeholder="Event Name..." required><br>
         <input class="textInput" type="text" name="EventDescription" placeholder="Event Description..." required><br>

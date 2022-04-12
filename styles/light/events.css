@@ -38,3 +38,16 @@
     min-width: 320px;
     width: 99%;
 }
+
+.event_desc {
+    font-size: 20px;
+}
+
+.inner_event,
+.inner_inner_event {
+    border-bottom: 2px solid black;
+}
+
+.eventName {
+    font-size: 30px;
+}

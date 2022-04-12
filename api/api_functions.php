@@ -383,12 +383,16 @@ function FormatEvent($EventID, $UserID)
     $info = EventInfo($EventID);
     echo '
         <div class="event" style="text-align: left;">
-                <span class="name">'. $info["Name"] .'</span> <br>
-                <span class="description">'. $info["Description"] .'</span> <br>
-                <span class="contact_phone">Phone: '. $info["ContactPhone"] .'</span>
-                <span class="contact_email">Email: '. $info["ContactEmail"] .'</span>
-                <span class="location_id">Location: '. getLocationNameByLocationID($info["LocationID"]) .'</span> 
-                <p>Rating: '. rating($EventID) .'</p>
+            <div class="inner_event">
+                <div class="inner_inner_event">
+                    <span class="event_desc eventName">'. $info["Name"] .'</span> <br>
+                    <span class="event_desc">'. $info["Description"] .'</span><br><br>
+                </div>
+                <span class="event_desc">Phone: '. $info["ContactPhone"] .'</span>
+                <span class="event_desc">Email: '. $info["ContactEmail"] .'</span><br>
+                <span class="event_desc">Location: '. getLocationNameByLocationID($info["LocationID"]) .'</span><br> 
+                <span class="event_desc" >Rating: '. rating($EventID) .'</span><br><br>
+            </div>
     ';
 
     if($UserID != 0 && !isRated($EventID, $UserID))
@@ -407,17 +411,21 @@ function FormatEvent($EventID, $UserID)
             </form>';
     }
 
-    echo '<br>';
+    echo '<br><p class="desc">Comments:<br></p>';
+    
     echo getComments($EventID);
-
+    
     if($UserID != 0)
     {
+        $UserInfo = getUserInfoById($UserID);
+        $UserName = $UserInfo["Name"];
         echo '
             <form action="api/Comment.php" method="POST">
                 <input type="hidden" name="EventID" value='. $EventID .'>
+                <p class="desc"><br>'. $UserName .':</p>
                 <textarea class="CommentEntry" name="Comment" rows="2" cols="20" placeholder="Text"></textarea>
                 <br>
-                <button type="submit" name="submit">Comment</button>
+                <button class="commentSubmit" type="submit" name="submit">Comment</button>
             </form>
         ';
     }
@@ -567,14 +575,16 @@ function comment($EventID, $UserID, $Comment)
 function getComments($EventID)
 {
     $conn = connectToDatabase();
-    $sql = "SELECT C.Text, U.Name FROM Comments C, Users U WHERE C.EventID = $EventID AND (C.UserID = U.ID)";
+    $sql = "SELECT C.Text, U.Name, C.DataTimeCreated FROM Comments C, Users U WHERE C.EventID = $EventID AND (C.UserID = U.ID)";
 
     $result = mysqli_query($conn, $sql);
     $resultCheck = mysqli_num_rows($result);
 
     if($resultCheck > 0)
-        while($row = mysqli_fetch_assoc($result))
-            echo "<p>". $row['Name'] .": ". $row['Text'] . "</p><br>";
+        while($row = mysqli_fetch_assoc($result)) {
+            $date = new DateTime($row['DataTimeCreated']);
+            echo "<p>&emsp;[" . $date->format('m-d H:i') . "] <strong> ". $row['Name'] .": </strong> ". $row['Text'] . "</p><br>";
+        }
 }
 
 function isRated($EventID, $UserID)

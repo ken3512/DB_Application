@@ -4,6 +4,13 @@
 
 <h1> <?php echo $_SESSION["Name"] . "'s" ?> User Settings</h1><br>
 <h2> Change Website Appearance:</h2>
+<?php
+    $errorMsg = "";
+    if (isset($_GET["error"])) {
+        // Handle the error message
+        echo $_GET["error"];
+    }
+?>
 <form class="forms" action="api/changeWebsiteAppearance.php" method="post">
     <select class="textInput" name="WebsiteAppearanceValue">
         <!-- <option value="none" selected disabled hidden>Select an Option</option> -->

@@ -10,11 +10,4 @@
     
 <?php 
     include_once "footer.php";
-
-/*
-<form class="forms" action="api/registerMember.php" method="POST">
-    <input type="hidden" name="RSOID" value=7>
-    <button type="submit" name="submit">Join</button>
-</form>
-*/
 ?>

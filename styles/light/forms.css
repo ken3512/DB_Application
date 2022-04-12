@@ -40,6 +40,21 @@
     cursor: pointer;
 }
 
+.commentSubmit {
+    width: 150px;
+    height: 30px;
+    text-align: right;
+    text-transform: uppercase;
+    font-size: medium;
+    background: #c5d0ff;
+    color: black;
+    transition: .75s;
+}
+.commentSubmit:hover {
+    background: linear-gradient(45deg, rgb(203, 152, 255) 50%, white);
+    cursor: pointer;
+}
+
 #checkboxLogin {
     display: inline-block;
     text-align: center;
