@@ -112,3 +112,12 @@ CONSTRAINT FK_Com_User FOREIGN KEY (UserID) REFERENCES Users(ID),
   FOREIGN KEY (`UserID`) REFERENCES `Users`(`ID`)
 );
 
+CREATE TABLE `ChatroomComments` (
+  `ID` int NOT NULL AUTO_INCREMENT,
+  `UserID` int NOT NULL REFERENCES Users(ID),
+  `Comment` text NOT NULL,
+  `DataTimeCreated` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `DataTimeUpdated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`ID`),
+  FOREIGN KEY (`UserID`) REFERENCES `Users`(`ID`)
+);
