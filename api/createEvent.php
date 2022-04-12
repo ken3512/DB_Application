@@ -8,7 +8,8 @@
     $EventPrivacy = $_POST["EventPrivacy"];
     $ContactPhone = $_POST["ContactPhone"];
     $ContactEmail = $_POST["ContactEmail"];
-    $EventLocation = $_POST["EventLocation"];
+    $EventLocationName = $_POST["EventLocationName"];
+    $EventLocationDescription = $_POST["EventLocationDescription"];
     
     // Get the phone and email of the user that is logged in 
     // and populate it the variables if they aren't set
@@ -20,5 +21,5 @@
         $ContactPhone = $userData["Phone"];
     }
     
-    createEvent($EventName, $EventDescription, $EventCategory, $EventPrivacy, $ContactPhone, $ContactEmail, $EventLocation, $_SESSION["ID"]);
+    createEvent($EventName, $EventDescription, $EventCategory, $EventPrivacy, $ContactPhone, $ContactEmail, $EventLocationName, $EventLocationDescription, $_SESSION["ID"]);
     

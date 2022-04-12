@@ -19,7 +19,13 @@
         <!-- <span>If phone and email is left blank, the user's phone and email will be used:</span><br> -->
         <input class="textInput" type="text" name="ContactPhone" placeholder="Contact Phone..."><br>
         <input class="textInput" type="text" name="ContactEmail" placeholder="Contact Email..."><br>
-        <input class="textInput" type="text" name="EventLocation" placeholder="Event Location..." required ><br>
+        
+        <!-- Location -->
+        <input class="textInput" type="text" name="EventLocationName" placeholder="Location Name..." required ><br>
+        <input class="textInput" type="text" name="EventLocationDescription" placeholder="Location Description..." required ><br>
+
+
+
         <label for="EventCategory">Category:</label>
         <select name="EventCategory">
             <?php

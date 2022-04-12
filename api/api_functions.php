@@ -193,13 +193,19 @@ function getRSOData($userID) {
     return $row;
 }
 
-function createEvent($EventName, $EventDescription, $EventCategory, $EventPrivacy, $ContactPhone, $ContactEmail, $EventLocation, $userID) {
+function createEvent($EventName, $EventDescription, $EventCategory, $EventPrivacy, $ContactPhone, $ContactEmail, $EventLocationName, $EventLocationDescription, $userID) {
     $conn = connectToDatabase();
-    // Check if the location exists
-    // If it does not then add it to the location table and 
-    // use the new location ID for the event
-    // Else use the location ID that already exists for the event
-
+    // Add the location to the database and use it's Id top populate $EventLocationID
+    // Then insert the values into the event database
+    $sql = "INSERT INTO `Location` (`Name`, `Description`) VALUES ('$EventLocationName', '$EventLocationDescription');";
+    $result = mysqli_query($conn, $sql);
+    if ($result) {
+        $EventLocationID = $conn->insert_id;
+    }
+    else {
+        echo "Location Insert Failed: " . mysqli_error($conn);
+        exit();
+    }
     // Get the ForeignID
     // If the privacy is 0 or 1 set the ForeignID to the University
     // Else set the ForeignID to the RSO
@@ -217,7 +223,7 @@ function createEvent($EventName, $EventDescription, $EventCategory, $EventPrivac
         exit();
     }
 
-    $stmt->bind_param("iiissiis", $EventLocation, $EventCategory, $ForeignID, $EventName, $EventDescription, $EventPrivacy, $ContactPhone, $ContactEmail);
+    $stmt->bind_param("iiissiis", $EventLocationID, $EventCategory, $ForeignID, $EventName, $EventDescription, $EventPrivacy, $ContactPhone, $ContactEmail);
     $stmt->execute();
     $stmt->get_result();
     header("location: ../index.php");
@@ -357,6 +363,21 @@ function EventInfo($EventID)
 
 }
 
+function getLocationNameByLocationID($LocationID) {
+    $conn = connectToDatabase();
+    $sql = "SELECT Name FROM Location WHERE ID = $LocationID;";
+    $result = mysqli_query($conn, $sql);
+
+    if ($result) {
+        $row = mysqli_fetch_array($result);
+        if ($row) {
+            return $row["Name"];
+        }
+    }
+
+    echo "Error when trying to get location name: " . mysqli_error($conn);
+    
+}
 function FormatEvent($EventID, $UserID)
 {
     $info = EventInfo($EventID);
@@ -366,7 +387,7 @@ function FormatEvent($EventID, $UserID)
                 <span class="description">'. $info["Description"] .'</span> <br>
                 <span class="contact_phone">Phone: '. $info["ContactPhone"] .'</span>
                 <span class="contact_email">Email: '. $info["ContactEmail"] .'</span>
-                <span class="location_id">Location: '. $info["LocationID"] .'</span> 
+                <span class="location_id">Location: '. getLocationNameByLocationID($info["LocationID"]) .'</span> 
                 <p>Rating: '. rating($EventID) .'</p>
     ';
 
