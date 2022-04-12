@@ -50,7 +50,7 @@ CREATE TABLE `Registered` (
 CREATE TABLE `Location` (
   `ID` int NOT NULL AUTO_INCREMENT,
   `Name` varchar(255) NOT NULL DEFAULT '',
-  `Description` text NOT NULL DEFAULT '',
+  `Description` text,
   `Longitude` int NOT NULL DEFAULT 0,
   `Latitude` int NOT NULL DEFAULT 0,
   `DataTimeCreated` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -104,7 +104,7 @@ CREATE TABLE `Comments` (
   `UserID` int NOT NULL REFERENCES Users(ID),
 CONSTRAINT FK_Com_Eve FOREIGN KEY (EventID) REFERENCES Events(ID),
 CONSTRAINT FK_Com_User FOREIGN KEY (UserID) REFERENCES Users(ID),
-  `Text` text NOT NULL DEFAULT '',
+  `Text` text,
   `DataTimeCreated` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `DataTimeUpdated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`ID`),
