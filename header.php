@@ -25,7 +25,7 @@
                     <link rel="stylesheet" href="styles/dark/welcome.css">
                     <link rel="stylesheet" href="styles/dark/sidebar.css">
                     <link rel="stylesheet" href="styles/dark/events.css">
-                    <link rel="stylesheet" href="styles/dark/rso.css">
+                    <link rel="stylesheet" href="styles/dark/chatroom.css">
                 ';
             }
             else { // Light Mode
@@ -36,7 +36,7 @@
                     <link rel="stylesheet" href="styles/light/welcome.css">
                     <link rel="stylesheet" href="styles/light/sidebar.css">
                     <link rel="stylesheet" href="styles/light/events.css">
-                    <link rel="stylesheet" href="styles/light/rso.css">
+                    <link rel="stylesheet" href="styles/light/chatroom.css">
                 ';
             }
         } else { // Default is dark mode if the user isn't logged in
