@@ -1,6 +1,7 @@
 <?php 
     include_once "api_functions.php";
 
+
     function UniversityTestData($Name, $Bio, $GmailAt)
     {
         $conn = connectToDatabase();
@@ -13,19 +14,29 @@
 
     function UsersTestData($UniversityID, $Super, $Name, $Gmail, $Password, $Phone) 
     {
+        $key = encryptionKey();
         $conn = connectToDatabase();
         $sql = "INSERT INTO Users(UniversityID, Super, Name, Gmail, Phone, Password) VALUES (?, ?, ?, ?, ?, ?);";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("iissss", $UniversityID, $Super, $Name, $Gmail, $Password, $Phone);
+
+        $Name_enc = encryptthis($Name, $key);
+        $Gmail_enc = encryptthis($Gmail, $key);
+        $Password_enc = password_hash($Password, PASSWORD_DEFAULT);
+        $Phone_enc = encryptthis($Phone, $key);
+
+        $stmt->bind_param("iissss", $UniversityID, $Super, $Name_enc, $Gmail_enc, $Password_enc, $Phone_enc);
         $stmt->execute();
     }
 
     function RSOTestData($UniversityID, $OwnerID, $Name) 
     {
+        $key = encryptionKey();
         $conn = connectToDatabase();
         $sql = "INSERT INTO RSO (UniversityID, OwnerID, Name) VALUES (?, ?, ?);";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("iis", $UniversityID, $OwnerID, $Name);
+
+        $Name_enc = encryptthis($Name, $key);
+        $stmt->bind_param("iis", $UniversityID, $OwnerID, $Name_enc);
         $stmt->execute();
     }
 
@@ -40,10 +51,17 @@
 
     function LocationTestData($Name, $Longitude, $Latitude, $Description)
     {
+        $key = encryptionKey();
         $conn = connectToDatabase();
         $sql = "INSERT INTO Location (Name, Longitude, Latitude, Description) VALUES (?, ?, ?, ?);";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("siis", $Name, $Longitude, $Latitude, $Description);
+        
+        $Name_enc = encryptthis($Name, $key);
+        $Longitude_enc = encryptthis($Longitude, $key);
+        $Latitude_enc = encryptthis($Latitude, $key);
+        $Description_enc = encryptthis($Description, $key);
+
+        $stmt->bind_param("siis", $Name_enc, $Longitude_enc, $Latitude_enc, $Description_enc);
         $stmt->execute();
     }
 
@@ -58,10 +76,18 @@
 
     function EventsTestData($LocationID, $EventCat, $ForeignID, $Name, $Description, $Privacy, $ContactPhone, $ContactEmail)
     {
+        $key = encryptionKey();
         $conn = connectToDatabase();
         $sql = "INSERT INTO Events (LocationID, EventCat, ForeignID, Name, Description, Privacy, ContactPhone, ContactEmail) VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("iiississ", $LocationID, $EventCat, $ForeignID, $Name, $Description, $Privacy, $ContactPhone, $ContactEmail);
+
+        $Name_enc = encryptthis($Name, $key);
+        $Privacy_enc = encryptthis($Privacy, $key);
+        $Description_enc = encryptthis($Description, $key);
+        $ContactPhone_enc = encryptthis($ContactPhone, $key);
+        $ContactEmail_enc = encryptthis($ContactEmail, $key);
+
+        $stmt->bind_param("iiississ", $LocationID, $EventCat, $ForeignID, $Name_enc, $Description_enc, $Privacy_enc, $ContactPhone_enc, $ContactEmail_enc);
         $stmt->execute();
     }
 
