@@ -3,7 +3,7 @@
 
     function signupTestData($UniversityID, $Super, $Name, $Gmail, $Password, $Phone) {
     $conn = connectToDatabase();
-    $sql = "INSERT INTO Users(UniversityID, `Super`, `Name`, `Gmail`, `Phone`, `Password`) VALUES ($UniversityID, $Super, '$Name', '$Gmail', $Phone, '$Password');";
+    $sql = "INSERT INTO Users(UniversityID, `Super`, `Name`, `Gmail`, `Phone`, `Password`) VALUES ($UniversityID, $Super, '$Name', '$Gmail', '$Phone', '$Password');";
     $result = mysqli_query($conn, $sql);
     if (!$result)
         echo mysqli_error($conn);
