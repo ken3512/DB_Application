@@ -1,7 +1,30 @@
 
 <?php  
-
 include_once "helper_functions.php";
+
+date_default_timezone_set('America/New_York');
+
+function encryptionKey()
+{
+    return 'qkwjdiw239&&jdafweihbrhnan&^%$ggdnawhd4njshjwuuO';
+}
+
+//ENCRYPT FUNCTION
+function encryptthis($data, $key) 
+{
+    $encryption_key = base64_decode($key);
+    $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length('aes-256-cbc'));
+    $encrypted = openssl_encrypt($data, 'aes-256-cbc', $encryption_key, 0, $iv);
+    return base64_encode($encrypted . '::' . $iv);
+}
+    
+    //DECRYPT FUNCTION
+function decryptthis($data, $key)
+{
+    $encryption_key = base64_decode($key);
+    list($encrypted_data, $iv) = array_pad(explode('::', base64_decode($data), 2),2,null);
+    return openssl_decrypt($encrypted_data, 'aes-256-cbc', $encryption_key, 0, $iv);
+}
 
 function connectToDatabase() {
     $conn = mysqli_connect("localhost","Admin","HeighT#157s","App"); 
@@ -13,7 +36,16 @@ function connectToDatabase() {
     return $conn;
 }
 
-function changeUsername($UserID, $NewName) {
+// Para
+function changeUsername($UserID, $NewName) 
+{
+    $key = encryptionKey();
+    /*
+        encryptthis(, $key);
+        decryptthis(, $key);
+    */
+
+
     if (usernameIsInvalid($NewName)) {
         header("location: ../changeUsername.php?error=newUsernameInvalid");
         return;
@@ -27,6 +59,7 @@ function changeUsername($UserID, $NewName) {
     $conn = connectToDatabase();
     $sql = "Update Users SET Name = '$NewName' WHERE ID = $UserID;";
     $result = mysqli_query($conn, $sql);
+
     if ($result)  {
         echo "Successfully changed name";
         // session_start();
@@ -40,7 +73,13 @@ function changeUsername($UserID, $NewName) {
     header("location: ../settings");
 }
 
-function passwordDoesNotMatchUser($UserID, $CurrentPass) {
+function passwordDoesNotMatchUser($UserID, $CurrentPass) 
+{
+    $key = encryptionKey();
+    /*
+        encryptthis(, $key);
+        decryptthis(, $key);
+    */
     $result = true;
     
     $UserInfo = getUserInfoById($UserID);
@@ -52,7 +91,13 @@ function passwordDoesNotMatchUser($UserID, $CurrentPass) {
     return $result;
 }
 
-function changePassword($UserID, $CurrentPass, $NewPass, $ConfirmNewPass) {
+function changePassword($UserID, $CurrentPass, $NewPass, $ConfirmNewPass) 
+{
+    $key = encryptionKey();
+    /*
+        encryptthis(, $key);
+        decryptthis(, $key);
+    */
     if (passwordDoesNotMatchUser($UserID, $CurrentPass)) {
         header("location: ../changePassword.php?error=passwordDoesNotMatchUser");
         exit();
@@ -83,7 +128,13 @@ function changePassword($UserID, $CurrentPass, $NewPass, $ConfirmNewPass) {
 
 }
 
-function setUserWebsiteAppearance($UserID, $WebsiteAppearanceValue) {
+function setUserWebsiteAppearance($UserID, $WebsiteAppearanceValue) 
+{
+    $key = encryptionKey();
+    /*
+        encryptthis(, $key);
+        decryptthis(, $key);
+    */
     $conn = connectToDatabase();
     $sql = "Update Users SET ColorPreferences = $WebsiteAppearanceValue WHERE ID = $UserID;";
     $result = mysqli_query($conn, $sql);
@@ -95,7 +146,13 @@ function setUserWebsiteAppearance($UserID, $WebsiteAppearanceValue) {
     }
 }
 
-function getUserWebsitePreferences($UserID) {
+function getUserWebsitePreferences($UserID) 
+{
+    $key = encryptionKey();
+    /*
+        encryptthis(, $key);
+        decryptthis(, $key);
+    */
     $conn = connectToDatabase();
     $sql = "SELECT ColorPreferences FROM Users WHERE ID = $UserID;";
     $result = mysqli_query($conn, $sql);
@@ -107,7 +164,13 @@ function getUserWebsitePreferences($UserID) {
     }
 }
 
-function getMaxUserStatus($UserID) {
+function getMaxUserStatus($UserID) 
+{
+    $key = encryptionKey();
+    /*
+        encryptthis(, $key);
+        decryptthis(, $key);
+    */
     if (isSuperAdmin($UserID)) {
         return "Super Admin";
     }
@@ -121,7 +184,13 @@ function getMaxUserStatus($UserID) {
 
 // Return true if the UserID is an Admin
 // Return false is it is not
-function isAdmin($UserID) {
+function isAdmin($UserID) 
+{
+    $key = encryptionKey();
+    /*
+        encryptthis(, $key);
+        decryptthis(, $key);
+    */
     $conn = connectToDatabase();
     $sql = "SELECT U.Name, R.Name FROM Users U, RSO R WHERE (U.ID = $UserID AND R.OwnerID = $UserID AND R.Status = 1);";
     $result = mysqli_query($conn, $sql);
@@ -140,7 +209,13 @@ function isAdmin($UserID) {
 
 // Return true if the UserID is an Admin
 // Return false is it is not
-function isSuperAdmin($UserID) {
+function isSuperAdmin($UserID) 
+{
+    $key = encryptionKey();
+    /*
+        encryptthis(, $key);
+        decryptthis(, $key);
+    */
     $conn = connectToDatabase();
     $sql = "SELECT Super FROM Users U WHERE U.ID = $UserID;";
     $result = mysqli_query($conn, $sql);
@@ -158,7 +233,13 @@ function isSuperAdmin($UserID) {
 }
 
 // Return the data in the users table for the ID passed in
-function getUserInfoById($UserID) {
+function getUserInfoById($UserID) 
+{
+    $key = encryptionKey();
+    /*
+        encryptthis(, $key);
+        decryptthis(, $key);
+    */
     $conn = connectToDatabase();
     $sql = "SELECT * FROM Users U WHERE U.ID = $UserID";
     $result = mysqli_query($conn, $sql);
@@ -167,7 +248,13 @@ function getUserInfoById($UserID) {
 }
 
 // Display the category options for creating an event 
-function displayCategories() {
+function displayCategories() 
+{
+    $key = encryptionKey();
+    /*
+        encryptthis(, $key);
+        decryptthis(, $key);
+    */
     $conn = connectToDatabase();
     $sql = "SELECT * FROM Categories;";
     $result = mysqli_query($conn, $sql);
@@ -185,7 +272,13 @@ function displayCategories() {
 }
 
 // Return the row data for the admin in an RSO
-function getRSOData($userID) {
+function getRSOData($userID) 
+{
+    $key = encryptionKey();
+    /*
+        encryptthis(, $key);
+        decryptthis(, $key);
+    */
     $conn = connectToDatabase();
     $sql = "SELECT * FROM rso WHERE OwnerID = $userID;";
     $result = mysqli_query($conn, $sql);
@@ -193,7 +286,13 @@ function getRSOData($userID) {
     return $row;
 }
 
-function createEvent($EventName, $EventDescription, $EventCategory, $EventPrivacy, $ContactPhone, $ContactEmail, $EventLocationName, $EventLocationDescription, $userID) {
+function createEvent($EventName, $EventDescription, $EventCategory, $EventPrivacy, $ContactPhone, $ContactEmail, $EventLocationName, $EventLocationDescription, $userID) 
+{
+    $key = encryptionKey();
+    /*
+        encryptthis(, $key);
+        decryptthis(, $key);
+    */
     $conn = connectToDatabase();
     // Add the location to the database and use it's Id top populate $EventLocationID
     // Then insert the values into the event database
@@ -228,7 +327,14 @@ function createEvent($EventName, $EventDescription, $EventCategory, $EventPrivac
     $stmt->get_result();
     header("location: ../index.php");
 }
-function usernameExists($Name, $Gmail) {
+
+function usernameExists($Name, $Gmail) 
+{
+    $key = encryptionKey();
+    /*
+        encryptthis(, $key);
+        decryptthis(, $key);
+    */
     $conn = connectToDatabase();
     $sql = "SELECT * FROM Users WHERE `Name` = ? OR `Gmail` = ?;";
     $stmt = mysqli_stmt_init($conn);
@@ -251,6 +357,11 @@ function usernameExists($Name, $Gmail) {
 
 function login($Gmail, $Password)
 {
+    $key = encryptionKey();
+    /*
+        encryptthis(, $key);
+        decryptthis(, $key);
+    */
     $usernameExists = usernameExists($Gmail, $Gmail);
 
     if ($usernameExists === false) {
@@ -277,6 +388,11 @@ function login($Gmail, $Password)
 
 function signup($UniversityID, $Name, $Gmail, $Phone, $Password)
 {
+    $key = encryptionKey();
+    /*
+        encryptthis(, $key);
+        decryptthis(, $key);
+    */
     $conn = connectToDatabase();
     $sql = "INSERT INTO Users(`UniversityID`, `Name`, `Gmail`, `Phone`, `Password`) VALUES (?, ?, ?, ?, ?);";
 
@@ -303,6 +419,11 @@ function signup($UniversityID, $Name, $Gmail, $Phone, $Password)
 
 function showEvents($UserID)
 {
+    $key = encryptionKey();
+    /*
+        encryptthis(, $key);
+        decryptthis(, $key);
+    */
     $conn = connectToDatabase();
     $sql = "SELECT E.ID FROM Events E, Users U  WHERE U.ID = ? AND 
         ((U.Super =  1) OR 
@@ -334,6 +455,11 @@ function showEvents($UserID)
 
 function showPublicEvents()
 {
+    $key = encryptionKey();
+    /*
+        encryptthis(, $key);
+        decryptthis(, $key);
+    */
     $UserID = 0;
     $conn = connectToDatabase();
     $sql = "SELECT E.ID FROM Events E WHERE E.Privacy = 0;";
@@ -353,6 +479,11 @@ function showPublicEvents()
 
 function EventInfo($EventID)
 {
+    $key = encryptionKey();
+    /*
+        encryptthis(, $key);
+        decryptthis(, $key);
+    */
     $conn = connectToDatabase();
     $sql = "SELECT * FROM Events E WHERE E.ID = $EventID;";
 
@@ -363,7 +494,13 @@ function EventInfo($EventID)
 
 }
 
-function getLocationNameByLocationID($LocationID) {
+function getLocationNameByLocationID($LocationID) 
+{
+    $key = encryptionKey();
+    /*
+        encryptthis(, $key);
+        decryptthis(, $key);
+    */
     $conn = connectToDatabase();
     $sql = "SELECT Name FROM Location WHERE ID = $LocationID;";
     $result = mysqli_query($conn, $sql);
@@ -380,12 +517,18 @@ function getLocationNameByLocationID($LocationID) {
 }
 function FormatEvent($EventID, $UserID)
 {
+    $key = encryptionKey();
+    /*
+        encryptthis(, $key);
+        decryptthis(, $key);
+    */
+
     $info = EventInfo($EventID);
     echo '
         <div class="event" style="text-align: left;">
             <div class="inner_event">
                 <div class="inner_inner_event">
-                    <span class="event_desc eventName">'. $info["Name"] .'</span> <br>
+                    <span class="event_desc eventName">'.$info["Name"] .'</span> <br>
                     <span class="event_desc">'. $info["Description"] .'</span><br><br>
                 </div>
                 <span class="event_desc">Phone: '. $info["ContactPhone"] .'</span>
@@ -434,7 +577,8 @@ function FormatEvent($EventID, $UserID)
     </div>';
 }
 
-function stringifyStatus($status) {
+function stringifyStatus($status) 
+{
     if ($status == 0) {
         return "Not Approved Yet";
     }
@@ -444,7 +588,13 @@ function stringifyStatus($status) {
 }
 
 
-function getAllRSO($UserID) {
+function getAllRSO($UserID) 
+{
+    $key = encryptionKey();
+    /*
+        encryptthis(, $key);
+        decryptthis(, $key);
+    */
     $conn = connectToDatabase();
     $sql = "SELECT R.Name, R.Status, R.UniversityID FROM RSO R WHERE EXISTS (SELECT O.ID FROM Registered O WHERE O.UserID = $UserID AND O.RSOID = R.ID)";
     
@@ -471,7 +621,13 @@ function formatRSOs($Name, $Status, $UniversityID)
     
 }
 
-function getRsoInfoByRsoId($RSOID) {
+function getRsoInfoByRsoId($RSOID) 
+{
+    $key = encryptionKey();
+    /*
+        encryptthis(, $key);
+        decryptthis(, $key);
+    */
     $conn = connectToDatabase();
     $sql = "SELECT * FROM RSO WHERE ID = $RSOID;";
     $result = mysqli_query($conn, $sql);
@@ -485,6 +641,11 @@ function getRsoInfoByRsoId($RSOID) {
 
 function isRegistered($RSOID, $MemberID)
 {
+    $key = encryptionKey();
+    /*
+        encryptthis(, $key);
+        decryptthis(, $key);
+    */
     $conn = connectToDatabase();
     $sql = "SELECT R.ID FROM Registered R WHERE R.RSOID = $RSOID AND R.UserID = $MemberID;";
 
@@ -498,6 +659,11 @@ function isRegistered($RSOID, $MemberID)
 
 function registerMember($RSOID, $MemberID)
 {
+    $key = encryptionKey();
+    /*
+        encryptthis(, $key);
+        decryptthis(, $key);
+    */
 
     if(isRegistered($RSOID, $MemberID)) return true;
 
@@ -512,6 +678,11 @@ function registerMember($RSOID, $MemberID)
 
 function unregisterMember($MemberID, $RSOID)
 {
+    $key = encryptionKey();
+    /*
+        encryptthis(, $key);
+        decryptthis(, $key);
+    */
     $conn = connectToDatabase();
     $sql = "DELETE R FROM Registered R WHERE R.RSOID = $RSOID AND R.UserID = $MemberID;";
     $result = mysqli_query($conn, $sql);
@@ -524,6 +695,11 @@ function unregisterMember($MemberID, $RSOID)
 
 function createRSO($UniversityID, $OwnerID, $Name, $MemberID_1, $MemberID_2, $MemberID_3, $MemberID_4)
 {
+    $key = encryptionKey();
+    /*
+        encryptthis(, $key);
+        decryptthis(, $key);
+    */
     $conn = connectToDatabase();
     $sql = "INSERT INTO RSO(UniversityID, OwnerID, Name) VALUES (?, ?, ?);";
 
@@ -549,6 +725,11 @@ function createRSO($UniversityID, $OwnerID, $Name, $MemberID_1, $MemberID_2, $Me
 
 function comment($EventID, $UserID, $Comment)
 {
+    $key = encryptionKey();
+    /*
+        encryptthis(, $key);
+        decryptthis(, $key);
+    */
     if(empty($Comment)) return;
 
     $conn = connectToDatabase();
@@ -574,6 +755,11 @@ function comment($EventID, $UserID, $Comment)
 
 function getComments($EventID)
 {
+    $key = encryptionKey();
+    /*
+        encryptthis(, $key);
+        decryptthis(, $key);
+    */
     $conn = connectToDatabase();
     $sql = "SELECT C.Text, U.Name, C.DataTimeCreated FROM Comments C, Users U WHERE C.EventID = $EventID AND (C.UserID = U.ID)";
 
@@ -589,6 +775,11 @@ function getComments($EventID)
 
 function isRated($EventID, $UserID)
 {
+    $key = encryptionKey();
+    /*
+        encryptthis(, $key);
+        decryptthis(, $key);
+    */
     $conn = connectToDatabase();
     $sql = "SELECT R.ID FROM Ratings R WHERE R.EventID = $EventID AND R.UserID = $UserID;";
 
@@ -602,6 +793,11 @@ function isRated($EventID, $UserID)
 
 function rate($EventID, $UserID, $Rating)
 {
+    $key = encryptionKey();
+    /*
+        encryptthis(, $key);
+        decryptthis(, $key);
+    */
     $conn = connectToDatabase();
     
     if(isRated($EventID, $UserID)) return true;
@@ -618,6 +814,11 @@ function rate($EventID, $UserID, $Rating)
 
 function rating($EventID)
 {
+    $key = encryptionKey();
+    /*
+        encryptthis(, $key);
+        decryptthis(, $key);
+    */
     $conn = connectToDatabase();
     $sql = "SELECT AVG(R.Rating) Rating FROM Ratings R WHERE R.EventID = $EventID;";
 
@@ -628,7 +829,13 @@ function rating($EventID)
     else return 'Unrated';
 }
 
-function getUserUniversityName($UniversityID) {
+function getUserUniversityName($UniversityID) 
+{
+    $key = encryptionKey();
+    /*
+        encryptthis(, $key);
+        decryptthis(, $key);
+    */
     $conn = connectToDatabase();
     $sql = "SELECT Name FROM University WHERE ID = $UniversityID;";
     $result = mysqli_query($conn, $sql);
@@ -638,6 +845,11 @@ function getUserUniversityName($UniversityID) {
 
 function getUserUniversity($UserID)
 {
+    $key = encryptionKey();
+    /*
+        encryptthis(, $key);
+        decryptthis(, $key);
+    */
     $conn = connectToDatabase();
     $sql = "SELECT U.UniversityID FROM Users U WHERE U.ID = $UserID;";
 
@@ -649,6 +861,11 @@ function getUserUniversity($UserID)
 
 function approveRSO($UserID, $RSOID)
 {
+    $key = encryptionKey();
+    /*
+        encryptthis(, $key);
+        decryptthis(, $key);
+    */
     $conn = connectToDatabase();
     $sql = "UPDATE RSO R SET R.Status = 1 WHERE R.ID = $RSOID AND EXISTS (SELECT U.ID FROM Users U WHERE U.ID = $UserID AND U.Super = 1);";
 
@@ -657,6 +874,11 @@ function approveRSO($UserID, $RSOID)
 
 function getUnapprovedRSO($UserID)
 {
+    $key = encryptionKey();
+    /*
+        encryptthis(, $key);
+        decryptthis(, $key);
+    */
     $conn = connectToDatabase();
     $sql = "SELECT R.ID, R.Name FROM  RSO R WHERE Status = 0 AND EXISTS (SELECT U.ID FROM Users U WHERE U.ID = $UserID AND U.Super = 1);";
 
@@ -679,6 +901,11 @@ function FormatApproval($RSOID, $RSOName)
 
 function allStudents($UniversityID)
 {
+    $key = encryptionKey();
+    /*
+        encryptthis(, $key);
+        decryptthis(, $key);
+    */
     $conn = connectToDatabase();
     $sql = "SELECT U.ID, U.Name FROM  Users U WHERE U.UniversityID = $UniversityID;";
 
@@ -699,6 +926,11 @@ function FormatCreateRSO($UserID, $Name)
 
 function allUniversity()
 {
+    $key = encryptionKey();
+    /*
+        encryptthis(, $key);
+        decryptthis(, $key);
+    */
     $conn = connectToDatabase();
     $sql = "SELECT U.ID, U.Name FROM  University U;";
 
@@ -719,6 +951,11 @@ function FormatUniversites($UniversityID, $Name)
 
 function allRSO($UniversityID, $UserID)
 {
+    $key = encryptionKey();
+    /*
+        encryptthis(, $key);
+        decryptthis(, $key);
+    */
     $conn = connectToDatabase();
     $sql = "SELECT R.ID, R.Name FROM  RSO R WHERE R.UniversityID = $UniversityID
     AND NOT EXISTS 
