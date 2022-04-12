@@ -3,12 +3,10 @@
     border: 2px solid black;
     width: 80vw;
     text-align: left;
+    padding: 10px;
 }
 
 .chatroom_outer {
     margin: 0 auto;
     width: 80vw;
-    border: 2px solid black;
-
-    text-align: center;
 }

@@ -742,3 +742,53 @@ function FormatJoinRSO($RSOID, $Name)
         <button type="submit" class="submitButton" name="submit">Join</button>
     </form>';
 }
+
+//
+// Chatroom Comments
+//
+
+// Insert the $Comment passed in into the chatroom comments table
+// with the $UserID that was passed in 
+function insertChatroomComment($UserID, $Comment) {
+    $conn = connectToDatabase();
+    $sql = "INSERT INTO ChatroomComments (UserID, Comment) VALUES (?, ?)";
+    
+    // Execute prepared statement
+    $stmt = $conn->prepare($sql);
+    
+    if(!$stmt) 
+    {
+        echo "Prepared statement failed";
+        exit();
+    }
+
+    $stmt->bind_param("is", $UserID, $Comment);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    // Return success boolean
+    if($result) return True;
+    return false;
+}
+
+// Echo every comment for the chatroom
+// Starting with the most recent
+function displayAllChatroomComments() {
+    $conn = connectToDatabase();
+    $sql = "SELECT * FROM ChatroomComments ORDER BY ID DESC;";
+    $result = mysqli_query($conn, $sql);
+    $resultCheck = mysqli_num_rows($result);
+    if($resultCheck > 0)
+    {
+        while($row = mysqli_fetch_assoc($result))
+        {
+            $UserInfo = getUserInfoById($row["UserID"]);
+            $UserName = $UserInfo["Name"];
+            $date = new DateTime($row['DataTimeCreated']);
+            echo "<p>&emsp;[" . $date->format('m-d H:i') . "] <strong> ". $UserName .": </strong> ". $row['Comment'] . "</p>";
+        }
+    }
+    else {
+        echo mysqli_error($conn);
+    }
+}

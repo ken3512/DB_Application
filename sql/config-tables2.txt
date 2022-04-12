@@ -119,5 +119,5 @@ CREATE TABLE `ChatroomComments` (
   `DataTimeCreated` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `DataTimeUpdated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`ID`),
-  FOREIGN KEY (`ID`) REFERENCES `Users`(`ID`)
+  FOREIGN KEY (`UserID`) REFERENCES `Users`(`ID`)
 );
