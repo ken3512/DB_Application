@@ -1,7 +1,30 @@
 
 <?php  
-
 include_once "helper_functions.php";
+
+date_default_timezone_set('America/New_York');
+
+function encryptionKey()
+{
+    return 'qkwjdiw239&&jdafweihbrhnan&^%$ggdnawhd4njshjwuuO';
+}
+
+//ENCRYPT FUNCTION
+function encryptthis($data, $key) 
+{
+    $encryption_key = base64_decode($key);
+    $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length('aes-256-cbc'));
+    $encrypted = openssl_encrypt($data, 'aes-256-cbc', $encryption_key, 0, $iv);
+    return base64_encode($encrypted . '::' . $iv);
+}
+    
+    //DECRYPT FUNCTION
+function decryptthis($data, $key)
+{
+    $encryption_key = base64_decode($key);
+    list($encrypted_data, $iv) = array_pad(explode('::', base64_decode($data), 2),2,null);
+    return openssl_decrypt($encrypted_data, 'aes-256-cbc', $encryption_key, 0, $iv);
+}
 
 function connectToDatabase() {
     $conn = mysqli_connect("localhost","Admin","HeighT#157s","App"); 
@@ -363,7 +386,8 @@ function EventInfo($EventID)
 
 }
 
-function getLocationNameByLocationID($LocationID) {
+function getLocationNameByLocationID($LocationID) 
+{
     $conn = connectToDatabase();
     $sql = "SELECT Name FROM Location WHERE ID = $LocationID;";
     $result = mysqli_query($conn, $sql);
@@ -380,12 +404,14 @@ function getLocationNameByLocationID($LocationID) {
 }
 function FormatEvent($EventID, $UserID)
 {
+    $key = encryptionKey();
+
     $info = EventInfo($EventID);
     echo '
         <div class="event" style="text-align: left;">
             <div class="inner_event">
                 <div class="inner_inner_event">
-                    <span class="event_desc eventName">'. $info["Name"] .'</span> <br>
+                    <span class="event_desc eventName">'.$info["Name"] .'</span> <br>
                     <span class="event_desc">'. $info["Description"] .'</span><br><br>
                 </div>
                 <span class="event_desc">Phone: '. $info["ContactPhone"] .'</span>
@@ -444,7 +470,9 @@ function stringifyStatus($status) {
 }
 
 
-function getAllRSO($UserID) {
+function getAllRSO($UserID) 
+{
+    $key = encryptionKey();
     $conn = connectToDatabase();
     $sql = "SELECT R.Name, R.Status, R.UniversityID FROM RSO R WHERE EXISTS (SELECT O.ID FROM Registered O WHERE O.UserID = $UserID AND O.RSOID = R.ID)";
     
@@ -471,7 +499,8 @@ function formatRSOs($Name, $Status, $UniversityID)
     
 }
 
-function getRsoInfoByRsoId($RSOID) {
+function getRsoInfoByRsoId($RSOID) 
+{
     $conn = connectToDatabase();
     $sql = "SELECT * FROM RSO WHERE ID = $RSOID;";
     $result = mysqli_query($conn, $sql);
@@ -574,6 +603,7 @@ function comment($EventID, $UserID, $Comment)
 
 function getComments($EventID)
 {
+    $key = encryptionKey();
     $conn = connectToDatabase();
     $sql = "SELECT C.Text, U.Name, C.DataTimeCreated FROM Comments C, Users U WHERE C.EventID = $EventID AND (C.UserID = U.ID)";
 
