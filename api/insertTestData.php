@@ -143,6 +143,7 @@
     UsersTestData(2, 0, "yo4", "yo4@gmail.com", "password39", 3062564658);
     UsersTestData(2, 0, "yo5", "yo5@gmail.com", "password40", 3060909888);
     UsersTestData(2, 0, "kenny", "kenny@ucf.edu", "password", 3060909888);
+    UsersTestData(2, 0, "kenny", "kenny", "password", 3060909888);
     
     RSOTestData(1, 1, "Scratch Systems");
     RSOTestData(1, 2, "Main Python Services");
