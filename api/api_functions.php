@@ -406,8 +406,8 @@ function FormatEvent($EventID, $UserID)
                 <input type="radio" name="rating" value=4>
                 <input type="radio" name="rating" value=5>
                 <br>
-                <p>&ensp;1&emsp;2&emsp;3&emsp;4&emsp;5&emsp;<p>
-                <button type="submit" name="submit">Rate</button>
+                <p>&ensp;1&emsp;2&emsp;3&emsp;4&emsp;5&emsp;<p><br>
+                <button class="commentSubmit" type="submit" name="submit">Rate</button>
             </form>';
     }
 
