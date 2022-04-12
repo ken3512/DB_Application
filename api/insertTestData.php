@@ -4,64 +4,65 @@
     function UniversityTestData($Name, $Bio, $GmailAt)
     {
         $conn = connectToDatabase();
-        $sql = "INSERT INTO University (Name, Bio, GmailAt) VALUES ($Name, $Bio, $GmailAt);";
-        $result = mysqli_query($conn, $sql);
-        if (!$result)
-            echo mysqli_error($conn);
+        $sql = "INSERT INTO University (Name, Bio, GmailAt) VALUES (?, ?, ?);";
+
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("sss", $Name, $Bio, $GmailAt);
+        $stmt->execute();
     }
 
     function UsersTestData($UniversityID, $Super, $Name, $Gmail, $Password, $Phone) 
     {
         $conn = connectToDatabase();
-        $sql = "INSERT INTO Users(UniversityID, `Super`, `Name`, `Gmail`, `Phone`, `Password`) VALUES ($UniversityID, $Super, $Name, $Gmail, `$Phone`, $Password);";
-        $result = mysqli_query($conn, $sql);
-        if (!$result)
-            echo mysqli_error($conn);
+        $sql = "INSERT INTO Users(UniversityID, Super, Name, Gmail, Phone, Password) VALUES (?, ?, ?, ?, ?, ?);";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("iissss", $UniversityID, $Super, $Name, $Gmail, $Password, $Phone);
+        $stmt->execute();
     }
 
     function RSOTestData($UniversityID, $OwnerID, $Name) 
     {
         $conn = connectToDatabase();
-        $sql = "INSERT INTO RSO (UniversityID, OwnerID, Name) VALUES ($UniversityID, $OwnerID, $Name);";
-        $result = mysqli_query($conn, $sql);
-        if (!$result)
-            echo mysqli_error($conn);
+        $sql = "INSERT INTO RSO (UniversityID, OwnerID, Name) VALUES (?, ?, ?);";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("iis", $UniversityID, $OwnerID, $Name);
+        $stmt->execute();
     }
 
     function RegisteredTestData($RSOID, $UserID)
     {
         $conn = connectToDatabase();
-        $sql = "INSERT INTO Registered (RSOID, UserID) VALUES ($RSOID, $UserID);";
-        $result = mysqli_query($conn, $sql);
-        if (!$result)
-            echo mysqli_error($conn);
+        $sql = "INSERT INTO Registered (RSOID, UserID) VALUES (?, ?);";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("ii", $RSOID, $UserID);
+        $stmt->execute();
     }
 
     function LocationTestData($Name, $Longitude, $Latitude, $Description)
     {
         $conn = connectToDatabase();
-        $sql = "INSERT INTO Location (Name, Longitude, Latitude, Description) VALUES ($Name, $Longitude, $Latitude, $Description);";
-        $result = mysqli_query($conn, $sql);
-        if (!$result)
-            echo mysqli_error($conn);
+        $sql = "INSERT INTO Location (Name, Longitude, Latitude, Description) VALUES (?, ?, ?, ?);";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("siis", $Name, $Longitude, $Latitude, $Description);
+        $stmt->execute();
     }
 
     function CategoriesTestData($Name)
     {
         $conn = connectToDatabase();
-        $sql = "INSERT INTO Categories (Name) VALUES ($Name);";
-        $result = mysqli_query($conn, $sql);
-        if (!$result)
-            echo mysqli_error($conn);
+        $sql = "INSERT INTO Categories (Name) VALUES (?);";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("s", $Name);
+        $stmt->execute();
     }
 
     function EventsTestData($LocationID, $EventCat, $ForeignID, $Name, $Description, $Privacy, $ContactPhone, $ContactEmail)
     {
         $conn = connectToDatabase();
-        $sql = "INSERT INTO Events (LocationID, EventCat, ForeignID, Name, Description, Privacy, ContactPhone, ContactEmail) VALUES ($LocationID, $EventCat, $ForeignID, $Name, $Description, $Privacy, $ContactPhone, $ContactEmail);";
-        $result = mysqli_query($conn, $sql);
-        if (!$result)
-            echo mysqli_error($conn);
+        $sql = "INSERT INTO Events (LocationID, EventCat, ForeignID, Name, Description, Privacy, ContactPhone, ContactEmail) VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("iiississ", $LocationID, $EventCat, $ForeignID, $Name, $Description, $Privacy, $ContactPhone, $ContactEmail);
+        $stmt->execute();
     }
 
     UniversityTestData("University of Central Florida", "Charge on!", "@UCF.edu");
