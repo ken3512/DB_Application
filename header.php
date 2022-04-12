@@ -17,7 +17,7 @@
     <?php
         if (isset($_SESSION["ID"])) {
             $prefValue = getUserWebsitePreferences($_SESSION["ID"]);
-            if ($prefValue == 0) { // Dark mode
+            if ($prefValue == 1) { // Dark mode
                 echo '
                     <link rel="stylesheet" href="styles/dark/main.css">
                     <link rel="stylesheet" href="styles/dark/dropdown.css">
@@ -41,13 +41,13 @@
             }
         } else { // Default is dark mode if the user isn't logged in
             echo '
-                <link rel="stylesheet" href="styles/dark/main.css">
-                <link rel="stylesheet" href="styles/dark/dropdown.css">
-                <link rel="stylesheet" href="styles/dark/forms.css">
-                <link rel="stylesheet" href="styles/dark/welcome.css">
-                <link rel="stylesheet" href="styles/dark/sidebar.css">
-                <link rel="stylesheet" href="styles/dark/events.css">
-                <link rel="stylesheet" href="styles/dark/rso.css">
+                <link rel="stylesheet" href="styles/light/main.css">
+                <link rel="stylesheet" href="styles/light/dropdown.css">
+                <link rel="stylesheet" href="styles/light/forms.css">
+                <link rel="stylesheet" href="styles/light/welcome.css">
+                <link rel="stylesheet" href="styles/light/sidebar.css">
+                <link rel="stylesheet" href="styles/light/events.css">
+                <link rel="stylesheet" href="styles/light/rso.css">
             ';
         }
     ?>

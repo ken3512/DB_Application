@@ -40,6 +40,49 @@ function changeUsername($UserID, $NewName) {
     header("location: ../settings");
 }
 
+function passwordDoesNotMatchUser($UserID, $CurrentPass) {
+    $result = true;
+    
+    $UserInfo = getUserInfoById($UserID);
+    $passIsValid = password_verify($CurrentPass, $UserInfo["Password"]);
+    if($passIsValid) {
+        $result = false;
+    }
+
+    return $result;
+}
+
+function changePassword($UserID, $CurrentPass, $NewPass, $ConfirmNewPass) {
+    if (passwordDoesNotMatchUser($UserID, $CurrentPass)) {
+        header("location: ../changePassword.php?error=passwordDoesNotMatchUser");
+        exit();
+    }
+    if (passwordsDoNotMatch($NewPass, $ConfirmNewPass)) {
+        header("location: ../changePassword.php?error=passwordsDoNotMatch");
+        exit();
+    }
+    if (passwordIsTooSimple($NewPass)) {
+        header("location: ../changePassword.php?error=passwordIsTooSimple");
+        exit();
+    }
+
+    // CurrentPass matches the user that is logged in.
+    // The new password is complex enough
+    // And the passwords match
+    // Change the password in the database and replace it with $NewPass
+    $hashedPwd = password_hash($NewPass, PASSWORD_DEFAULT);
+    $conn = connectToDatabase();
+    $sql = "Update Users SET Password = '$hashedPwd' WHERE ID = $UserID;";
+    $result = mysqli_query($conn, $sql);
+    if ($result)  {
+        header("location: ../settings");
+    }
+    else {
+        echo "Password change failed: " . mysqli_error($conn);
+    }
+
+}
+
 function setUserWebsiteAppearance($UserID, $WebsiteAppearanceValue) {
     $conn = connectToDatabase();
     $sql = "Update Users SET ColorPreferences = $WebsiteAppearanceValue WHERE ID = $UserID;";
@@ -53,7 +96,6 @@ function setUserWebsiteAppearance($UserID, $WebsiteAppearanceValue) {
 }
 
 function getUserWebsitePreferences($UserID) {
-    
     $conn = connectToDatabase();
     $sql = "SELECT ColorPreferences FROM Users WHERE ID = $UserID;";
     $result = mysqli_query($conn, $sql);
