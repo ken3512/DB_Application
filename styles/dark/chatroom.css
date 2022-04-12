@@ -1,0 +1,12 @@
+.chatroom {
+    background-color: black;
+    border: 2px solid white;
+    width: 80vw;
+    text-align: left;
+    padding: 10px;
+}
+
+.chatroom_outer {
+    margin: 0 auto;
+    width: 80vw;
+}
