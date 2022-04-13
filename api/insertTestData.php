@@ -82,12 +82,11 @@
         $stmt = $conn->prepare($sql);
 
         $Name_enc = encryptthis($Name, $key);
-        $Privacy_enc = encryptthis($Privacy, $key);
         $Description_enc = encryptthis($Description, $key);
         $ContactPhone_enc = encryptthis($ContactPhone, $key);
         $ContactEmail_enc = encryptthis($ContactEmail, $key);
 
-        $stmt->bind_param("iiississ", $LocationID, $EventCat, $ForeignID, $Name_enc, $Description_enc, $Privacy_enc, $ContactPhone_enc, $ContactEmail_enc);
+        $stmt->bind_param("iiississ", $LocationID, $EventCat, $ForeignID, $Name_enc, $Description_enc, $Privacy, $ContactPhone_enc, $ContactEmail_enc);
         $stmt->execute();
     }
 

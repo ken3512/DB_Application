@@ -41,7 +41,6 @@ function changeUsername($UserID, $NewName)
 {
     $key = encryptionKey();
 
-
     if (usernameIsInvalid($NewName)) {
         header("location: ../changeUsername.php?error=newUsernameInvalid");
         return;
@@ -53,7 +52,10 @@ function changeUsername($UserID, $NewName)
     // Only here if the $NewName is valid and the name doesn't already exist
     // Change the user's name in the database
     $conn = connectToDatabase();
-    $sql = "Update Users SET Name = '$NewName' WHERE ID = $UserID;";
+
+    $NewName_enc = encryptthis($NewName, $key);
+
+    $sql = "Update Users SET Name = '$NewName_enc' WHERE ID = $UserID;";
     $result = mysqli_query($conn, $sql);
 
     if ($result)  {
@@ -71,7 +73,6 @@ function changeUsername($UserID, $NewName)
 
 function passwordDoesNotMatchUser($UserID, $CurrentPass) 
 {
-    $key = encryptionKey();
     $result = true;
     
     $UserInfo = getUserInfoById($UserID);
@@ -256,7 +257,12 @@ function createEvent($EventName, $EventDescription, $EventCategory, $EventPrivac
         echo "Location Insert Failed: " . mysqli_error($conn);
         exit();
     }
-    $stmt->bind_param("ss", $EventLocationName, $EventLocationDescription);
+
+    $EventLocationName_enc = encryptthis($EventLocationName, $key);
+    $EventLocationDescription_enc = encryptthis($EventLocationDescription, $key);
+    
+
+    $stmt->bind_param("ss", $EventLocationName_enc, $EventLocationDescription_enc);
     $stmt->execute();
     $stmt->get_result();
 
@@ -279,9 +285,14 @@ function createEvent($EventName, $EventDescription, $EventCategory, $EventPrivac
         echo "Prepared statement failed";
         exit();
     }
-    
 
-    $stmt->bind_param("iiissiis", $EventLocationID, $EventCategory, $ForeignID, $EventName, $EventDescription, $EventPrivacy, $ContactPhone, $ContactEmail);
+    $EventName_enc = encryptthis($EventName, $key);
+    $Privacy_enc = encryptthis($Privacy, $key);
+    $Description_enc = encryptthis($Description, $key);
+    $ContactPhone_enc = encryptthis($ContactPhone, $key);
+    $ContactEmail_enc = encryptthis($ContactEmail, $key);
+
+    $stmt->bind_param("iiissiis", $EventLocationID, $EventCategory, $ForeignID, $EventName_enc, $EventDescription_enc, $EventPrivacy_enc, $ContactPhone_enc, $ContactEmail_enc);
     $stmt->execute();
     $stmt->get_result();
     header("location: ../index.php");
@@ -297,7 +308,12 @@ function usernameExists($Name, $Gmail)
         header("location: ../signup.php?error=preparedStatementFailed");
         exit();
     }
-    mysqli_stmt_bind_param($stmt, "ss", $Name, $Gmail);
+
+    $Name_enc = encryptthis($Name, $key);
+    $Gmail_enc = encryptthis($Gmail, $key);
+
+
+    mysqli_stmt_bind_param($stmt, "ss", $Name_enc, $Gmail_enc);
     mysqli_stmt_execute($stmt);
 
     $resultData = mysqli_stmt_get_result($stmt);
@@ -329,7 +345,7 @@ function login($Gmail, $Password)
         // Start the session and assign variables
         session_start();
         $_SESSION["ID"] = $usernameExists["ID"];
-        $_SESSION["Name"] = $usernameExists["Name"];
+        $_SESSION["Name"] = decryptthis($usernameExists["Name"], $key);
         // Go to the account page of the user
         header("location: ../index.php"); 
         exit();
@@ -353,7 +369,11 @@ function signup($UniversityID, $Name, $Gmail, $Phone, $Password)
         exit();
     }
 
-    $stmt->bind_param("issss", $UniversityID, $Name, $Gmail, $Phone, $hashedPwd);
+    $Name_enc=  encryptthis($Name, $key);
+    $Gmail_enc = encryptthis($Gmail, $key);
+    $Phone_enc = encryptthis($Phone, $key);
+
+    $stmt->bind_param("issss", $UniversityID, $Name_enc, $Gmail_enc, $Phone_enc, $hashedPwd);
     $stmt->execute();
     $stmt->get_result();
 
