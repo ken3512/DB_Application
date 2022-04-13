@@ -274,6 +274,7 @@ function createEvent($EventName, $EventDescription, $EventCategory, $EventPrivac
         echo "Prepared statement failed";
         exit();
     }
+    
 
     $stmt->bind_param("iiissiis", $EventLocationID, $EventCategory, $ForeignID, $EventName, $EventDescription, $EventPrivacy, $ContactPhone, $ContactEmail);
     $stmt->execute();
