@@ -764,11 +764,6 @@ function allStudents($UniversityID)
     $key = encryptionKey();
     $conn = connectToDatabase();
     $sql = "SELECT U.ID, U.Name FROM  Users U WHERE U.UniversityID = $UniversityID;";
-
-     /*
-        encryptthis(, $key);
-        decryptthis(, $key);
-    */
     $result = mysqli_query($conn, $sql);
     $resultCheck = mysqli_num_rows($result);
 
