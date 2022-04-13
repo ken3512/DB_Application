@@ -838,7 +838,9 @@ function FormatJoinRSO($RSOID, $Name)
 
 // Insert the $Comment passed in into the chatroom comments table
 // with the $UserID that was passed in 
-function insertChatroomComment($UserID, $Comment) {
+function insertChatroomComment($UserID, $Comment) 
+{
+    $key = encryptionKey();
     $conn = connectToDatabase();
     $sql = "INSERT INTO ChatroomComments (UserID, Comment) VALUES (?, ?)";
     
@@ -851,7 +853,9 @@ function insertChatroomComment($UserID, $Comment) {
         exit();
     }
 
-    $stmt->bind_param("is", $UserID, $Comment);
+    $Comment_enc = encryptthis($Comment, $key);
+
+    $stmt->bind_param("is", $UserID, $Comment_enc);
     $stmt->execute();
     $result = $stmt->get_result();
 
@@ -862,7 +866,8 @@ function insertChatroomComment($UserID, $Comment) {
 
 // Echo every comment for the chatroom
 // Starting with the most recent
-function displayAllChatroomComments() {
+function displayAllChatroomComments() 
+{
     $key = encryptionKey();
     $conn = connectToDatabase();
     $sql = "SELECT * FROM ChatroomComments ORDER BY ID DESC;";
@@ -875,7 +880,7 @@ function displayAllChatroomComments() {
             $UserInfo = getUserInfoById($row["UserID"]);
             $UserName = decryptthis($UserInfo["Name"], $key);
             $date = new DateTime($row['DataTimeCreated']);
-            echo "<p>&emsp;[" . $date->format('m-d H:i') . "] <strong> ". $UserName .": </strong> ". $row['Comment'] . "</p>";
+            echo "<p>&emsp;[" . $date->format('m-d H:i') . "] <strong> ". $UserName .": </strong> ". decryptthis($row['Comment'], $key) . "</p>";
         }
     }
     else {
