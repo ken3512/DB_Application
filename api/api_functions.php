@@ -249,15 +249,20 @@ function createEvent($EventName, $EventDescription, $EventCategory, $EventPrivac
     $conn = connectToDatabase();
     // Add the location to the database and use it's Id top populate $EventLocationID
     // Then insert the values into the event database
-    $sql = "INSERT INTO `Location` (`Name`, `Description`) VALUES ('$EventLocationName', '$EventLocationDescription');";
-    $result = mysqli_query($conn, $sql);
-    if ($result) {
-        $EventLocationID = $conn->insert_id;
-    }
-    else {
+    // $sql = "INSERT INTO `Location` (`Name`, `Description`) VALUES ('$EventLocationName', '$EventLocationDescription');";
+    $sql = "INSERT INTO `Location` (`Name`, `Description`) VALUES (?, ?);";
+    $stmt = $conn->prepare($sql);
+    if(!$stmt) {
         echo "Location Insert Failed: " . mysqli_error($conn);
         exit();
     }
+    $stmt->bind_param("ss", $EventLocationName, $EventLocationDescription);
+    $stmt->execute();
+    $stmt->get_result();
+
+    // Get the location id of the location we just inserted
+    $EventLocationID = $conn->insert_id;
+    
     // Get the ForeignID
     // If the privacy is 0 or 1 set the ForeignID to the University
     // Else set the ForeignID to the RSO

@@ -49,7 +49,10 @@ INSERT INTO Users (UniversityID, Super, Name, Gmail, Password, Phone) VALUES (2,
 INSERT INTO Users (UniversityID, Super, Name, Gmail, Password, Phone) VALUES (2, 0, "yo3", "yo3@gmail.com", "password38", 4070909888);
 INSERT INTO Users (UniversityID, Super, Name, Gmail, Password, Phone) VALUES (2, 0, "yo4", "yo4@gmail.com", "password39", 3062564658);
 INSERT INTO Users (UniversityID, Super, Name, Gmail, Password, Phone) VALUES (2, 0, "yo5", "yo5@gmail.com", "password40", 3060909888);
-INSERT INTO Users (UniversityID, Super, Name, Gmail, Password, Phone) VALUES (2, 0, "kenny", "kenny@ucf.edu", "password", 3060909888);
+INSERT INTO Users (UniversityID, Super, Name, Gmail, Password, Phone) VALUES (2, 0, "kenny", "kenny@knights.ucf.edu", "password", 3060909888);
+INSERT INTO Users (UniversityID, Super, Name, Gmail, Password, Phone) VALUES (2, 1, "kennySuper", "kennySuper@knights.ucf.edu", "password", 3060909888);
+INSERT INTO Users (UniversityID, Super, Name, Gmail, Password, Phone) VALUES (2, 0, "Travis", "Travis@knights.ucf.edu", "password", 3864795030);
+INSERT INTO Users (UniversityID, Super, Name, Gmail, Password, Phone) VALUES (2, 1, "TravisSuper", "Travis@knights.ucf.edu", "password", 3864795030);
 
 
 INSERT INTO RSO (UniversityID, OwnerID, Name) VALUES (1, 1, "Scratch Systems");
