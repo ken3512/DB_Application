@@ -1,0 +1,35 @@
+body {
+    background-color: #c5d0ff;
+}
+
+.submitButton {
+    width: 250px;
+    height: 30px;
+    text-align: right;
+    text-transform: uppercase;
+    font-size: medium;
+    background: #c5d0ff;
+    color: black;
+    transition: .75s;
+}
+.submitButton:hover {
+    background: linear-gradient(45deg, rgb(203, 152, 255) 50%, white);
+    cursor: pointer;
+}
+
+.main {
+    margin: 0 auto;
+    border: 2px solid black;
+    background-color: white;
+    padding: 10px;
+    min-width: 50vw;
+    width: 50vw;
+    min-height: 60vh;
+    height: fit-content;
+}
+
+h1 {
+    text-align: center;
+    border-bottom: 2px solid black;
+    padding: 10px;
+}
