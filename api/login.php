@@ -7,20 +7,19 @@
     if (isset($_POST["submit"])) {
 
         // Get the information that was posted
-        $Gmail = $_POST["Gmail"];
+        $Name = $_POST["Username"];
         $Password = $_POST["Password"];
 
-        if (loginInputIsEmpty($Gmail, $Password)) {
-            header("location: ../login.php?error=loginInputIsEmpty");
+        if (loginInputIsEmpty($Name, $Password)) {
+            //header("location: ../login.php?error=loginInputIsEmpty");
             exit();
         } 
         
-        login($Gmail, $Password);
+        login($Name, $Password);
     }
     else {
         // We didn't get here through submitting a login request so
         // go back to the login page
-        header("location: ../login.php");
+        //header("location: ../login.php");
         exit();
     }
-

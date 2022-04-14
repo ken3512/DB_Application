@@ -53,9 +53,7 @@ function changeUsername($UserID, $NewName)
     // Change the user's name in the database
     $conn = connectToDatabase();
 
-    $NewName_enc = encryptthis($NewName, $key);
-
-    $sql = "Update Users SET Name = '$NewName_enc' WHERE ID = $UserID;";
+    $sql = "Update Users SET Name = '$NewName' WHERE ID = $UserID;";
     $result = mysqli_query($conn, $sql);
 
     if ($result)  {
@@ -287,12 +285,12 @@ function createEvent($EventName, $EventDescription, $EventCategory, $EventPrivac
     }
 
     $EventName_enc = encryptthis($EventName, $key);
-    $Privacy_enc = encryptthis($Privacy, $key);
-    $Description_enc = encryptthis($Description, $key);
+    $EventDescription_enc = encryptthis($EventDescription, $key);
     $ContactPhone_enc = encryptthis($ContactPhone, $key);
     $ContactEmail_enc = encryptthis($ContactEmail, $key);
 
-    $stmt->bind_param("iiissiis", $EventLocationID, $EventCategory, $ForeignID, $EventName_enc, $EventDescription_enc, $EventPrivacy_enc, $ContactPhone_enc, $ContactEmail_enc);
+
+    $stmt->bind_param("iiissiis", $EventLocationID, $EventCategory, $ForeignID, $EventName_enc, $EventDescription_enc, $EventPrivacy, $ContactPhone_enc, $ContactEmail_enc);
     $stmt->execute();
     $stmt->get_result();
     header("location: ../index.php");
@@ -302,18 +300,14 @@ function usernameExists($Name, $Gmail)
 {
     $key = encryptionKey();
     $conn = connectToDatabase();
-    $sql = "SELECT * FROM Users WHERE `Name` = ? OR `Gmail` = ?;";
+    $sql = "SELECT * FROM Users WHERE `Name` = ?;";
     $stmt = mysqli_stmt_init($conn);
     if (!mysqli_stmt_prepare($stmt, $sql)) {
         header("location: ../signup.php?error=preparedStatementFailed");
         exit();
     }
 
-    $Name_enc = encryptthis($Name, $key);
-    $Gmail_enc = encryptthis($Gmail, $key);
-
-
-    mysqli_stmt_bind_param($stmt, "ss", $Name_enc, $Gmail_enc);
+    mysqli_stmt_bind_param($stmt, "s", $Name);
     mysqli_stmt_execute($stmt);
 
     $resultData = mysqli_stmt_get_result($stmt);
@@ -326,10 +320,10 @@ function usernameExists($Name, $Gmail)
     mysqli_stmt_close($stmt);
 }
 
-function login($Gmail, $Password)
+function login($Name, $Password)
 {
     $key = encryptionKey();
-    $usernameExists = usernameExists($Gmail, $Gmail);
+    $usernameExists = usernameExists($Name, $Name);
 
     if ($usernameExists === false) {
         header("location: ../login.php?error=invalidUsernameOrEmail");
@@ -345,7 +339,7 @@ function login($Gmail, $Password)
         // Start the session and assign variables
         session_start();
         $_SESSION["ID"] = $usernameExists["ID"];
-        $_SESSION["Name"] = decryptthis($usernameExists["Name"], $key);
+        $_SESSION["Name"] = $usernameExists["Name"];
         // Go to the account page of the user
         header("location: ../index.php"); 
         exit();
@@ -369,11 +363,10 @@ function signup($UniversityID, $Name, $Gmail, $Phone, $Password)
         exit();
     }
 
-    $Name_enc=  encryptthis($Name, $key);
     $Gmail_enc = encryptthis($Gmail, $key);
     $Phone_enc = encryptthis($Phone, $key);
 
-    $stmt->bind_param("issss", $UniversityID, $Name_enc, $Gmail_enc, $Phone_enc, $hashedPwd);
+    $stmt->bind_param("issss", $UniversityID, $Name, $Gmail_enc, $Phone_enc, $hashedPwd);
     $stmt->execute();
     $stmt->get_result();
 
@@ -633,7 +626,10 @@ function createRSO($UniversityID, $OwnerID, $Name, $MemberID_1, $MemberID_2, $Me
         exit();
     }
     
-    $stmt->bind_param("iis", $UniversityID, $OwnerID, $Name);
+
+    $Name_enc = encryptionKey($Name, $key);
+
+    $stmt->bind_param("iis", $UniversityID, $OwnerID, $Name_enc);
     $stmt->execute();
     
     $RSOID = $conn->insert_id;
@@ -899,7 +895,7 @@ function displayAllChatroomComments()
         while($row = mysqli_fetch_assoc($result))
         {
             $UserInfo = getUserInfoById($row["UserID"]);
-            $UserName = decryptthis($UserInfo["Name"], $key);
+            $UserName = $UserInfo["Name"];
             $date = new DateTime($row['DataTimeCreated']);
             echo "<p>&emsp;[" . $date->format('m-d H:i') . "] <strong> ". $UserName .": </strong> ". decryptthis($row['Comment'], $key) . "</p>";
         }

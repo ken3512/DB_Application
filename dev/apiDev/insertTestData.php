@@ -1,5 +1,5 @@
 <?php 
-    include_once "api_functions.php";
+    include_once "../../api/api_functions.php";
 
 
     function UniversityTestData($Name, $Bio, $GmailAt)
@@ -19,12 +19,11 @@
         $sql = "INSERT INTO Users(UniversityID, Super, Name, Gmail, Phone, Password) VALUES (?, ?, ?, ?, ?, ?);";
         $stmt = $conn->prepare($sql);
 
-        $Name_enc = encryptthis($Name, $key);
         $Gmail_enc = encryptthis($Gmail, $key);
         $Password_enc = password_hash($Password, PASSWORD_DEFAULT);
         $Phone_enc = encryptthis($Phone, $key);
 
-        $stmt->bind_param("iissss", $UniversityID, $Super, $Name_enc, $Gmail_enc, $Password_enc, $Phone_enc);
+        $stmt->bind_param("iissss", $UniversityID, $Super, $Name, $Gmail_enc, $Phone_enc, $Password_enc);
         $stmt->execute();
     }
 
@@ -229,4 +228,4 @@
     EventsTestData(10,3,19,"Protest at NY!","Let's protest for equal rights at NY!", 1, 4079845555, "protest@gmail.com");
     
 
-header("location: ../index.php");
+header("location: ../tools.php");
