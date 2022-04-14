@@ -793,7 +793,7 @@ function allStudents($UniversityID)
     
     if($resultCheck > 0)
         while($row = mysqli_fetch_assoc($result))
-            FormatCreateRSO($row["ID"], decryptthis($row["Name"], $key));
+            FormatCreateRSO($row["ID"], $row["Name"]);
 }
 
 function FormatCreateRSO($UserID, $Name)
