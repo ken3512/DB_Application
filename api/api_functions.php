@@ -290,7 +290,7 @@ function createEvent($EventName, $EventDescription, $EventCategory, $EventPrivac
     $ContactEmail_enc = encryptthis($ContactEmail, $key);
 
 
-    $stmt->bind_param("iiissiis", $EventLocationID, $EventCategory, $ForeignID, $EventName_enc, $EventDescription_enc, $EventPrivacy, $ContactPhone_enc, $ContactEmail_enc);
+    $stmt->bind_param("iiississ", $EventLocationID, $EventCategory, $ForeignID, $EventName_enc, $EventDescription_enc, $EventPrivacy, $ContactPhone_enc, $ContactEmail_enc);
     $stmt->execute();
     $stmt->get_result();
     header("location: ../index.php");
@@ -472,7 +472,7 @@ function FormatEvent($EventID, $UserID)
                 </div>
                 <span class="event_desc">Phone: '. decryptthis($info["ContactPhone"], $key) .'</span>
                 <span class="event_desc">Email: '. decryptthis($info["ContactEmail"], $key) .'</span><br>
-                <span class="event_desc">Location: '. decryptthis(getLocationNameByLocationID($info["LocationID"]), $key) .'</span><br> 
+                <span class="event_desc">Location: '. getLocationNameByLocationID($info["LocationID"]) .'</span><br> 
                 <span class="event_desc" >Rating: '. rating($EventID) .'</span><br><br>
             </div>
     ';
@@ -627,7 +627,7 @@ function createRSO($UniversityID, $OwnerID, $Name, $MemberID_1, $MemberID_2, $Me
     }
     
 
-    $Name_enc = encryptionKey($Name, $key);
+    $Name_enc = encryptthis($Name, $key);
 
     $stmt->bind_param("iis", $UniversityID, $OwnerID, $Name_enc);
     $stmt->execute();

@@ -1,6 +1,7 @@
 <?php
     include_once 'api/api_functions.php';
     session_start();
+    date_default_timezone_set('America/New_York');
 ?>
 
 <!-- Head -->
