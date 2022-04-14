@@ -1,0 +1,25 @@
+.commentEditingButtons {
+    display: inline;
+    text-align: right;
+    width: fit-content;
+    width: 90px;
+    height: 25px;
+    text-transform: uppercase;
+    font-size: medium;
+    background: #c5d0ff;
+    color: black;
+    transition: .75s;
+}
+.commentEditingButtons:hover {
+    background: linear-gradient(45deg, rgb(203, 152, 255) 50%, white);
+    cursor: pointer;
+}
+
+.commentEditingForms {
+    display: inline;
+    text-align: right;
+}
+
+.EditingOptions {
+    text-align: right;
+}

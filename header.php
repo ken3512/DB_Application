@@ -38,6 +38,7 @@
                     <link rel="stylesheet" href="styles/light/sidebar.css">
                     <link rel="stylesheet" href="styles/light/events.css">
                     <link rel="stylesheet" href="styles/light/chatroom.css">
+                    <link rel="stylesheet" href="styles/light/editingComment.css">
                 ';
             }
         } else { // Default is dark mode if the user isn't logged in

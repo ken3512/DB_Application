@@ -671,14 +671,14 @@ function getComments($EventID)
 {
     $key = encryptionKey();
     $conn = connectToDatabase();
-    $sql = "SELECT C.Text, U.Name, C.DataTimeCreated FROM Comments C, Users U WHERE C.EventID = $EventID AND (C.UserID = U.ID)";
+    $sql = "SELECT C.Text, U.Name, C.DataTimeUpdated FROM Comments C, Users U WHERE C.EventID = $EventID AND (C.UserID = U.ID)";
 
     $result = mysqli_query($conn, $sql);
     $resultCheck = mysqli_num_rows($result);
 
     if($resultCheck > 0)
         while($row = mysqli_fetch_assoc($result)) {
-            $date = new DateTime($row['DataTimeCreated']);
+            $date = new DateTime($row['DataTimeUpdated']);
             echo "<p>&emsp;[" . $date->format('m-d H:i') . "] <strong> ". $row['Name'] .": </strong> ". $row['Text'] . "</p><br>";
         }
 }
@@ -894,13 +894,107 @@ function displayAllChatroomComments()
     {
         while($row = mysqli_fetch_assoc($result))
         {
+            $commentID = $row['ID'];
             $UserInfo = getUserInfoById($row["UserID"]);
             $UserName = $UserInfo["Name"];
-            $date = new DateTime($row['DataTimeCreated']);
-            echo "<p>&emsp;[" . $date->format('m-d H:i') . "] <strong> ". $UserName .": </strong> ". decryptthis($row['Comment'], $key) . "</p>";
+            $date = new DateTime($row['DataTimeUpdated']);
+            echo "
+                <p>&emsp;[" . $date->format('m-d H:i') . "] ". checkEdited($row['DataTimeCreated'], $row['DataTimeUpdated']) ." <strong> ". $UserName .": </strong> ". decryptthis($row['Comment'], $key) . "</p>
+            ";
+            displayCommentOptions($commentID, $UserInfo);
         }
     }
     else {
+        echo mysqli_error($conn);
+    }
+}
+
+function checkEdited($DataTimeCreated, $DataTimeUpdated) {
+    if ($DataTimeCreated != $DataTimeUpdated) {
+        return "(edited)";
+    }
+}
+function displayCommentOptions($commentID, $UserInfo) {
+    if ($UserInfo["ID"] == $_SESSION["ID"] || $UserInfo['Super'] == 1) {
+        echo "<div class='EditingOptions'>";
+        if ($UserInfo["ID"] == $_SESSION["ID"]) {
+            echo "
+                <form class='commentEditingForms' action='editComment.php'  method='POST'>
+                    <input type='hidden' name='commentID' value='$commentID'>
+                    <button class='commentEditingButtons' type='submit' name='submit'>Edit</button>
+                </form>
+            ";
+        }
+        echo"   
+            <form class='commentEditingForms' action='api/deleteComment.php' method='POST'>
+                <input type='hidden' name='commentID' value='$commentID'>
+                <button class='commentEditingButtons' type='submit' name='submit'>Delete</button>
+            </form>
+        ";
+        echo "</div>";
+    }    
+}
+
+function deleteComment($CommentID) {
+    $conn = connectToDatabase();
+    $sql = "DELETE FROM ChatroomComments C WHERE C.ID = $CommentID;";
+    $result = mysqli_query($conn, $sql);
+    if (!$result) {
+        echo mysqli_error($conn);
+        exit();
+    } 
+    else {
+        header("location: ../index.php");
+    }
+}
+        
+function displayEditingComment($CommentID) {
+    $key = encryptionKey();
+    $conn = connectToDatabase();
+    $sql = "SELECT * FROM ChatroomComments WHERE ID = $CommentID;";
+    $result = mysqli_query($conn, $sql);
+    
+    if($result)
+    {
+        echo '
+            <h2 class="pageTitle">Editing Comment:</h2>
+            <div class="chatroom_outer">
+                <div class="chatroom">
+        ';
+        
+        $row = mysqli_fetch_assoc($result);
+        $UserInfo = getUserInfoById($row["UserID"]);
+        $UserName = $UserInfo["Name"];
+        echo $UserName . '<br>';
+        echo '<p>Old Comment:<br>&emsp;' . decryptthis($row["Comment"], $key) . '</p>';
+        echo '
+        <div class="editingComment">
+        <form action="api/editComment.php" method="POST">
+            <input type="hidden" name="CommentID" value='.$row["ID"].'>
+            <textarea class="CommentEntry" name="NewComment" rows="4" cols="20" placeholder="New Comment..."></textarea><br>
+            <button class="commentSubmit" type="submit" name="submit">Update</button>
+        </form>
+        </div>
+        ';
+        $date = new DateTime($row['DataTimeUpdated']);
+        echo "<p>Last Updated: &emsp;[" . $date->format('m-d H:i') . "]</p>";
+
+        echo '</div></div>';
+    }
+    else {
+        echo mysqli_error($conn);
+    }
+}
+
+function updateComment($CommentID, $NewComment) {
+    $key = encryptionKey();
+    $conn = connectToDatabase();
+    $NewComment_enc = encryptthis($NewComment, $key);
+    $Date = date('Y-m-d H:i:s');
+    $sql = "UPDATE ChatroomComments SET Comment = '$NewComment_enc', DataTimeUpdated = '$Date'  WHERE ID = $CommentID";
+    $result = mysqli_query($conn, $sql);
+    // Return success boolean
+    if(!$result) {
         echo mysqli_error($conn);
     }
 }

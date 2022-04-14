@@ -13,6 +13,8 @@
     }
     else {
 ?>
+    <!-- <script src="./scripts/script.js"></script>
+    <button onclick="setScrollPosition(200)">Set Scroll Position</button> -->
     <!-- User is logged in display the chatroom -->
     <h2 class="pageTitle">Welcome to the Chatroom!</h2>
     <div class="chatroom_outer">
@@ -31,6 +33,7 @@
         </div>
     </div>
 
+    
 <?php
     }
 ?>
