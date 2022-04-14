@@ -17,7 +17,7 @@
         </form>
         <br><br>   
         <form class="forms" action="apiDev/MakeAdmin.php" method="POST">
-            <button class="submitButton" name="submit" type="submit">Become Admin</button>
+            <button class="submitButton" name="submit" type="submit">Become Super Admin</button>
         </form>
         <br><br>
         <form class="forms" action="apiDev/goHome.php" method="POST">
