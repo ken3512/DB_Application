@@ -836,7 +836,7 @@ function allRSO($UniversityID, $UserID)
     
     if($resultCheck > 0)
         while($row = mysqli_fetch_assoc($result))
-        FormatJoinRSO($row["ID"], decryptthis($row["Name"], $key));
+            FormatJoinRSO($row["ID"], decryptthis($row["Name"], $key));
 }
 
 function FormatJoinRSO($RSOID, $Name)
