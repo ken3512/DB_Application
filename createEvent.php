@@ -22,10 +22,13 @@
     ?>
     
     <form class="forms" action="api/createEvent.php" method="POST">
+        <select name="RSOs">
+            <option value="">------------------</option>
         <?php
             if (isset($_SESSION["ID"]))
                 displayOwnedRSOs($_SESSION["ID"]);
         ?>
+        </select>
         <input class="textInput" type="text" name="EventName" placeholder="Event Name..." required><br>
         <input class="textInput" type="text" name="EventDescription" placeholder="Event Description..." required><br>
         

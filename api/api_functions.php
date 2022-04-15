@@ -299,16 +299,12 @@ function createEvent($EventName, $EventDescription, $EventCategory, $EventPrivac
 function displayOwnedRSOs($UserID) {
     $key = encryptionKey();
     $conn = connectToDatabase();
-    $sql = "SELECT Name, ID FROM RSO WHERE OwnerID = $UserID";
+    $sql = "SELECT R.Name, R.ID FROM RSO R WHERE EXISTS (SELECT R1.ID FROM Registered R1 WHERE R1.RSOID = R.ID AND R1.UserID = $UserID);";
     $result = mysqli_query($conn, $sql);
     
     if($result) {
-        echo '<select name="RSOs">';
         while($row = mysqli_fetch_assoc($result))
-        {
            echo '<option value="'. $row["ID"] .'>'. decryptthis($row['Name'], $key) .'</option>';
-        }
-        echo '</select><br>';
     } else {
         echo mysqli_error($conn);
     }
@@ -592,14 +588,14 @@ function leaveRSO($RSOID, $UserID) {
     } 
     else {
         updateRSOStatus($RSOID);
-        header("location: ../index.php");
+        header("location: ../profile.php");
     }
 }
 
 function updateRSOStatus($RSOID) {
     
     $conn = connectToDatabase();
-    $sql = "SELECT COUNT(*) AS Total From Registered WHERE RSOID = 1;";
+    $sql = "SELECT COUNT(*) AS Total From Registered WHERE RSOID = $RSOID;";
     $result = mysqli_query($conn, $sql);
     if (!$result) {
         echo mysqli_error($conn);
@@ -677,6 +673,7 @@ function registerMember($RSOID, $MemberID)
     $sql = "INSERT INTO Registered (RSOID, UserID) VALUES ($RSOID, $MemberID);";
     $result = mysqli_query($conn, $sql);
 
+    updateRSOStatus($RSOID);
     // Return success boolean
     if($result) return True;
     return false;
@@ -695,7 +692,7 @@ function unregisterMember($MemberID, $RSOID)
 } 
 
 
-function createRSO($UniversityID, $OwnerID, $Name, $MemberID_1, $MemberID_2, $MemberID_3, $MemberID_4)
+function createRSO($UniversityID, $OwnerID, $Name)
 {
     $key = encryptionKey();
     $conn = connectToDatabase();
@@ -714,13 +711,9 @@ function createRSO($UniversityID, $OwnerID, $Name, $MemberID_1, $MemberID_2, $Me
 
     $stmt->bind_param("iis", $UniversityID, $OwnerID, $Name_enc);
     $stmt->execute();
-    
+
     $RSOID = $conn->insert_id;
 
-    registerMember($RSOID, $MemberID_1);
-    registerMember($RSOID, $MemberID_2);
-    registerMember($RSOID, $MemberID_3);
-    registerMember($RSOID, $MemberID_4);
     registerMember($RSOID, $OwnerID);
 }
 
@@ -1061,7 +1054,7 @@ function allRSO($UniversityID, $UserID)
 {
     $key = encryptionKey();
     $conn = connectToDatabase();
-    $sql = "SELECT R.ID, R.Name FROM  RSO R WHERE R.UniversityID = $UniversityID
+    $sql = "SELECT R.ID, R.Name, R.UniversityID, R.Status FROM  RSO R WHERE R.UniversityID = $UniversityID
     AND NOT EXISTS 
     (SELECT O.ID FROM Registered O WHERE O.UserID = $UserID AND O.RSOID = R.ID);";
 
@@ -1071,17 +1064,19 @@ function allRSO($UniversityID, $UserID)
     
     if($resultCheck > 0)
         while($row = mysqli_fetch_assoc($result))
-            FormatJoinRSO($row["ID"], decryptthis($row["Name"], $key));
+            FormatJoinRSO($row["ID"], decryptthis($row["Name"], $key), $row["UniversityID"], $row["Status"]);
 }
 
-function FormatJoinRSO($RSOID, $Name)
+function FormatJoinRSO($RSOID, $Name, $UniversityID, $Status)
 {
-    echo $Name;
+    echo '<p class="desc">RSO Name: ' . $Name . '</p>';
+    echo '<p class="desc">RSO\'s University: ' . getUserUniversityName($UniversityID) . '</p>';
+    echo '<p class="desc">RSO\'s Approval Status: ' . stringifyStatus($Status)  . '</p>';
     echo'
     <form class = "forms" action="api/registerMember.php" method="POST">
         <input type="hidden" name="RSOID" value=' . $RSOID . '>
         <button type="submit" class="submitButton" name="submit">Join</button>
-    </form>';
+    </form><br>';
 }
 
 //

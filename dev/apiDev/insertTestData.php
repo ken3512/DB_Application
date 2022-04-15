@@ -256,6 +256,22 @@
     UniversityTestData("University of Central Florida", "@knights.ucf.edu");
     UniversityTestData("Florida State University", "@fsu.edu");
 
+    CategoriesTestData("Social");
+    CategoriesTestData("Fundraising");
+    CategoriesTestData("Tech Talks");
+    CategoriesTestData("Swimming");
+    CategoriesTestData("Food");
+    CategoriesTestData("Protest");
+    CategoriesTestData("Culture");
+    CategoriesTestData("Fitness");
+    CategoriesTestData("Party");
+    CategoriesTestData("Movies");
+    CategoriesTestData("Beach");
+    CategoriesTestData("Springs");
+    CategoriesTestData("Concert");
+    CategoriesTestData("Programming");
+    CategoriesTestData("Engineering");
+
     UsersTestData(1, 1, "Yosefh123", "Yosef huynh123", "yosefhuynh@knights.ucf.edu", "iambob123!!!", 4071231234);
     UsersTestData(1, 0, "KimG", "Gretchen Kim", "gretchenkim@knights.ucf.edu", "81ilovecates", 4072342345);
     UsersTestData(1, 0, "yann3Jac0b", "Cheyanne Jacobson", "cheyannejacobson@knights.ucf.edu", "1993wasdum", 3061231234);

@@ -5,40 +5,11 @@ include_once 'api_functions.php';
 session_start();
 $OwnerID = $_SESSION["ID"];
 $UniversityID = getUserUniversity($OwnerID);
-
 $Name = $_POST["Name"];
-$MemberID_1 = $_POST["M1"];
-$MemberID_2 = $_POST["M2"];
-$MemberID_3 = $_POST["M3"];
-$MemberID_4 = $_POST["M4"];
-
-$arr = array($OwnerID, $MemberID_1, $MemberID_2, $MemberID_3, $MemberID_4);
-
-if($MemberID_1 == 0|| 
-   $MemberID_2 == 0 || 
-   $MemberID_3 == 0 || 
-   $MemberID_4 == 0) 
-    header("location: ../createRSO?error=notAllSelected");
-
-for ($i = 0; $i < 5; $i++)
-  for ($j = $i; $j < 5; $j++)
-    if ($arr[$i] == $arr[$j] && $i != $j)
-        header("location: ../createRSO?error=sameUserSelected");
-
-$MemberUniv_1 = getUserUniversity($MemberID_1);
-$MemberUniv_2 = getUserUniversity($MemberID_2);
-$MemberUniv_3 = getUserUniversity($MemberID_3);
-$MemberUniv_4 = getUserUniversity($MemberID_4);
 
 
-if($MemberUniv_1!= $UniversityID || 
-   $MemberUniv_2 != $UniversityID || 
-   $MemberUniv_3 != $UniversityID || 
-   $MemberUniv_4 != $UniversityID) 
-    header("location: ../createRSO?error=universitiesDoNotMatch");
 
-
-createRSO($UniversityID, $OwnerID, $Name, $MemberID_1, $MemberID_2, $MemberID_3, $MemberID_4);
+createRSO($UniversityID, $OwnerID, $Name);
 
 
 header("location: ../createRSO");
