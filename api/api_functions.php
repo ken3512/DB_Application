@@ -657,7 +657,9 @@ function comment($EventID, $UserID, $Comment)
         exit();
     }
 
-    $stmt->bind_param("iis", $EventID, $UserID, $Comment);
+    $Comment_enc = encryptthis($Comment, $key);
+
+    $stmt->bind_param("iis", $EventID, $UserID, $Comment_enc);
     $stmt->execute();
     $result = $stmt->get_result();
 
@@ -678,7 +680,7 @@ function getComments($EventID, $UserID)
     if($resultCheck > 0)
         while($row = mysqli_fetch_assoc($result)) {
             $date = new DateTime($row['DataTimeUpdated']);
-            echo "<p>&emsp;[" . $date->format('m-d H:i') . "] <strong> ". $row['Name'] .": </strong> ". $row['Text'] . "</p><br>";
+            echo "<p>&emsp;[" . $date->format('m-d H:i') . "] <strong> ". $row['Name'] .": </strong> ". decryptthis($row['Text'], $key) . "</p><br>";
             displayEventCommentEditingButtons($EventID, $UserID, $row["ID"]);
         }
 }
@@ -744,7 +746,7 @@ function displayEventCommentEditingButtons($EventID, $UserID, $CommentID) {
 
 function deleteEventComment($CommentID) {
     $conn = connectToDatabase();
-    $sql = "DELETE FROM Comments C WHERE C.ID = $CommentID;";
+    $sql = "DELETE FROM comments WHERE ID = $CommentID;";
     $result = mysqli_query($conn, $sql);
     if (!$result) {
         echo mysqli_error($conn);
