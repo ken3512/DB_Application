@@ -314,7 +314,7 @@ function usernameExists($Username)
 {
     $key = encryptionKey();
     $conn = connectToDatabase();
-    $sql = "SELECT * FROM Users WHERE `Name` = ?;";
+    $sql = "SELECT * FROM Users WHERE `Username` = ?;";
     $stmt = mysqli_stmt_init($conn);
     if (!mysqli_stmt_prepare($stmt, $sql)) {
         header("location: ../signup.php?error=preparedStatementFailed");
