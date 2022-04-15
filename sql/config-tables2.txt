@@ -1,7 +1,7 @@
 CREATE TABLE `University` (
   `ID` int NOT NULL AUTO_INCREMENT,
   `Name` varchar(255) NOT NULL,
-  `Bio` varchar(255),
+  `Username` varchar(255) NOT NULL,
   `GmailAt` varchar(255) NOT NULL,
   `DataTimeCreated` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `DataTimeUpdated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
