@@ -477,7 +477,7 @@ function FormatEvent($EventID, $UserID)
             </div>
     ';
 
-    if($UserID != 0 && !isRated($EventID, $UserID))
+    if($UserID != 0)
     {
         echo '                
             <form action="api/rate.php" method="POST">
@@ -838,7 +838,18 @@ function rate($EventID, $UserID, $Rating)
     $key = encryptionKey();
     $conn = connectToDatabase();
     
-    if(isRated($EventID, $UserID)) return true;
+    if(isRated($EventID, $UserID)) 
+    {
+
+        $sql = "UPDATE Ratings R SET R.Rating = $Rating  WHERE R.EventID = $EventID AND R.UserID = $UserID;";
+
+        $result = mysqli_query($conn, $sql);
+        $resultCheck = mysqli_num_rows($result);
+
+        // Check if registration exists
+        if($resultCheck > 0) return True;
+        return False;
+    };
     
     $sql = "INSERT INTO Ratings (EventID, UserID, Rating) VALUES ($EventID, $UserID, $Rating)";
 
