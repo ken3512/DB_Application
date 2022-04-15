@@ -34,10 +34,11 @@
         $conn = connectToDatabase();
         $sql = "INSERT INTO RSO (UniversityID, OwnerID, Name) VALUES (?, ?, ?);";
         $stmt = $conn->prepare($sql);
-
+        
         $Name_enc = encryptthis($Name, $key);
         $stmt->bind_param("iis", $UniversityID, $OwnerID, $Name_enc);
         $stmt->execute();
+
     }
 
     function RegisteredTestData($RSOID, $UserID)
@@ -47,6 +48,8 @@
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("ii", $RSOID, $UserID);
         $stmt->execute();
+
+        updateRSOStatus($RSOID);
     }
 
     function LocationTestData($Name, $Longitude, $Latitude, $Description)
@@ -57,13 +60,18 @@
         $stmt = $conn->prepare($sql);
         
         $Name_enc = encryptthis($Name, $key);
-        $Longitude_enc = encryptthis($Longitude, $key);
-        $Latitude_enc = encryptthis($Latitude, $key);
         $Description_enc = encryptthis($Description, $key);
 
-        $stmt->bind_param("siis", $Name_enc, $Longitude_enc, $Latitude_enc, $Description_enc);
+        $stmt->bind_param("siis", $Name_enc, $Longitude, $Latitude, $Description_enc);
         $stmt->execute();
     }
+
+    LocationTestData("UCF Swimming Pool", 543467, -19803, "UCF Swimming Pool Wednesdays at 1PM!", );
+    LocationTestData("UCF HEC Building", 16432, 34526, "Tonight at Room 119 in the HEC Building!", );
+    LocationTestData("Business Building", 234567, 2366543, "Room 202 at 9PM on May 20th!", );
+    LocationTestData("Starbucks Near School", -45845, 345364, "Starbucks at 9AM!", );
+    LocationTestData("Chick-Fil-A Near School", 225446, 65453, "Chick-Fil-A at 10AM!", );
+
 
     function CategoriesTestData($Name)
     {
@@ -74,11 +82,11 @@
         $stmt->execute();
     }
 
-    function EventsTestData($LocationID, $EventCat, $ForeignID, $Name, $Description, $Privacy, $ContactPhone, $ContactEmail)
+    function EventsTestData($LocationID, $EventCat, $ForeignID, $Name, $Description, $Privacy, $ContactPhone, $ContactEmail, $Time)
     {
         $key = encryptionKey();
         $conn = connectToDatabase();
-        $sql = "INSERT INTO Events (LocationID, EventCat, ForeignID, Name, Description, Privacy, ContactPhone, ContactEmail) VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
+        $sql = "INSERT INTO Events (LocationID, EventCat, ForeignID, Name, Description, Privacy, ContactPhone, ContactEmail, Time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
         $stmt = $conn->prepare($sql);
 
         $Name_enc = encryptthis($Name, $key);
@@ -86,9 +94,24 @@
         $ContactPhone_enc = encryptthis($ContactPhone, $key);
         $ContactEmail_enc = encryptthis($ContactEmail, $key);
 
-        $stmt->bind_param("iiississ", $LocationID, $EventCat, $ForeignID, $Name_enc, $Description_enc, $Privacy, $ContactPhone_enc, $ContactEmail_enc);
+        $stmt->bind_param("iiississs", 
+            $LocationID, 
+            $EventCat, 
+            $ForeignID, 
+            $Name_enc, 
+            $Description_enc, 
+            $Privacy, 
+            $ContactPhone_enc, 
+            $ContactEmail_enc, 
+            $Time);
         $stmt->execute();
     }
+
+    EventsTestData(1,1,1,"Swim With Tim!","Get the chance to swim with Tim Tebow!", 1, 4077778888, "timtebow@gmail.com", "11:11:00");
+    EventsTestData(2,7,1,"Happy Feat!","We will go watch a penguin movie!", 0, 4076664444, "yaya@gmail.com", "22:22:00");
+    EventsTestData(3,12,2,"Robo Mobo!","We will work together to build a robot!", 2, 4073332222, "penquin@gmail.com", "3:33:00");
+    EventsTestData(4,11,1,"C++ Sesh!","Let's learn C++!", 0, 4072229999, "rick@gmail.com", "44:44:00");
+    EventsTestData(5,5,2,"Gym Rat!","Let's learn some new gym moves!", 2, 4071110000, "jock@gmail.com", "55:55:00");
 
     // UniversityTestData("University of Central Florida", "@UCF.edu");
     // UniversityTestData("Florida State University", "@FSU.edu");
@@ -143,10 +166,7 @@
     // UsersTestData(2, 0, "UCF_User5", "UCF_User5@gmail.com", "UCF_User5", 3060909888);
     // UsersTestData(2, 0, "kenny", "kenny@knights.ucf.edu", "password", 3060909888);
     // UsersTestData(2, 0, "kenny", "kenny", "password", 3060909888);
-    // UsersTestData(2, 0, "kenny", "kenny@knights.ucf.edu", "password", 3060909888);
-    // UsersTestData(2, 1, "kennySuper", "kennySuper@knights.ucf.edu", "password", 3060909888);
-    // UsersTestData(2, 0, "Travis", "Travis@knights.ucf.edu", "password", 3864795030);
-    // UsersTestData(2, 1, "TravisSuper", "Travis@knights.ucf.edu", "password", 3864795030);
+
     
     // RSOTestData(1, 1, "Scratch Systems");
     // RSOTestData(1, 2, "Main Python Services");
@@ -250,8 +270,6 @@
     UsersTestData(1, 0, "Bryant Weeks", "bryantweeks@knights.ucf.edu", "welovedads", 3069879876);
     UsersTestData(1, 0, "Kael Murillo", "kaelmurillo@knights.ucf.edu", "stophatingm@n", 3068768765);
     */ 
-
-
    
     UniversityTestData("University of Central Florida", "@knights.ucf.edu");
     UniversityTestData("Florida State University", "@fsu.edu");
@@ -292,10 +310,15 @@
     UsersTestData(2, 0, "JB3ltran", "Jovanni Beltran", "jovannibeltran@fsu.edu", "badbUNNy123", 4078768765);
     UsersTestData(2, 0, "BryantWWW76543", "Bryant Weeks", "bryantweeks@knights.ucf.edu", "welovedads", 3069879876);
     UsersTestData(2, 0, "KaleM", "Kael Murillo", "kaelmurillo@knights.ucf.edu", "stophatingm@n", 3068768765);
+    UsersTestData(1, 0, "kenny", "Kenny", "kenny@knights.ucf.edu", "password", 3060909888);
+    UsersTestData(1, 1, "kennySuper", "Kenny", "kennySuper@knights.ucf.edu", "password", 3060909888);
+    UsersTestData(1, 0, "Travis", "Travis Wise", "Travis@knights.ucf.edu", "password", 3864795030);
+    UsersTestData(1, 1, "TravisSuper", "Travis Wise", "Travis@knights.ucf.edu", "password", 3864795030);
 
     RSOTestData(1, 1, "Scratch Systems");
     RSOTestData(1, 2, "Main Python Services");
     RSOTestData(2, 5, "Wire Industries");
+    RSOTestData(1, 23, "Travis's RSO");
 
     RegisteredTestData(1, 1);
     RegisteredTestData(1, 2);
@@ -311,20 +334,15 @@
     RegisteredTestData(3, 12);
     RegisteredTestData(3, 13);
     RegisteredTestData(3, 14);
-    RegisteredTestData(3, 15);
+    RegisteredTestData(4, 20);
+    RegisteredTestData(4, 21);
+    RegisteredTestData(4, 22);
+    RegisteredTestData(4, 23);
+    
 
 
 
-    LocationTestData("UCF Swimming Pool", 543467, -19803, "UCF Swimming Pool Wednesdays at 1PM!", );
-    LocationTestData("UCF HEC Building", 16432, 34526, "Tonight at Room 119 in the HEC Building!", );
-    LocationTestData("Business Building", 234567, 2366543, "Room 202 at 9PM on May 20th!", );
-    LocationTestData("Starbucks Near School", -45845, 345364, "Starbucks at 9AM!", );
-    LocationTestData("Chick-Fil-A Near School", 225446, 65453, "Chick-Fil-A at 10AM!", );
+    
 
-    EventsTestData(1,1,1,"Swim With Tim!","Get the chance to swim with Tim Tebow!", 1, 4077778888, "timtebow@gmail.com");
-    EventsTestData(2,7,1,"Happy Feat!","We will go watch a penguin movie!", 0, 4076664444, "yaya@gmail.com");
-    EventsTestData(3,12,2,"Robo Mobo!","We will work together to build a robot!", 2, 4073332222, "penquin@gmail.com");
-    EventsTestData(4,11,1,"C++ Sesh!","Let's learn C++!", 0, 4072229999, "rick@gmail.com");
-    EventsTestData(5,5,2,"Gym Rat!","Let's learn some new gym moves!", 2, 4071110000, "jock@gmail.com");
     
     header("location: ../tools.php");

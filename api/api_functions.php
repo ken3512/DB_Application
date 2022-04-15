@@ -241,15 +241,44 @@ function displayCategories()
     }
 }
 
+function locationExists($long, $lat, $Time) {
+    $conn = connectToDatabase();
+    $sql = "SELECT `LocationID`, `Time` FROM Events WHERE Time='$Time';";
+    $result = mysqli_query($conn, $sql);
+    $resultCheck = mysqli_num_rows($result);
+    
+    if($resultCheck > 0){
+        while($row = mysqli_fetch_assoc($result)) {
+            $locID = $row['LocationID'];
+            echo $locID . "<br>";
+
+            $conn = connectToDatabase();
+            $sql = "SELECT * FROM `location` WHERE ID = $locID;";
+            $result2 = mysqli_query($conn, $sql);
+            if ($result2) {
+                $row2 = mysqli_fetch_assoc($result2);
+                echo $row2["Longitude"] . "<br>";
+                echo $row2["Latitude"] . "<br>";
+                return true;
+            }
+            return false;
+        }
+    } else {
+        return false;
+    }
+}
 
 function createEvent($EventName, $EventDescription, $EventCategory, $EventPrivacy, $ContactPhone, $ContactEmail, $EventLocationName, $EventLocationDescription, $UserID, $RSOID, $long, $lat, $Time) 
 {
     $key = encryptionKey();
-
     $conn = connectToDatabase();
+
+    if (locationExists($long, $lat, $Time)) {
+        header("location: ../createEvent.php?error=LocationAndOrTimeOverlap");
+    }
+
     // Add the location to the database and use it's Id top populate $EventLocationID
     // Then insert the values into the event database
-    // $sql = "INSERT INTO `Location` (`Name`, `Description`) VALUES ('$EventLocationName', '$EventLocationDescription');";
     $sql = "INSERT INTO `Location` (`Name`, `Description`, `Longitude`, `Latitude`) VALUES (?, ?, ?, ?);";
     $stmt = $conn->prepare($sql);
     if(!$stmt) {
@@ -259,12 +288,8 @@ function createEvent($EventName, $EventDescription, $EventCategory, $EventPrivac
 
     $EventLocationName_enc = encryptthis($EventLocationName, $key);
     $EventLocationDescription_enc = encryptthis($EventLocationDescription, $key);
-    $long_enc = encryptthis($long, $key);
-    $lat_enc = encryptthis($lat, $key);
-    $Time_enc = encryptthis($Time, $key);
-    
 
-    $stmt->bind_param("ssii", $EventLocationName_enc, $EventLocationDescription_enc, $long_enc, $lat_enc);
+    $stmt->bind_param("ssii", $EventLocationName_enc, $EventLocationDescription_enc, $long, $lat);
     $stmt->execute();
     $stmt->get_result();
 
@@ -290,8 +315,6 @@ function createEvent($EventName, $EventDescription, $EventCategory, $EventPrivac
         return;
     }
 
-
-
     $sql = "INSERT INTO Events (`LocationID`, `EventCat`, `ForeignID`, `Name`, `Description`, `Privacy`, `ContactPhone`, `ContactEmail`, `Time`)  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
     $stmt = $conn->prepare($sql);
     if(!$stmt) {
@@ -305,7 +328,7 @@ function createEvent($EventName, $EventDescription, $EventCategory, $EventPrivac
     $ContactEmail_enc = encryptthis($ContactEmail, $key);
 
 
-    $stmt->bind_param("iiississb", $EventLocationID, $EventCategory, $ForeignID, $EventName_enc, $EventDescription_enc, $EventPrivacy, $ContactPhone_enc, $ContactEmail_enc, $Time_enc);
+    $stmt->bind_param("iiississs", $EventLocationID, $EventCategory, $ForeignID, $EventName_enc, $EventDescription_enc, $EventPrivacy, $ContactPhone_enc, $ContactEmail_enc, $Time);
     $stmt->execute();
     $stmt->get_result();
     //header("location: ../index.php");

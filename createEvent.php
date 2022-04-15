@@ -17,7 +17,14 @@
         $errorMsg = "";
         if (isset($_GET["error"])) {
             // Handle the error message
-            echo $_GET["error"];
+            switch ($_GET["error"]) {
+                case "LocationAndOrTimeOverlap":
+                   $errorMsg = "Location and or Time entered overlaps with other events. <br>Please choose another time or location.";
+                    break;
+                default:
+                    $errorMsg = $_GET["error"];
+            }
+            echo "<p>$errorMsg</p>";
         }
     ?>
     
