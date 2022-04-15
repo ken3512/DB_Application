@@ -27,6 +27,7 @@
                     <link rel="stylesheet" href="styles/dark/sidebar.css">
                     <link rel="stylesheet" href="styles/dark/events.css">
                     <link rel="stylesheet" href="styles/dark/chatroom.css">
+                    <link rel="stylesheet" href="styles/dark/editingComment.css">
                 ';
             }
             else { // Light Mode
@@ -50,6 +51,7 @@
                 <link rel="stylesheet" href="styles/light/sidebar.css">
                 <link rel="stylesheet" href="styles/light/events.css">
                 <link rel="stylesheet" href="styles/light/rso.css">
+                <link rel="stylesheet" href="styles/light/editingComment.css">
             ';
         }
     ?>

@@ -495,7 +495,7 @@ function FormatEvent($EventID, $UserID)
 
     echo '<br><p class="desc">Comments:<br></p>';
     
-    echo getComments($EventID);
+    echo getComments($EventID, $UserID);
     
     if($UserID != 0)
     {
@@ -553,7 +553,6 @@ function formatRSOs($Name, $Status, $UniversityID)
     echo '<p class="desc">RSO Name: ' . $Name . '</p><br>';
     echo '<p class="desc">RSO\'s University: ' . getUserUniversityName($UniversityID) . '</p><br>';
     echo '<p class="desc">RSO\'s Approval Status: ' . stringifyStatus($Status)  . '</p><br><br>';
-    
 }
 
 function getRsoInfoByRsoId($RSOID) 
@@ -667,11 +666,11 @@ function comment($EventID, $UserID, $Comment)
     return false;
 }
 
-function getComments($EventID)
+function getComments($EventID, $UserID)
 {
     $key = encryptionKey();
     $conn = connectToDatabase();
-    $sql = "SELECT C.Text, U.Name, C.DataTimeUpdated FROM Comments C, Users U WHERE C.EventID = $EventID AND (C.UserID = U.ID)";
+    $sql = "SELECT C.Text, U.Name, C.DataTimeUpdated, C.ID FROM Comments C, Users U WHERE C.EventID = $EventID AND (C.UserID = U.ID)";
 
     $result = mysqli_query($conn, $sql);
     $resultCheck = mysqli_num_rows($result);
@@ -680,7 +679,104 @@ function getComments($EventID)
         while($row = mysqli_fetch_assoc($result)) {
             $date = new DateTime($row['DataTimeUpdated']);
             echo "<p>&emsp;[" . $date->format('m-d H:i') . "] <strong> ". $row['Name'] .": </strong> ". $row['Text'] . "</p><br>";
+            displayEventCommentEditingButtons($EventID, $UserID, $row["ID"]);
         }
+}
+
+function displayEventCommentEditingButtons($EventID, $UserID, $CommentID) {
+    $UserInfo = getUserInfoById($UserID);
+    if ($UserInfo["ID"] == $_SESSION["ID"]) {
+        echo "<div class='EditingOptions'>";
+        echo "
+            <form class='commentEditingForms' action='eventCommentEdit.php'  method='POST'>
+                <input type='hidden' name='EventID' value='$EventID'>
+                <input type='hidden' name='UserID' value='$UserID'>
+                <input type='hidden' name='CommentID' value='$CommentID'>
+                <button class='commentEditingButtons' type='submit' name='submit'>Edit</button>
+            </form>
+        ";
+        echo"   
+            <form class='commentEditingForms' action='api/eventCommentDelete.php' method='POST'>
+                <input type='hidden' name='CommentID' value='$CommentID'>
+                <button class='commentEditingButtons' type='submit' name='submit'>Delete</button>
+            </form>
+        ";
+        echo "</div>";
+
+    }    
+}
+
+function deleteEventComment($CommentID) {
+    $conn = connectToDatabase();
+    $sql = "DELETE FROM Comments C WHERE C.ID = $CommentID;";
+    $result = mysqli_query($conn, $sql);
+    if (!$result) {
+        echo mysqli_error($conn);
+        exit();
+    } 
+    else {
+        header("location: ../events.php");
+    }
+}
+
+    
+function displayEventCommentEditing($EventID, $UserID, $CommentID) {
+    $conn = connectToDatabase();
+    $sql = "SELECT * FROM Comments WHERE ID = $CommentID;";
+    $result = mysqli_query($conn, $sql);
+    
+    if($result)
+    {
+        $EventInformation = EventInfo($EventID);
+        $key = encryptionKey();
+        $EventName = decryptthis($EventInformation["Name"], $key);
+        $EventDescription =  decryptthis($EventInformation["Description"], $key);
+
+        echo '
+        <h2 class="pageTitle">Editing Comment:</h2>
+        <div class="chatroom_outer">
+        <div class="chatroom">
+        
+        <div class="inner_inner_event">
+            <span class="event_desc eventName">'. $EventName .'</span> <br>
+            <span class="event_desc">'. $EventDescription . '</span><br><br>
+        </div>
+        ';
+        
+
+        $row = mysqli_fetch_assoc($result);
+        $UserInfo = getUserInfoById($row["UserID"]);
+        $UserName = $UserInfo["Name"];
+        echo '<p> '. $UserName .'\'s Old Comment:<br>&emsp;' . $row["Text"] . '</p>';
+        echo '
+        <div class="editingComment">
+        <form action="api/eventCommentEdit.php" method="POST">
+            <input type="hidden" name="CommentID" value='.$row["ID"].'>
+            <textarea class="CommentEntry" name="NewComment" rows="4" cols="20" placeholder="New Comment..."></textarea><br>
+            <button class="commentSubmit" type="submit" name="submit">Update</button>
+        </form>
+        </div>
+        ';
+        $date = new DateTime($row['DataTimeUpdated']);
+        echo "<p>Last Updated: &emsp;[" . $date->format('m-d H:i') . "]</p>";
+
+        echo '</div></div>';
+    }
+    else {
+        echo mysqli_error($conn);
+    }
+}
+
+
+function updateEventComment($CommentID, $NewComment) {
+    $conn = connectToDatabase();
+    $Date = date('Y-m-d H:i:s');
+    $sql = "UPDATE Comments SET `Text` = '$NewComment', DataTimeUpdated = '$Date'  WHERE ID = $CommentID";
+    $result = mysqli_query($conn, $sql);
+    // Return success boolean
+    if(!$result) {
+        echo mysqli_error($conn);
+    }
 }
 
 function isRated($EventID, $UserID)
@@ -919,7 +1015,7 @@ function displayCommentOptions($commentID, $UserInfo) {
         echo "<div class='EditingOptions'>";
         if ($UserInfo["ID"] == $_SESSION["ID"]) {
             echo "
-                <form class='commentEditingForms' action='editComment.php'  method='POST'>
+                <form class='commentEditingForms' action='eventCommentEdit.php'  method='POST'>
                     <input type='hidden' name='commentID' value='$commentID'>
                     <button class='commentEditingButtons' type='submit' name='submit'>Edit</button>
                 </form>
@@ -932,6 +1028,7 @@ function displayCommentOptions($commentID, $UserInfo) {
             </form>
         ";
         echo "</div>";
+
     }    
 }
 
