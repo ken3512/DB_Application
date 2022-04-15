@@ -65,6 +65,7 @@
                 <?php allUniversity();?>
             </select>
             <br>
+            <input class="textInput" type="text" name="Username" placeholder="Username..." required autofocus> <br>
             <input class="textInput" type="text" name="Name" placeholder="Name..." required autofocus> <br>
             <input class="textInput" type="email" name="Gmail" placeholder="Gmail..." required autofocus> <br>
             <input class="textInput" type="phone" name="Phone" placeholder="Phone..." required autofocus> <br>

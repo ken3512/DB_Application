@@ -9,9 +9,9 @@
      */
     
     // Check if any value is empty
-    function signupInputIsEmpty($UniversityID, $Name, $Password, $ConfirmPassword, $Gmail) {
+    function signupInputIsEmpty($UniversityID, $Username, $Name, $Password, $ConfirmPassword, $Gmail) {
         $result = false;
-        if (empty($UniversityID) || empty($Name) || empty($Password) || empty($ConfirmPassword) || empty($Gmail)) {
+        if (empty($UniversityID) || empty($Username) || empty($Name) || empty($Password) || empty($ConfirmPassword) || empty($Gmail)) {
             $result = true;
         }
         return $result;

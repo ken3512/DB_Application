@@ -12,18 +12,19 @@
         $stmt->execute();
     }
 
-    function UsersTestData($UniversityID, $Super, $Name, $Gmail, $Password, $Phone) 
+    function UsersTestData($UniversityID, $Super, $Username, $Name, $Gmail, $Password, $Phone) 
     {
         $key = encryptionKey();
         $conn = connectToDatabase();
-        $sql = "INSERT INTO Users(UniversityID, Super, Name, Gmail, Phone, Password) VALUES (?, ?, ?, ?, ?, ?);";
+        $sql = "INSERT INTO Users(`UniversityID`, `Super`, `Username`, `Name`, `Gmail`, `Phone`, `Password`) VALUES (?, ?, ?, ?, ?, ?, ?);";
         $stmt = $conn->prepare($sql);
 
         $Gmail_enc = encryptthis($Gmail, $key);
         $Password_enc = password_hash($Password, PASSWORD_DEFAULT);
         $Phone_enc = encryptthis($Phone, $key);
+        $Name_enc = encryptthis($Name, $key);
 
-        $stmt->bind_param("iissss", $UniversityID, $Super, $Name, $Gmail_enc, $Phone_enc, $Password_enc);
+        $stmt->bind_param("iisssss", $UniversityID, $Super, $Username, $Name_enc, $Gmail_enc, $Phone_enc, $Password_enc);
         $stmt->execute();
     }
 
@@ -255,26 +256,26 @@
     UniversityTestData("University of Central Florida", "@knights.ucf.edu");
     UniversityTestData("Florida State University", "@fsu.edu");
 
-    UsersTestData(1, 1, "Yosefh123", "yosefhuynh@knights.ucf.edu", "iambob123!!!", 4071231234);
-    UsersTestData(1, 0, "KimG", "gretchenkim@knights.ucf.edu", "81ilovecates", 4072342345);
-    UsersTestData(1, 0, "yann3Jac0b", "cheyannejacobson@knights.ucf.edu", "1993wasdum", 3061231234);
-    UsersTestData(1, 0, "Lamar Moss", "lamarmoss@knights.ucf.edu", "yeswelovec@ts", 3062342345);
-    UsersTestData(1, 1, "Aubree Travis", "aubreetravis@knights.ucf.edu", "B0BwasHer3", 4073453456);
-    UsersTestData(2, 0, "Lainey Mitchell", "laineymitchell@fsu.edu", "WakeBoa2rding", 4074564567);
-    UsersTestData(2, 0, "zz100", "zoiezimmerman@fsu.edu", "IloveC@ts", 3063453456);
-    UsersTestData(2, 0, "Daws0n200", "carolinedawson@fsu.edu", "gottem2022!!", 3064564567);
-    UsersTestData(2, 0, "PenaX", "axelpena@fsu.edu", "33saintJo0hn", 4075675678);
-    UsersTestData(1, 0, "enam53", "wyattpena@knights.ucf.edu", "y@yford@ddys", 4076786789);
-    UsersTestData(2, 0, "Darnell Vega", "darnellvega", "yeswe@tit", 3065675678);
-    UsersTestData(1, 0, "Coperlin", "isaiascopeland@knights.ucf.edu", "g@showabouth0rse", 3066786789);
-    UsersTestData(1, 0, "Calderon0", "janellecalderon@knights.ucf.edu", "373737welove37@", 4077897890);
-    UsersTestData(1, 0, "Nathanial675", "nathanialibarra@knights.ucf.edu", "@!$#@gotothegym", 4070980987);
-    UsersTestData(2, 0, "Colby321", "colbywatkins@fsu.edu", "y0g0p0g0eats0met0ma", 3067897890);
-    UsersTestData(2, 0, "Kristen Pierce", "kristenpierce@fsu.edu", "easterbunny100", 3060980987);
-    UsersTestData(2, 0, "Edith Weiss", "edithweiss@fsu.edu", "s@nta!&%^", 4079879876);
-    UsersTestData(2, 0, "Jovanni Beltran", "jovannibeltran@fsu.edu", "badbUNNy123", 4078768765);
-    UsersTestData(1, 0, "Bryant Weeks", "bryantweeks@knights.ucf.edu", "welovedads", 3069879876);
-    UsersTestData(1, 0, "Kael Murillo", "kaelmurillo@knights.ucf.edu", "stophatingm@n", 3068768765);
+    UsersTestData(1, 1, "Yosefh123", "Yosef huynh123", "yosefhuynh@knights.ucf.edu", "iambob123!!!", 4071231234);
+    UsersTestData(1, 0, "KimG", "Gretchen Kim", "gretchenkim@knights.ucf.edu", "81ilovecates", 4072342345);
+    UsersTestData(1, 0, "yann3Jac0b", "Cheyanne Jacobson", "cheyannejacobson@knights.ucf.edu", "1993wasdum", 3061231234);
+    UsersTestData(1, 0, "Lamar Moss", "Lamar Moss", "lamarmoss@knights.ucf.edu", "yeswelovec@ts", 3062342345);
+    UsersTestData(1, 1, "Aubree Travis", "Aubree Travis", "aubreetravis@knights.ucf.edu", "B0BwasHer3", 4073453456);
+    UsersTestData(2, 0, "Lainey Mitchell", "Lainey Mitchell", "laineymitchell@fsu.edu", "WakeBoa2rding", 4074564567);
+    UsersTestData(2, 0, "zz100", "Zoie Zimmerman", "zoiezimmerman@fsu.edu", "IloveC@ts", 3063453456);
+    UsersTestData(2, 0, "Daws0n200", "Caroline Dawson", "carolinedawson@fsu.edu", "gottem2022!!", 3064564567);
+    UsersTestData(2, 0, "PenaX", "Axel Pena", "axelpena@fsu.edu", "33saintJo0hn", 4075675678);
+    UsersTestData(1, 0, "enam53", "Wyatt Pena", "wyattpena@knights.ucf.edu", "y@yford@ddys", 4076786789);
+    UsersTestData(2, 0, "Darnell Vega", "Darnell Vega", "darnellvega", "yeswe@tit", 3065675678);
+    UsersTestData(1, 0, "Coperlin", "Isaias Copeland", "isaiascopeland@knights.ucf.edu", "g@showabouth0rse", 3066786789);
+    UsersTestData(1, 0, "Calderon0", "Janelle Calderon", "janellecalderon@knights.ucf.edu", "373737welove37@", 4077897890);
+    UsersTestData(1, 0, "Nathanial675", "Nathanial Ibarra", "nathanialibarra@knights.ucf.edu", "@!$#@gotothegym", 4070980987);
+    UsersTestData(2, 0, "Colby123", "Colby Watkins", "colbywatkins@fsu.edu", "y0g0p0g0eats0met0ma", 3067897890);
+    UsersTestData(2, 0, "KristenPJ", "Kristen Pierce", "kristenpierce@fsu.edu", "easterbunny100", 3060980987);
+    UsersTestData(2, 0, "EdithW987", "Edith Weiss", "edithweiss@fsu.edu", "s@nta!&%^", 4079879876);
+    UsersTestData(2, 0, "JB3ltran", "Jovanni Beltran", "jovannibeltran@fsu.edu", "badbUNNy123", 4078768765);
+    UsersTestData(1, 0, "BryantWWW76543", "Bryant Weeks", "bryantweeks@knights.ucf.edu", "welovedads", 3069879876);
+    UsersTestData(1, 0, "KaleM", "Kael Murillo", "kaelmurillo@knights.ucf.edu", "stophatingm@n", 3068768765);
 
     RSOTestData(1, 1, "Scratch Systems");
     RSOTestData(1, 2, "Main Python Services");
@@ -295,6 +296,14 @@
     RegisteredTestData(3, 27);
     RegisteredTestData(3, 28);
     RegisteredTestData(3, 31);
+
+
+
+    LocationTestData("UCF Swimming Pool", 0, 0, "UCF Swimming Pool Wednesdays at 1PM!");
+    LocationTestData("UCF HEC Building", 0, 0, "Tonight at Room 119 in the HEC Building!");
+    LocationTestData("Business Building", 0, 0, "Room 202 at 9PM on May 20th!");
+    LocationTestData("Starbucks Near School", 0, 0, "Starbucks at 9AM!");
+    LocationTestData("Chick-Fil-A Near School", 0, 0, "Chick-Fil-A at 10AM!");
 
     EventsTestData(1,1,1,"Swim With Tim!","Get the chance to swim with Tim Tebow!", 1, 4077778888, "timtebow@gmail.com");
     EventsTestData(2,7,1,"Happy Feat!","We will go watch a penguin movie!", 0, 4076664444, "yaya@gmail.com");

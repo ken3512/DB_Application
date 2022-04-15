@@ -295,6 +295,7 @@ function createEvent($EventName, $EventDescription, $EventCategory, $EventPrivac
     header("location: ../index.php");
 }
 
+
 function displayOwnedRSOs($UserID) {
     $key = encryptionKey();
     $conn = connectToDatabase();
@@ -313,7 +314,7 @@ function displayOwnedRSOs($UserID) {
     }
 }
 
-function usernameExists($Name, $Gmail) 
+function usernameExists($Username) 
 {
     $key = encryptionKey();
     $conn = connectToDatabase();
@@ -324,7 +325,7 @@ function usernameExists($Name, $Gmail)
         exit();
     }
 
-    mysqli_stmt_bind_param($stmt, "s", $Name);
+    mysqli_stmt_bind_param($stmt, "s", $Username);
     mysqli_stmt_execute($stmt);
 
     $resultData = mysqli_stmt_get_result($stmt);
@@ -337,10 +338,10 @@ function usernameExists($Name, $Gmail)
     mysqli_stmt_close($stmt);
 }
 
-function login($Name, $Password)
+function login($Username, $Password)
 {
     $key = encryptionKey();
-    $usernameExists = usernameExists($Name, $Name);
+    $usernameExists = usernameExists($Username, $Username);
 
     if ($usernameExists === false) {
         header("location: ../login.php?error=invalidUsernameOrEmail");
@@ -356,7 +357,7 @@ function login($Name, $Password)
         // Start the session and assign variables
         session_start();
         $_SESSION["ID"] = $usernameExists["ID"];
-        $_SESSION["Name"] = $usernameExists["Name"];
+        $_SESSION["Name"] = decryptthis($usernameExists["Name"], $key);
         // Go to the account page of the user
         header("location: ../index.php"); 
         exit();
@@ -364,11 +365,11 @@ function login($Name, $Password)
 
 }
 
-function signup($UniversityID, $Name, $Gmail, $Phone, $Password)
+function signup($UniversityID, $Username, $Name, $Gmail, $Phone, $Password)
 {
     $key = encryptionKey();
     $conn = connectToDatabase();
-    $sql = "INSERT INTO Users(`UniversityID`, `Name`, `Gmail`, `Phone`, `Password`) VALUES (?, ?, ?, ?, ?);";
+    $sql = "INSERT INTO Users(`UniversityID`, `Username`, `Name`, `Gmail`, `Phone`, `Password`) VALUES (?, ?, ?, ?, ?, ?);";
 
     $hashedPwd = password_hash($Password, PASSWORD_DEFAULT);
 
@@ -382,8 +383,9 @@ function signup($UniversityID, $Name, $Gmail, $Phone, $Password)
 
     $Gmail_enc = encryptthis($Gmail, $key);
     $Phone_enc = encryptthis($Phone, $key);
+    $Name_enc = encryptthis($Name, $key);
 
-    $stmt->bind_param("issss", $UniversityID, $Name, $Gmail_enc, $Phone_enc, $hashedPwd);
+    $stmt->bind_param("isssss", $UniversityID, $Username, $Name_enc, $Gmail_enc, $Phone_enc, $hashedPwd);
     $stmt->execute();
     $stmt->get_result();
 
@@ -494,7 +496,7 @@ function FormatEvent($EventID, $UserID)
             </div>
     ';
 
-    if($UserID != 0 && !isRated($EventID, $UserID))
+    if($UserID != 0)
     {
         echo '                
             <form action="api/rate.php" method="POST">
@@ -517,7 +519,7 @@ function FormatEvent($EventID, $UserID)
     if($UserID != 0)
     {
         $UserInfo = getUserInfoById($UserID);
-        $UserName = $UserInfo["Name"];
+        $UserName = decryptthis($UserInfo["Name"], $key);
         echo '
             <form action="api/Comment.php" method="POST">
                 <input type="hidden" name="EventID" value='. $EventID .'>
@@ -762,7 +764,7 @@ function getComments($EventID, $UserID)
     if($resultCheck > 0)
         while($row = mysqli_fetch_assoc($result)) {
             $date = new DateTime($row['DataTimeUpdated']);
-            echo "<p>&emsp;[" . $date->format('m-d H:i') . "] <strong> ". $row['Name'] .": </strong> ". $row['Text'] . "</p><br>";
+            echo "<p>&emsp;[" . $date->format('m-d H:i') . "] <strong> ". decryptthis($row['Name'], $key) .": </strong> ". decryptthis($row['Text'], $key) . "</p><br>";
             if (isset($_SESSION["ID"])) {
                 displayEventCommentEditingButtons($EventID, $UserID, $row["ID"]);
             }
@@ -842,6 +844,7 @@ function deleteEventComment($CommentID) {
 
     
 function displayEventCommentEditing($EventID, $UserID, $CommentID) {
+    $key = encryptionKey();
     $conn = connectToDatabase();
     $sql = "SELECT * FROM Comments WHERE ID = $CommentID;";
     $result = mysqli_query($conn, $sql);
@@ -867,8 +870,8 @@ function displayEventCommentEditing($EventID, $UserID, $CommentID) {
 
         $row = mysqli_fetch_assoc($result);
         $UserInfo = getUserInfoById($row["UserID"]);
-        $UserName = $UserInfo["Name"];
-        echo '<p> '. $UserName .'\'s Old Comment:<br>&emsp;' . $row["Text"] . '</p>';
+        $UserName = decryptthis($UserInfo["Name"], $key);
+        echo '<p> '. $UserName .'\'s Old Comment:<br>&emsp;' . decryptthis($row["Text"], $key) . '</p>';
         echo '
         <div class="editingComment">
         <form action="api/eventCommentEdit.php" method="POST">
@@ -892,7 +895,11 @@ function displayEventCommentEditing($EventID, $UserID, $CommentID) {
 function updateEventComment($CommentID, $NewComment) {
     $conn = connectToDatabase();
     $Date = date('Y-m-d H:i:s');
-    $sql = "UPDATE Comments SET `Text` = '$NewComment', DataTimeUpdated = '$Date'  WHERE ID = $CommentID";
+
+    $key = encryptionKey();
+    $NewComment_enc = encryptthis($NewComment, $key);
+
+    $sql = "UPDATE Comments SET `Text` = '$NewComment_enc', DataTimeUpdated = '$Date'  WHERE ID = $CommentID";
     $result = mysqli_query($conn, $sql);
     // Return success boolean
     if(!$result) {
@@ -919,7 +926,18 @@ function rate($EventID, $UserID, $Rating)
     $key = encryptionKey();
     $conn = connectToDatabase();
     
-    if(isRated($EventID, $UserID)) return true;
+    if(isRated($EventID, $UserID)) 
+    {
+
+        $sql = "UPDATE Ratings R SET R.Rating = $Rating  WHERE R.EventID = $EventID AND R.UserID = $UserID;";
+
+        $result = mysqli_query($conn, $sql);
+        $resultCheck = mysqli_num_rows($result);
+
+        // Check if registration exists
+        if($resultCheck > 0) return True;
+        return False;
+    };
     
     $sql = "INSERT INTO Ratings (EventID, UserID, Rating) VALUES ($EventID, $UserID, $Rating)";
 
@@ -1010,7 +1028,7 @@ function allStudents($UniversityID)
     
     if($resultCheck > 0)
         while($row = mysqli_fetch_assoc($result))
-            FormatCreateRSO($row["ID"], $row["Name"]);
+            FormatCreateRSO($row["ID"], decryptthis($row["Name"], $key));
 }
 
 function FormatCreateRSO($UserID, $Name)
@@ -1113,7 +1131,7 @@ function displayAllChatroomComments()
         {
             $commentID = $row['ID'];
             $UserInfo = getUserInfoById($row["UserID"]);
-            $UserName = $UserInfo["Name"];
+            $UserName = decryptthis($UserInfo["Name"], $key);
             $date = new DateTime($row['DataTimeUpdated']);
             echo "
                 <p>&emsp;[" . $date->format('m-d H:i') . "] ". checkEdited($row['DataTimeCreated'], $row['DataTimeUpdated']) ." <strong> ". $UserName .": </strong> ". decryptthis($row['Comment'], $key) . "</p>
