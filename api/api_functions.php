@@ -18,7 +18,7 @@ function encryptthis($data, $key)
     return base64_encode($encrypted . '::' . $iv);
 }
     
-    //DECRYPT FUNCTION
+//DECRYPT FUNCTION
 function decryptthis($data, $key)
 {
     $encryption_key = base64_decode($key);
@@ -58,7 +58,6 @@ function changeUsername($UserID, $NewName)
 
     if ($result)  {
         echo "Successfully changed name";
-        // session_start();
         $_SESSION["Name"] = $NewName;
         header("location: ../settings");
     }
@@ -413,7 +412,7 @@ function showPublicEvents()
     $key = encryptionKey();
     $UserID = 0;
     $conn = connectToDatabase();
-    $sql = "SELECT E.ID FROM Events E WHERE E.Privacy = 0;";
+    $sql = "SELECT ID FROM Events WHERE Privacy = 0;";
 
     $result = mysqli_query($conn, $sql);
     $resultCheck = mysqli_num_rows($result);
@@ -680,15 +679,16 @@ function getComments($EventID, $UserID)
     if($resultCheck > 0)
         while($row = mysqli_fetch_assoc($result)) {
             $date = new DateTime($row['DataTimeUpdated']);
-            echo "<p>&emsp;[" . $date->format('m-d H:i') . "] <strong> ". $row['Name'] .": </strong> ". decryptthis($row['Text'], $key) . "</p><br>";
-            displayEventCommentEditingButtons($EventID, $UserID, $row["ID"]);
+            echo "<p>&emsp;[" . $date->format('m-d H:i') . "] <strong> ". $row['Name'] .": </strong> ". $row['Text'] . "</p><br>";
+            if (isset($_SESSION["ID"])) {
+                displayEventCommentEditingButtons($EventID, $UserID, $row["ID"]);
+            }
         }
 }
 
 function displayEventCommentEditingButtons($EventID, $UserID, $CommentID) {
-    
     $LoggedInUserInfo = getUserInfoById($_SESSION["ID"]);
-    
+
     $conn = connectToDatabase();
     $sql = "SELECT UserID FROM Comments WHERE ID = $CommentID;";
     $result = mysqli_query($conn, $sql);
@@ -1098,7 +1098,7 @@ function displayCommentOptions($CommentID, $UserInfo) {
 
 function deleteComment($CommentID) {
     $conn = connectToDatabase();
-    $sql = "DELETE FROM ChatroomComments C WHERE C.ID = $CommentID;";
+    $sql = "DELETE FROM ChatroomComments WHERE ID = $CommentID;";
     $result = mysqli_query($conn, $sql);
     if (!$result) {
         echo mysqli_error($conn);
