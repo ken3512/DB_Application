@@ -1,6 +1,6 @@
 <?php
     include_once "header.php";
     
-    if (isset($_POST["commentID"])) {
-        displayEditingComment($_POST["commentID"]);
+    if (isset($_POST["CommentID"])) {
+        displayEditingComment($_POST["CommentID"]);
     }

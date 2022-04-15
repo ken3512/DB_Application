@@ -683,28 +683,86 @@ function getComments($EventID, $UserID)
         }
 }
 
+// function displayEventCommentEditingButtons($EventID, $UserID, $CommentID) {
+//     $UserInfo = getUserInfoById($UserID);
+//     if ($UserInfo["ID"] == $_SESSION["ID"]) {
+//         echo "<div class='EditingOptions'>";
+//         echo "
+//             <form class='commentEditingForms' action='eventCommentEdit.php'  method='POST'>
+//                 <input type='hidden' name='EventID' value='$EventID'>
+//                 <input type='hidden' name='UserID' value='$UserID'>
+//                 <input type='hidden' name='CommentID' value='$CommentID'>
+//                 <button class='commentEditingButtons' type='submit' name='submit'>Edit</button>
+//             </form>
+//         ";
+//         echo"   
+//             <form class='commentEditingForms' action='api/eventCommentDelete.php' method='POST'>
+//                 <input type='hidden' name='CommentID' value='$CommentID'>
+//                 <button class='commentEditingButtons' type='submit' name='submit'>Delete</button>
+//             </form>
+//         ";
+//         echo "</div>";
+
+//     }    
+// }
 function displayEventCommentEditingButtons($EventID, $UserID, $CommentID) {
-    $UserInfo = getUserInfoById($UserID);
-    if ($UserInfo["ID"] == $_SESSION["ID"]) {
-        echo "<div class='EditingOptions'>";
-        echo "
-            <form class='commentEditingForms' action='eventCommentEdit.php'  method='POST'>
-                <input type='hidden' name='EventID' value='$EventID'>
-                <input type='hidden' name='UserID' value='$UserID'>
-                <input type='hidden' name='CommentID' value='$CommentID'>
-                <button class='commentEditingButtons' type='submit' name='submit'>Edit</button>
-            </form>
-        ";
-        echo"   
+    
+    $LoggedInUserInfo = getUserInfoById($_SESSION["ID"]);
+    
+    $conn = connectToDatabase();
+    $sql = "SELECT UserID FROM Comments WHERE ID = $CommentID;";
+    $result = mysqli_query($conn, $sql);
+    $row = mysqli_fetch_array($result);
+    $CommentUserID = $row["UserID"];
+
+    echo "<div class='EditingOptions'>";
+    if ($LoggedInUserInfo['Super'] == 1) {
+        if ($CommentUserID == $_SESSION["ID"]) {
+            echo "
+                <form class='commentEditingForms' action='eventCommentEdit.php'  method='POST'>
+                    <input type='hidden' name='EventID' value='$EventID'>
+                    <input type='hidden' name='UserID' value='$UserID'>
+                    <input type='hidden' name='CommentID' value='$CommentID'>
+                    <button class='commentEditingButtons' type='submit' name='submit'>Edit</button>
+                </form>
+            ";
+            echo"   
+                <form class='commentEditingForms' action='api/eventCommentDelete.php' method='POST'>
+                    <input type='hidden' name='CommentID' value='$CommentID'>
+                    <button class='commentEditingButtons' type='submit' name='submit'>Delete</button>
+                </form>
+            ";
+        }
+        else {
+            echo"   
             <form class='commentEditingForms' action='api/eventCommentDelete.php' method='POST'>
                 <input type='hidden' name='CommentID' value='$CommentID'>
                 <button class='commentEditingButtons' type='submit' name='submit'>Delete</button>
             </form>
         ";
-        echo "</div>";
-
-    }    
+        }
+    }
+    else {
+        if ($CommentUserID == $_SESSION["ID"]) {
+            echo "
+                <form class='commentEditingForms' action='eventCommentEdit.php'  method='POST'>
+                    <input type='hidden' name='EventID' value='$EventID'>
+                    <input type='hidden' name='UserID' value='$UserID'>
+                    <input type='hidden' name='CommentID' value='$CommentID'>
+                    <button class='commentEditingButtons' type='submit' name='submit'>Edit</button>
+                </form>
+            ";
+            echo"   
+                <form class='commentEditingForms' action='api/eventCommentDelete.php' method='POST'>
+                    <input type='hidden' name='CommentID' value='$CommentID'>
+                    <button class='commentEditingButtons' type='submit' name='submit'>Delete</button>
+                </form>
+            ";
+        }
+    }
+    echo "</div>";
 }
+
 
 function deleteEventComment($CommentID) {
     $conn = connectToDatabase();
@@ -1010,26 +1068,52 @@ function checkEdited($DataTimeCreated, $DataTimeUpdated) {
         return "(edited)";
     }
 }
-function displayCommentOptions($commentID, $UserInfo) {
-    if ($UserInfo["ID"] == $_SESSION["ID"] || $UserInfo['Super'] == 1) {
-        echo "<div class='EditingOptions'>";
+function displayCommentOptions($CommentID, $UserInfo) {
+    echo "<div class='EditingOptions'>";
+
+    $LoggedInUserInfo = getUserInfoById($_SESSION["ID"]);
+
+    if ($LoggedInUserInfo['Super'] == 1) {
         if ($UserInfo["ID"] == $_SESSION["ID"]) {
             echo "
-                <form class='commentEditingForms' action='eventCommentEdit.php'  method='POST'>
-                    <input type='hidden' name='commentID' value='$commentID'>
+                <form class='commentEditingForms' action='editComment.php'  method='POST'>
+                    <input type='hidden' name='CommentID' value='$CommentID'>
                     <button class='commentEditingButtons' type='submit' name='submit'>Edit</button>
                 </form>
             ";
+            echo"   
+                <form class='commentEditingForms' action='api/deleteComment.php' method='POST'>
+                    <input type='hidden' name='CommentID' value='$CommentID'>
+                    <button class='commentEditingButtons' type='submit' name='submit'>Delete</button>
+                </form>
+            ";
         }
-        echo"   
-            <form class='commentEditingForms' action='api/deleteComment.php' method='POST'>
-                <input type='hidden' name='commentID' value='$commentID'>
-                <button class='commentEditingButtons' type='submit' name='submit'>Delete</button>
-            </form>
-        ";
-        echo "</div>";
-
-    }    
+        else {
+            echo"   
+                <form class='commentEditingForms' action='api/deleteComment.php' method='POST'>
+                    <input type='hidden' name='CommentID' value='$CommentID'>
+                    <button class='commentEditingButtons' type='submit' name='submit'>Delete</button>
+                </form>
+            ";
+        }
+    }
+    else {
+        if ($UserInfo["ID"] == $_SESSION["ID"]) {
+            echo "
+                <form class='commentEditingForms' action='editComment.php'  method='POST'>
+                    <input type='hidden' name='CommentID' value='$CommentID'>
+                    <button class='commentEditingButtons' type='submit' name='submit'>Edit</button>
+                </form>
+            ";
+            echo"   
+                <form class='commentEditingForms' action='api/deleteComment.php' method='POST'>
+                    <input type='hidden' name='CommentID' value='$CommentID'>
+                    <button class='commentEditingButtons' type='submit' name='submit'>Delete</button>
+                </form>
+            ";
+        }
+    }
+    echo "</div>";
 }
 
 function deleteComment($CommentID) {
