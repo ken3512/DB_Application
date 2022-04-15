@@ -295,6 +295,25 @@ function createEvent($EventName, $EventDescription, $EventCategory, $EventPrivac
     header("location: ../index.php");
 }
 
+
+function displayOwnedRSOs($UserID) {
+    $key = encryptionKey();
+    $conn = connectToDatabase();
+    $sql = "SELECT Name, ID FROM RSO WHERE OwnerID = $UserID";
+    $result = mysqli_query($conn, $sql);
+    
+    if($result) {
+        echo '<select name="RSOs">';
+        while($row = mysqli_fetch_assoc($result))
+        {
+           echo '<option value="'. $row["ID"] .'>'. decryptthis($row['Name'], $key) .'</option>';
+        }
+        echo '</select><br>';
+    } else {
+        echo mysqli_error($conn);
+    }
+}
+
 function usernameExists($Username) 
 {
     $key = encryptionKey();
@@ -519,7 +538,7 @@ function FormatEvent($EventID, $UserID)
 function stringifyStatus($status) 
 {
     if ($status == 0) {
-        return "Not Approved Yet";
+        return "Inactive";
     }
     else {
         return "Approved";
@@ -531,7 +550,7 @@ function getAllRSO($UserID)
 {
     $key = encryptionKey();
     $conn = connectToDatabase();
-    $sql = "SELECT R.Name, R.Status, R.UniversityID FROM RSO R WHERE EXISTS (SELECT O.ID FROM Registered O WHERE O.UserID = $UserID AND O.RSOID = R.ID)";
+    $sql = "SELECT R.ID, R.Name, R.Status, R.UniversityID FROM RSO R WHERE EXISTS (SELECT O.ID FROM Registered O WHERE O.UserID = $UserID AND O.RSOID = R.ID)";
     
     $result = mysqli_query($conn, $sql);
     $resultCheck = mysqli_num_rows($result);
@@ -540,7 +559,7 @@ function getAllRSO($UserID)
     {
         while($row = mysqli_fetch_assoc($result))
         {
-            FormatRSOs(decryptthis($row["Name"], $key), $row["Status"], $row["UniversityID"]);
+            FormatRSOs(decryptthis($row["Name"], $key), $row["Status"], $row["UniversityID"], $row['ID'], $UserID);
         }
     }
     else {
@@ -548,11 +567,76 @@ function getAllRSO($UserID)
     }
 }
 
-function formatRSOs($Name, $Status, $UniversityID)
+function formatRSOs($Name, $Status, $UniversityID, $RSOID, $UserID)
 {
     echo '<p class="desc">RSO Name: ' . $Name . '</p><br>';
     echo '<p class="desc">RSO\'s University: ' . getUserUniversityName($UniversityID) . '</p><br>';
     echo '<p class="desc">RSO\'s Approval Status: ' . stringifyStatus($Status)  . '</p><br><br>';
+    // echo '<p class="desc">RSO: ' . $RSOID . '</p><br><br>';
+    echo "
+        <form class='forms' style='margin:0px; margin-bottom:45px; padding:0px;' action='api/leaveRSO.php' method='POST'>
+            <input type='hidden' name='RSOID' value=$RSOID>
+            <input type='hidden' name='UserID' value=$UserID>
+            <button class='submitButton' style='margin:0px; padding:0px;' type='submit' name='submit'>Leave RSO</button>
+        </form>
+    ";
+}
+
+function leaveRSO($RSOID, $UserID) {
+    $conn = connectToDatabase();
+    $sql = "DELETE FROM Registered WHERE RSOID = $RSOID AND UserID = $UserID;";
+    $result = mysqli_query($conn, $sql);
+    if (!$result) {
+        echo mysqli_error($conn);
+        exit();
+    } 
+    else {
+        updateRSOStatus($RSOID);
+        header("location: ../index.php");
+    }
+}
+
+function updateRSOStatus($RSOID) {
+    
+    $conn = connectToDatabase();
+    $sql = "SELECT COUNT(*) AS Total From Registered WHERE RSOID = 1;";
+    $result = mysqli_query($conn, $sql);
+    if (!$result) {
+        echo mysqli_error($conn);
+        exit();
+    } 
+    else {
+        $row = mysqli_fetch_assoc($result);
+        $numMembers = $row['Total'];
+        if ($numMembers < 5) {
+            setRsoUnapproved($RSOID);
+            return false;
+        }
+        else {
+            setRsoApproved($RSOID);
+            return true;
+        }
+    }
+}
+
+function setRsoApproved($RSOID) {
+    $conn = connectToDatabase();
+    $sql = "UPDATE RSO SET `Status` = 1 WHERE ID = $RSOID";
+    $result = mysqli_query($conn, $sql);
+    // Return success boolean
+    if(!$result) {
+        echo mysqli_error($conn);
+    }
+}
+
+function setRsoUnapproved($RSOID) {
+    $conn = connectToDatabase();
+    $sql = "UPDATE RSO SET `Status` = 0 WHERE ID = $RSOID";
+    $result = mysqli_query($conn, $sql);
+    // Return success boolean
+    if(!$result) {
+        echo mysqli_error($conn);
+    }
 }
 
 function getRsoInfoByRsoId($RSOID) 
