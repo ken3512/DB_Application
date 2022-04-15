@@ -7,15 +7,15 @@
     if (isset($_POST["submit"])) {
 
         // Get the information that was posted
-        $Name = $_POST["Username"];
+        $Username = $_POST["Username"];
         $Password = $_POST["Password"];
 
-        if (loginInputIsEmpty($Name, $Password)) {
+        if (loginInputIsEmpty($Username, $Password)) {
             //header("location: ../login.php?error=loginInputIsEmpty");
             exit();
         } 
         
-        login($Name, $Password);
+        login($Username, $Password);
     }
     else {
         // We didn't get here through submitting a login request so

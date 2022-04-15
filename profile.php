@@ -10,7 +10,7 @@
     // Display the unapproved RSOs to super admins
     if (isset($_SESSION["ID"])) {
         $userInfo = getUserInfoById($_SESSION["ID"]);
-        echo '<div class="event"><h2 class="pageTitle">' . $userInfo["Name"] . '\'s Profile Page</h2><br>';
+        echo '<div class="event"><h2 class="pageTitle">' . decryptthis($userInfo["Name"], $key) . '\'s Profile Page</h2><br>';
         echo '<p class="desc">Email: '.  decryptthis($userInfo["Gmail"], $key) . '</p><br>';
         echo '<p class="desc">University: ' . getUserUniversityName($userInfo["UniversityID"]) . '</p><br>';
         echo '<p class="desc">User Status: ' . getMaxUserStatus($userInfo["ID"]) . "</p><br></div>";

@@ -13,16 +13,18 @@
     // Here if the user got here the correct way
     // Process the user information
     $UniversityID = $_POST["UniversityID"];
+    
     $Name = $_POST["Name"];
+    $Username = $_POST["Username"];
     $Gmail = $_POST["Gmail"];
     $Phone = $_POST["Phone"];
     $Password = $_POST["Password"];
     $ConfirmPassword = $_POST["ConfirmPassword"];
 
-    if (signupInputIsEmpty($UniversityID, $Name, $Password, $ConfirmPassword, $Gmail)) {
+    if (signupInputIsEmpty($UniversityID, $Username, $Name, $Password, $ConfirmPassword, $Gmail)) {
         header("location: ../signup.php?error=signupInputIsEmpty");
         exit();
-    } else if (usernameIsInvalid($Name)) {
+    } else if (usernameIsInvalid($Username)) {
         header("location: ../signup.php?error=usernameIsInvalid");
         exit();
     } else if (passwordIsTooSimple($Password)) {
@@ -40,5 +42,5 @@
     }
 
     // Insert the new user into the database
-    signup($UniversityID, $Name, $Gmail, $Phone, $Password);
+    signup($UniversityID, $Username, $Name, $Gmail, $Phone, $Password);
     exit(); // End this script
