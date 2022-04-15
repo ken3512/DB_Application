@@ -2,7 +2,7 @@
     include_once "../../api/api_functions.php";
 
 
-    function UniversityTestData($Name, $Bio, $GmailAt)
+    function UniversityTestData($Name, $GmailAt)
     {
         $conn = connectToDatabase();
         $sql = "INSERT INTO University (Name, GmailAt) VALUES (?, ?);";
@@ -135,12 +135,12 @@
     // UsersTestData(9, 0, "Zoey Hampton", "zoeyhampton", "password33", 4078889999);
     // UsersTestData(1, 0, "Elsie Alvarado", "elsiealvarado", "password34", 4075677777);
     // UsersTestData(9, 0, "Anika Francis", "anikafrancis", "password35", 3068889999);
-    // UsersTestData(2, 0, "yo1", "yo1@gmail.com", "password36", 3065677777);
-    // UsersTestData(2, 0, "yo2", "yo2@gmail.com", "password37", 4072564658);
-    // UsersTestData(2, 0, "yo3", "yo3@gmail.com", "password38", 4070909888);
-    // UsersTestData(2, 0, "yo4", "yo4@gmail.com", "password39", 3062564658);
-    // UsersTestData(2, 0, "yo5", "yo5@gmail.com", "password40", 3060909888);
-    // UsersTestData(2, 0, "kenny", "kenny@ucf.edu", "password", 3060909888);
+    // UsersTestData(2, 0, "UCF_User1", "UCF_User1@gmail.com", "UCF_User1", 3065677777);
+    // UsersTestData(2, 0, "UCF_User2", "UCF_User2@gmail.com", "UCF_User2", 4072564658);
+    // UsersTestData(2, 0, "UCF_User3", "UCF_User3@gmail.com", "UCF_User3", 4070909888);
+    // UsersTestData(2, 0, "UCF_User4", "UCF_User4@gmail.com", "UCF_User4", 3062564658);
+    // UsersTestData(2, 0, "UCF_User5", "UCF_User5@gmail.com", "UCF_User5", 3060909888);
+    // UsersTestData(2, 0, "kenny", "kenny@knights.ucf.edu", "password", 3060909888);
     // UsersTestData(2, 0, "kenny", "kenny", "password", 3060909888);
     // UsersTestData(2, 0, "kenny", "kenny@knights.ucf.edu", "password", 3060909888);
     // UsersTestData(2, 1, "kennySuper", "kennySuper@knights.ucf.edu", "password", 3060909888);
