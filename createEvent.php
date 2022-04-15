@@ -22,13 +22,13 @@
     ?>
     
     <form class="forms" action="api/createEvent.php" method="POST">
-        <select name="RSOs">
-            <option value="">------------------</option>
+        <select class="textInput" name="RSOs">
+            <option value=0>-------------------------------------</option>
         <?php
             if (isset($_SESSION["ID"]))
                 displayOwnedRSOs($_SESSION["ID"]);
         ?>
-        </select>
+        </select><br>
         <input class="textInput" type="text" name="EventName" placeholder="Event Name..." required><br>
         <input class="textInput" type="text" name="EventDescription" placeholder="Event Description..." required><br>
         
@@ -39,6 +39,10 @@
         <!-- Location -->
         <input class="textInput" type="text" name="EventLocationName" placeholder="Location Name..." required ><br>
         <input class="textInput" type="text" name="EventLocationDescription" placeholder="Location Description..." required ><br>
+        <input class="textInput" type="number" name="Lat" placeholder="Location Latitude..." required ><br>
+        <input class="textInput" type="number" name="Long" placeholder="Location longitude..." required ><br>
+        <input class="textInput" type="time" name="start" placeholder="Location start time..." required ><br>
+        <input class="textInput" type="time" name="end" placeholder="Location end time..." required ><br>
 
 
 
@@ -57,7 +61,6 @@
         <button class="submitButton" type="submit" name="submit">Create Event</button>
     </form>
     
-    </form>
 <?php 
     include_once "footer.php";
 ?>

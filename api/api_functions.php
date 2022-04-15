@@ -177,6 +177,18 @@ function isAdmin($UserID)
     else return false;
 }
 
+function isOwner($RSOID, $UserID) 
+{
+    $key = encryptionKey();
+    $conn = connectToDatabase();
+    $sql = "SELECT R.ID FROM RSO R WHERE R.ID = $RSOID AND R.OwnerID = $UserID";
+    $result = mysqli_query($conn, $sql);
+    $resultCheck = mysqli_num_rows($result);
+    
+    if($resultCheck > 0) return true;
+    else return false;
+}
+
 // Return true if the UserID is an Admin
 // Return false is it is not
 function isSuperAdmin($UserID) 
@@ -229,18 +241,8 @@ function displayCategories()
     }
 }
 
-// Return the row data for the admin in an RSO
-function getRSOData($userID) 
-{
-    $key = encryptionKey();
-    $conn = connectToDatabase();
-    $sql = "SELECT * FROM rso WHERE OwnerID = $userID;";
-    $result = mysqli_query($conn, $sql);
-    $row = mysqli_fetch_array($result);
-    return $row;
-}
 
-function createEvent($EventName, $EventDescription, $EventCategory, $EventPrivacy, $ContactPhone, $ContactEmail, $EventLocationName, $EventLocationDescription, $userID) 
+function createEvent($EventName, $EventDescription, $EventCategory, $EventPrivacy, $ContactPhone, $ContactEmail, $EventLocationName, $EventLocationDescription, $UserID, $RSOID, $long, $lat, $start, $end) 
 {
     $key = encryptionKey();
 
@@ -248,7 +250,7 @@ function createEvent($EventName, $EventDescription, $EventCategory, $EventPrivac
     // Add the location to the database and use it's Id top populate $EventLocationID
     // Then insert the values into the event database
     // $sql = "INSERT INTO `Location` (`Name`, `Description`) VALUES ('$EventLocationName', '$EventLocationDescription');";
-    $sql = "INSERT INTO `Location` (`Name`, `Description`) VALUES (?, ?);";
+    $sql = "INSERT INTO `Location` (`Name`, `Description`, `Longitude`, `Latitude`) VALUES (?, ?, ?, ?);";
     $stmt = $conn->prepare($sql);
     if(!$stmt) {
         echo "Location Insert Failed: " . mysqli_error($conn);
@@ -257,9 +259,13 @@ function createEvent($EventName, $EventDescription, $EventCategory, $EventPrivac
 
     $EventLocationName_enc = encryptthis($EventLocationName, $key);
     $EventLocationDescription_enc = encryptthis($EventLocationDescription, $key);
+    $long_enc = encryptthis($long, $key);
+    $lat_enc = encryptthis($lat, $key);
+    $start_enc = encryptthis($start, $key);
+    $end_enc = encryptthis($end, $key);
     
 
-    $stmt->bind_param("ss", $EventLocationName_enc, $EventLocationDescription_enc);
+    $stmt->bind_param("ssii", $EventLocationName_enc, $EventLocationDescription_enc, $long_enc, $lat_enc);
     $stmt->execute();
     $stmt->get_result();
 
@@ -269,14 +275,25 @@ function createEvent($EventName, $EventDescription, $EventCategory, $EventPrivac
     // Get the ForeignID
     // If the privacy is 0 or 1 set the ForeignID to the University
     // Else set the ForeignID to the RSO
-    $rsoData = getRSOData($userID);
     if ($EventPrivacy == 0 || $EventPrivacy == 1) {
-        $ForeignID = $rsoData["UniversityID"];
+        $ForeignID = getUserUniversity($UserID);
     }
-    else {
-        $ForeignID = $rsoData["ID"];
+    else if($RSOID != 0 && isOwner($RSOID ,$UserID)){
+        $ForeignID = $RSOID;
+    }else if($RSOID == 0)
+    {
+        header("location: ../createEvent.php?error=An RSO Must be Selected");
+        return;
     }
-    $sql = "INSERT INTO Events (`LocationID`, `EventCat`, `ForeignID`, `Name`, `Description`, `Privacy`, `ContactPhone`, `ContactEmail`)  VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
+    else 
+    {
+        header("location: ../createEvent.php?error=Not Owner of RSO");
+        return;
+    }
+
+
+
+    $sql = "INSERT INTO Events (`LocationID`, `EventCat`, `ForeignID`, `Name`, `Description`, `Privacy`, `ContactPhone`, `ContactEmail`, `StartTime`, `EndTime`)  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
     $stmt = $conn->prepare($sql);
     if(!$stmt) {
         echo "Prepared statement failed";
@@ -289,25 +306,27 @@ function createEvent($EventName, $EventDescription, $EventCategory, $EventPrivac
     $ContactEmail_enc = encryptthis($ContactEmail, $key);
 
 
-    $stmt->bind_param("iiississ", $EventLocationID, $EventCategory, $ForeignID, $EventName_enc, $EventDescription_enc, $EventPrivacy, $ContactPhone_enc, $ContactEmail_enc);
+    $stmt->bind_param("iiississbb", $EventLocationID, $EventCategory, $ForeignID, $EventName_enc, $EventDescription_enc, $EventPrivacy, $ContactPhone_enc, $ContactEmail_enc, $start, $end);
     $stmt->execute();
     $stmt->get_result();
-    header("location: ../index.php");
+    //header("location: ../index.php");
 }
-
 
 function displayOwnedRSOs($UserID) {
     $key = encryptionKey();
     $conn = connectToDatabase();
     $sql = "SELECT R.Name, R.ID FROM RSO R WHERE EXISTS (SELECT R1.ID FROM Registered R1 WHERE R1.RSOID = R.ID AND R1.UserID = $UserID);";
     $result = mysqli_query($conn, $sql);
+    $resultCheck = mysqli_num_rows($result);
     
-    if($result) {
+    if($resultCheck > 0){
         while($row = mysqli_fetch_assoc($result))
-           echo '<option value="'. $row["ID"] .'>'. decryptthis($row['Name'], $key) .'</option>';
+           echo '<option value='. $row["ID"] .'>'. decryptthis($row['Name'], $key) .'</option><br>';
     } else {
         echo mysqli_error($conn);
+        
     }
+
 }
 
 function usernameExists($Username) 
