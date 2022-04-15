@@ -295,6 +295,24 @@ function createEvent($EventName, $EventDescription, $EventCategory, $EventPrivac
     header("location: ../index.php");
 }
 
+function displayOwnedRSOs($UserID) {
+    $key = encryptionKey();
+    $conn = connectToDatabase();
+    $sql = "SELECT Name, ID FROM RSO WHERE OwnerID = $UserID";
+    $result = mysqli_query($conn, $sql);
+    
+    if($result) {
+        echo '<select name="RSOs">';
+        while($row = mysqli_fetch_assoc($result))
+        {
+           echo '<option value="'. $row["ID"] .'>'. decryptthis($row['Name'], $key) .'</option>';
+        }
+        echo '</select><br>';
+    } else {
+        echo mysqli_error($conn);
+    }
+}
+
 function usernameExists($Name, $Gmail) 
 {
     $key = encryptionKey();
@@ -571,12 +589,12 @@ function leaveRSO($RSOID, $UserID) {
         exit();
     } 
     else {
-        verifyMemberCountInRSO($RSOID);
-        // header("location: ../index.php");
+        updateRSOStatus($RSOID);
+        header("location: ../index.php");
     }
 }
 
-function verifyMemberCountInRSO($RSOID) {
+function updateRSOStatus($RSOID) {
     
     $conn = connectToDatabase();
     $sql = "SELECT COUNT(*) AS Total From Registered WHERE RSOID = 1;";
@@ -590,13 +608,27 @@ function verifyMemberCountInRSO($RSOID) {
         $numMembers = $row['Total'];
         if ($numMembers < 5) {
             setRsoUnapproved($RSOID);
+            return false;
         }
+        else {
+            setRsoApproved($RSOID);
+            return true;
+        }
+    }
+}
+
+function setRsoApproved($RSOID) {
+    $conn = connectToDatabase();
+    $sql = "UPDATE RSO SET `Status` = 1 WHERE ID = $RSOID";
+    $result = mysqli_query($conn, $sql);
+    // Return success boolean
+    if(!$result) {
+        echo mysqli_error($conn);
     }
 }
 
 function setRsoUnapproved($RSOID) {
     $conn = connectToDatabase();
-    $Date = date('Y-m-d H:i:s');
     $sql = "UPDATE RSO SET `Status` = 0 WHERE ID = $RSOID";
     $result = mysqli_query($conn, $sql);
     // Return success boolean
