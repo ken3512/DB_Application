@@ -683,28 +683,6 @@ function getComments($EventID, $UserID)
         }
 }
 
-// function displayEventCommentEditingButtons($EventID, $UserID, $CommentID) {
-//     $UserInfo = getUserInfoById($UserID);
-//     if ($UserInfo["ID"] == $_SESSION["ID"]) {
-//         echo "<div class='EditingOptions'>";
-//         echo "
-//             <form class='commentEditingForms' action='eventCommentEdit.php'  method='POST'>
-//                 <input type='hidden' name='EventID' value='$EventID'>
-//                 <input type='hidden' name='UserID' value='$UserID'>
-//                 <input type='hidden' name='CommentID' value='$CommentID'>
-//                 <button class='commentEditingButtons' type='submit' name='submit'>Edit</button>
-//             </form>
-//         ";
-//         echo"   
-//             <form class='commentEditingForms' action='api/eventCommentDelete.php' method='POST'>
-//                 <input type='hidden' name='CommentID' value='$CommentID'>
-//                 <button class='commentEditingButtons' type='submit' name='submit'>Delete</button>
-//             </form>
-//         ";
-//         echo "</div>";
-
-//     }    
-// }
 function displayEventCommentEditingButtons($EventID, $UserID, $CommentID) {
     
     $LoggedInUserInfo = getUserInfoById($_SESSION["ID"]);
