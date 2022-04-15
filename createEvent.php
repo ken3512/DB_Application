@@ -41,8 +41,7 @@
         <input class="textInput" type="text" name="EventLocationDescription" placeholder="Location Description..." required ><br>
         <input class="textInput" type="number" name="Lat" placeholder="Location Latitude..." required ><br>
         <input class="textInput" type="number" name="Long" placeholder="Location longitude..." required ><br>
-        <input class="textInput" type="time" name="start" placeholder="Location start time..." required ><br>
-        <input class="textInput" type="time" name="end" placeholder="Location end time..." required ><br>
+        <input class="textInput" type="time" name="time" placeholder="Event time..." required ><br>
 
 
 

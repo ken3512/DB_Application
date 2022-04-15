@@ -6,8 +6,7 @@
 
     $long = $_POST["Long"];
     $lat = $_POST["Lat"];
-    $start = $_POST["start"];
-    $end = $_POST["end"];
+    $time = $_POST["time"];
     
     $EventName = $_POST["EventName"];
     $EventDescription = $_POST["EventDescription"];
@@ -29,5 +28,5 @@
         $ContactPhone = $userData["Phone"];
     }
     
-    createEvent($EventName, $EventDescription, $EventCategory, $EventPrivacy, $ContactPhone, $ContactEmail, $EventLocationName, $EventLocationDescription, $_SESSION["ID"], $RSOID, $long, $lat, $start, $end);
+    createEvent($EventName, $EventDescription, $EventCategory, $EventPrivacy, $ContactPhone, $ContactEmail, $EventLocationName, $EventLocationDescription, $_SESSION["ID"], $RSOID, $long, $lat, $time);
     

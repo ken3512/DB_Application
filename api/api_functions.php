@@ -242,7 +242,7 @@ function displayCategories()
 }
 
 
-function createEvent($EventName, $EventDescription, $EventCategory, $EventPrivacy, $ContactPhone, $ContactEmail, $EventLocationName, $EventLocationDescription, $UserID, $RSOID, $long, $lat, $start, $end) 
+function createEvent($EventName, $EventDescription, $EventCategory, $EventPrivacy, $ContactPhone, $ContactEmail, $EventLocationName, $EventLocationDescription, $UserID, $RSOID, $long, $lat, $Time) 
 {
     $key = encryptionKey();
 
@@ -261,8 +261,7 @@ function createEvent($EventName, $EventDescription, $EventCategory, $EventPrivac
     $EventLocationDescription_enc = encryptthis($EventLocationDescription, $key);
     $long_enc = encryptthis($long, $key);
     $lat_enc = encryptthis($lat, $key);
-    $start_enc = encryptthis($start, $key);
-    $end_enc = encryptthis($end, $key);
+    $Time_enc = encryptthis($Time, $key);
     
 
     $stmt->bind_param("ssii", $EventLocationName_enc, $EventLocationDescription_enc, $long_enc, $lat_enc);
@@ -293,10 +292,10 @@ function createEvent($EventName, $EventDescription, $EventCategory, $EventPrivac
 
 
 
-    $sql = "INSERT INTO Events (`LocationID`, `EventCat`, `ForeignID`, `Name`, `Description`, `Privacy`, `ContactPhone`, `ContactEmail`, `StartTime`, `EndTime`)  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+    $sql = "INSERT INTO Events (`LocationID`, `EventCat`, `ForeignID`, `Name`, `Description`, `Privacy`, `ContactPhone`, `ContactEmail`, `Time`)  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
     $stmt = $conn->prepare($sql);
     if(!$stmt) {
-        echo "Prepared statement failed";
+        echo "Prepared statement failed 2";
         exit();
     }
 
@@ -306,7 +305,7 @@ function createEvent($EventName, $EventDescription, $EventCategory, $EventPrivac
     $ContactEmail_enc = encryptthis($ContactEmail, $key);
 
 
-    $stmt->bind_param("iiississbb", $EventLocationID, $EventCategory, $ForeignID, $EventName_enc, $EventDescription_enc, $EventPrivacy, $ContactPhone_enc, $ContactEmail_enc, $start, $end);
+    $stmt->bind_param("iiississb", $EventLocationID, $EventCategory, $ForeignID, $EventName_enc, $EventDescription_enc, $EventPrivacy, $ContactPhone_enc, $ContactEmail_enc, $Time_enc);
     $stmt->execute();
     $stmt->get_result();
     //header("location: ../index.php");
