@@ -82,6 +82,26 @@
         $stmt->execute();
     }
 
+    function ChatroomCommentsTestData($UserID, $Comment) {
+        $key = encryptionKey();
+        $conn = connectToDatabase();
+        $sql = "INSERT INTO ChatroomComments (UserID, Comment) VALUES (?, ?);";
+        $stmt = $conn->prepare($sql);
+
+        $Comment_enc = encryptthis($Comment, $key);
+
+        $stmt->bind_param("is", $UserID, $Comment_enc);
+        $stmt->execute();
+    }
+
+    ChatroomCommentsTestData(23, "YOOOO!!!!");
+    ChatroomCommentsTestData(21, "YO!!!! WHAT'S UP TRAVIS!");
+    ChatroomCommentsTestData(23, "Sup kenny!");
+    ChatroomCommentsTestData(19, "Any cool events going on?");
+    ChatroomCommentsTestData(15, "Join Travis's RSO, it's pretty nice!!!");
+    ChatroomCommentsTestData(12, "YO! Travis is a beast!");
+    ChatroomCommentsTestData(21, "Yeah we love Travis here!");
+
     function EventsTestData($LocationID, $EventCat, $ForeignID, $Name, $Description, $Privacy, $ContactPhone, $ContactEmail, $Time)
     {
         $key = encryptionKey();
