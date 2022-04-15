@@ -787,7 +787,7 @@ function displayEventCommentEditing($EventID, $UserID, $CommentID) {
         $row = mysqli_fetch_assoc($result);
         $UserInfo = getUserInfoById($row["UserID"]);
         $UserName = decryptthis($UserInfo["Name"], $key);
-        echo '<p> '. $UserName .'\'s Old Comment:<br>&emsp;' . $row["Text"] . '</p>';
+        echo '<p> '. $UserName .'\'s Old Comment:<br>&emsp;' . decryptthis($row["Text"], $key) . '</p>';
         echo '
         <div class="editingComment">
         <form action="api/eventCommentEdit.php" method="POST">
@@ -811,7 +811,11 @@ function displayEventCommentEditing($EventID, $UserID, $CommentID) {
 function updateEventComment($CommentID, $NewComment) {
     $conn = connectToDatabase();
     $Date = date('Y-m-d H:i:s');
-    $sql = "UPDATE Comments SET `Text` = '$NewComment', DataTimeUpdated = '$Date'  WHERE ID = $CommentID";
+
+    $key = encryptionKey();
+    $NewComment_enc = encryptthis($NewComment, $key);
+
+    $sql = "UPDATE Comments SET `Text` = '$NewComment_enc', DataTimeUpdated = '$Date'  WHERE ID = $CommentID";
     $result = mysqli_query($conn, $sql);
     // Return success boolean
     if(!$result) {
@@ -1043,7 +1047,7 @@ function displayAllChatroomComments()
         {
             $commentID = $row['ID'];
             $UserInfo = getUserInfoById($row["UserID"]);
-            $UserName = $UserInfo["Name"];
+            $UserName = decryptthis($UserInfo["Name"], $key);
             $date = new DateTime($row['DataTimeUpdated']);
             echo "
                 <p>&emsp;[" . $date->format('m-d H:i') . "] ". checkEdited($row['DataTimeCreated'], $row['DataTimeUpdated']) ." <strong> ". $UserName .": </strong> ". decryptthis($row['Comment'], $key) . "</p>
