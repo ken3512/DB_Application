@@ -518,7 +518,7 @@ function FormatEvent($EventID, $UserID)
 function stringifyStatus($status) 
 {
     if ($status == 0) {
-        return "Not Approved Yet";
+        return "Inactive";
     }
     else {
         return "Approved";
@@ -530,7 +530,7 @@ function getAllRSO($UserID)
 {
     $key = encryptionKey();
     $conn = connectToDatabase();
-    $sql = "SELECT R.Name, R.Status, R.UniversityID FROM RSO R WHERE EXISTS (SELECT O.ID FROM Registered O WHERE O.UserID = $UserID AND O.RSOID = R.ID)";
+    $sql = "SELECT R.ID, R.Name, R.Status, R.UniversityID FROM RSO R WHERE EXISTS (SELECT O.ID FROM Registered O WHERE O.UserID = $UserID AND O.RSOID = R.ID)";
     
     $result = mysqli_query($conn, $sql);
     $resultCheck = mysqli_num_rows($result);
@@ -539,7 +539,7 @@ function getAllRSO($UserID)
     {
         while($row = mysqli_fetch_assoc($result))
         {
-            FormatRSOs(decryptthis($row["Name"], $key), $row["Status"], $row["UniversityID"]);
+            FormatRSOs(decryptthis($row["Name"], $key), $row["Status"], $row["UniversityID"], $row['ID'], $UserID);
         }
     }
     else {
@@ -547,11 +547,62 @@ function getAllRSO($UserID)
     }
 }
 
-function formatRSOs($Name, $Status, $UniversityID)
+function formatRSOs($Name, $Status, $UniversityID, $RSOID, $UserID)
 {
     echo '<p class="desc">RSO Name: ' . $Name . '</p><br>';
     echo '<p class="desc">RSO\'s University: ' . getUserUniversityName($UniversityID) . '</p><br>';
     echo '<p class="desc">RSO\'s Approval Status: ' . stringifyStatus($Status)  . '</p><br><br>';
+    // echo '<p class="desc">RSO: ' . $RSOID . '</p><br><br>';
+    echo "
+        <form class='forms' style='margin:0px; margin-bottom:45px; padding:0px;' action='api/leaveRSO.php' method='POST'>
+            <input type='hidden' name='RSOID' value=$RSOID>
+            <input type='hidden' name='UserID' value=$UserID>
+            <button class='submitButton' style='margin:0px; padding:0px;' type='submit' name='submit'>Leave RSO</button>
+        </form>
+    ";
+}
+
+function leaveRSO($RSOID, $UserID) {
+    $conn = connectToDatabase();
+    $sql = "DELETE FROM Registered WHERE RSOID = $RSOID AND UserID = $UserID;";
+    $result = mysqli_query($conn, $sql);
+    if (!$result) {
+        echo mysqli_error($conn);
+        exit();
+    } 
+    else {
+        verifyMemberCountInRSO($RSOID);
+        // header("location: ../index.php");
+    }
+}
+
+function verifyMemberCountInRSO($RSOID) {
+    
+    $conn = connectToDatabase();
+    $sql = "SELECT COUNT(*) AS Total From Registered WHERE RSOID = 1;";
+    $result = mysqli_query($conn, $sql);
+    if (!$result) {
+        echo mysqli_error($conn);
+        exit();
+    } 
+    else {
+        $row = mysqli_fetch_assoc($result);
+        $numMembers = $row['Total'];
+        if ($numMembers < 5) {
+            setRsoUnapproved($RSOID);
+        }
+    }
+}
+
+function setRsoUnapproved($RSOID) {
+    $conn = connectToDatabase();
+    $Date = date('Y-m-d H:i:s');
+    $sql = "UPDATE RSO SET `Status` = 0 WHERE ID = $RSOID";
+    $result = mysqli_query($conn, $sql);
+    // Return success boolean
+    if(!$result) {
+        echo mysqli_error($conn);
+    }
 }
 
 function getRsoInfoByRsoId($RSOID) 
