@@ -331,7 +331,6 @@ function createEvent($EventName, $EventDescription, $EventCategory, $EventPrivac
     $stmt->bind_param("iiississs", $EventLocationID, $EventCategory, $ForeignID, $EventName_enc, $EventDescription_enc, $EventPrivacy, $ContactPhone_enc, $ContactEmail_enc, $Time);
     $stmt->execute();
     $stmt->get_result();
-    //header("location: ../index.php");
 }
 
 function displayOwnedRSOs($UserID) {
@@ -514,6 +513,7 @@ function getLocationNameByLocationID($LocationID)
     echo "Error when trying to get location name: " . mysqli_error($conn);
     
 }
+
 function FormatEvent($EventID, $UserID)
 {
     $key = encryptionKey();
@@ -706,8 +706,6 @@ function isRegistered($RSOID, $MemberID)
 
 function registerMember($RSOID, $MemberID)
 {
-    $key = encryptionKey();
-
     if(isRegistered($RSOID, $MemberID)) return true;
 
     $conn = connectToDatabase();
@@ -1262,7 +1260,7 @@ function displayEditingComment($CommentID) {
         
         $row = mysqli_fetch_assoc($result);
         $UserInfo = getUserInfoById($row["UserID"]);
-        $UserName = $UserInfo["Name"];
+        $UserName = decryptthis($UserInfo["Name"], $key);
         echo $UserName . '<br>';
         echo '<p>Old Comment:<br>&emsp;' . decryptthis($row["Comment"], $key) . '</p>';
         echo '
