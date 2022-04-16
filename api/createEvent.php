@@ -30,6 +30,5 @@
     
         
         createEvent($EventName, $EventDescription, $EventCategory, $EventPrivacy, $ContactPhone, $ContactEmail, $EventLocationName, $EventLocationDescription, $_SESSION["ID"], $RSOID, $long, $lat, $time);
-    } else {
-        header("location: ../createEvent.php");
     }
+    header("location: ../index.php");
