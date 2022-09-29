@@ -2,7 +2,14 @@
     include_once "../../api/api_functions.php";
     $conn = new mysqli("localhost", "root", "");
 
+    
     $sql = "CREATE DATABASE app;";
+    mysqli_query($conn, $sql);
+
+    $sql = "USE app;";
+    mysqli_query($conn, $sql);
+
+    $sql = "create user 'Admin' identified by 'HeighT#157s';";
     mysqli_query($conn, $sql);
 
     $sql = "grant all privileges on App.* to 'Admin'";
